@@ -1,28 +1,19 @@
+import jdk.jshell.execution.Util;
+
 public class Test {
     public static void main(String[] args) {
-        CryptoUtils cryptoUtils = new CryptoUtils();
-        SquareKeyPair keys = cryptoUtils.generateKeyPair();
+        Utility utility = Utility.create();
+        Utility utility2 = Utility.forceNew();
 
-        String data = "test me";
+        String password = "8JLOCxT68jdU";
 
-        byte[] encrypt1 = keys.encrypt(data);
-        String decrypt1 = keys.decrypt(encrypt1);
+        String data = "join%%%john law%%%MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApsRCab4SDmN1FjBdy11rlIUJg5GbczLnj4dMrqzdVZ7zSYThihSdRHx1HcU+gejwwP/q28vuoClFIOj4kOr73By3UUBWdZLRhOH7NcpLCpiIRINU0poHIHwkmM6L4PdvmUTP099VCmyNlndI/AesCD/ZzSZJDsIyuY36MMJNnjbsHd26tFBDCKqIDRixWUPOR+FX+539YQqGgU3RIBF9uNc6T0aWqijNIlMbMxAOMiUFWbDt+wqQWY6sBgPDVWBZqvXEg+CwzdlUYB5LGbGjwb/xyMiUcCkef14faYsCLu6lXQaRQbKgcmWseQPllhyGwwoyylFdx9GFhT2i1VYWSwIDAQAB%%%207.244.67.150%%%44423%%%d1de5968-814d-4a40-8693-542008c80e1c";
 
-        SquareKeyPair compKeys = new SquareKeyPair();
-        compKeys.setPrivateKeyFromBase64(keys.getPrivateKeyBase64());
-        compKeys.setPublicKeyFromBase64(keys.getPublicKeyBase64());
+        String encrypted = utility.encrypt(data, password);
+        LogIt.LogInfo(encrypted);
+        String decrypted = utility2.decrypt(encrypted, password);
 
-        byte[] encrypt2 = compKeys.encrypt(data);
-        String decrypt2 = compKeys.decrypt(encrypt1);
-
-        String decrypt3 = compKeys.decrypt(encrypt2);
-
-        LogIt.LogInfo(Boolean.toString(data.equals(decrypt1)));
-        
-        LogIt.LogInfo(Boolean.toString(decrypt3.equals(data)));
-
-        LogIt.LogInfo(Boolean.toString(data.equals(decrypt2)));
-
-        LogIt.LogInfo(Boolean.toString(decrypt1.equals(decrypt2)));
+        LogIt.LogInfo(data);
+        LogIt.LogInfo(decrypted);
     }
 }

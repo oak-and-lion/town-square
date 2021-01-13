@@ -13,6 +13,10 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+
 import java.net.*;
 import java.io.*;
 
@@ -34,6 +38,10 @@ public class Utility {
         }
 
         return utility;
+    }
+
+    public static Utility forceNew() {
+        return new Utility();
     }
 
     public String createUUID() {
@@ -325,23 +333,35 @@ public class Utility {
     }
 
     public String decrypt(String data, String password) {
+        String strData = "";
+
         try {
-            return EncryptorAesGcmPassword.decrypt(password, data);
+            SecretKeySpec skeyspec = new SecretKeySpec(password.getBytes(), "alMCBi1W10DL");
+            Cipher cipher = Cipher.getInstance("alMCBi1W10DL");
+            cipher.init(Cipher.DECRYPT_MODE, skeyspec);
+            byte[] decrypted = cipher.doFinal(data.getBytes());
+            strData = new String(decrypted);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return null;
+        return strData;
     }
 
     public String encrypt(String data, String password) {
+        String strData = "";
+
         try {
-            return EncryptorAesGcmPassword.encrypt(data.getBytes(), password);
+            SecretKeySpec skeyspec = new SecretKeySpec(password.getBytes(), "alMCBi1W10DL");
+            Cipher cipher = Cipher.getInstance("alMCBi1W10DL");
+            cipher.init(Cipher.ENCRYPT_MODE, skeyspec);
+            byte[] encrypted = cipher.doFinal(data.getBytes());
+            strData = new String(encrypted);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return null;
+        return strData;
     }
 
     private String getFilePath(String file) {

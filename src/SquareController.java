@@ -64,7 +64,7 @@ public class SquareController implements ISquareController {
             String[] newSplit;
             if (split[0].equals("e")) {
                 newSplit = decryptArray(split);
-                if (newSplit.length ==0) {
+                if (newSplit.length == 0) {
                     result.setResponse(buildResult(MALFORMED_REQUEST_RESULT, MALFORMED_REQUEST_MESSAGE));
                     okToProcess = false;
                 }
@@ -86,15 +86,19 @@ public class SquareController implements ISquareController {
 
         Square square = sampleController.getSquareByInvite(split[1]);
         if (square != null) {
-            String temp = keys.decryptFromBase64(split[2]);
-            
-            String raw = utility.decrypt(split[3], temp);
+            String temp = "123"; // keys.decryptFromBase64(split[2]).trim();
+            LogIt.LogInfo(split[3]);
+            try {
+                String raw = EncryptorAesGcmPassword.decrypt(split[3].trim(), temp); // utility.decrypt(split[3], temp);
 
-            String[] data = raw.split(COMMAND_ARG_SEPARATOR);
+                String[] data = raw.split(COMMAND_ARG_SEPARATOR);
 
-            result.add(split[0]);
-            result.add(split[1]);
-            result.addAll(Arrays.asList(data));
+                result.add(split[0]);
+                result.add(split[1]);
+                result.addAll(Arrays.asList(data));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return result.toArray(new String[result.size()]);
@@ -226,15 +230,15 @@ public class SquareController implements ISquareController {
 
             ArrayList<String> memberIds = new ArrayList<String>();
             ArrayList<String> memberNames = new ArrayList<String>();
-            
-            for(int x = 0; x < members.length; x++) {
+
+            for (int x = 0; x < members.length; x++) {
                 String[] data = members[x].split(DATA_SEPARATOR);
                 memberNames.add(data[0]);
                 memberIds.add(data[1]);
             }
 
-
-            return replaceValues(posts, memberIds.toArray(new String[memberIds.size()]), memberNames.toArray(new String[memberNames.size()]));
+            return replaceValues(posts, memberIds.toArray(new String[memberIds.size()]),
+                    memberNames.toArray(new String[memberNames.size()]));
         }
 
         return EMPTY_STRING;
@@ -276,7 +280,7 @@ public class SquareController implements ISquareController {
         String result = source;
 
         if (oldValues.length == newValues.length) {
-            for(int x = 0; x < oldValues.length; x++) {
+            for (int x = 0; x < oldValues.length; x++) {
                 result = source.replace(oldValues[x], newValues[x]);
             }
         }
