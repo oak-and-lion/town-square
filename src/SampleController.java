@@ -340,8 +340,6 @@ public class SampleController {
             Utility utility = Utility.create();
             String password = utility.generateRandomString(12);
             StringBuilder temp = new StringBuilder();
-            password = "123";
-            data = "test data";
             temp.append(utility.encrypt(data, password));
             data = tempKeys.encryptToBase64(password) + DATA_SEPARATOR + temp.toString();
         }

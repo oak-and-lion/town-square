@@ -14,8 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.Base64;
 
 import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import java.net.*;
@@ -28,6 +30,8 @@ public class Utility {
     private static final String REMOTE_IP_URL = "https://checkip.amazonaws.com/";
     private static final int NOT_FOUND_ROW = -1;
     private static final String EMPTY_STRING = "";
+    private static final String ALGORITHM = "AES";
+    private static final String TRANSFORMATION = "AES/ECB/PKCS5Padding";
 
     private Random random;
 
@@ -336,36 +340,39 @@ public class Utility {
     }
 
     public String decrypt(String data, String password) {
-        String strData = "";
-
         try {
-            SecretKeySpec skeyspec = new SecretKeySpec(password.getBytes(), "alMCBi1W10DL");
-            Cipher cipher = Cipher.getInstance("alMCBi1W10DL");
-            cipher.init(Cipher.DECRYPT_MODE, skeyspec);
-            byte[] decrypted = cipher.doFinal(data.getBytes());
-            strData = new String(decrypted);
-
-        } catch (Exception e) {
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+            SecretKey secretKey = new SecretKeySpec(password.getBytes(), ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            byte[] clearMessage = cipher.doFinal(convertFromBase64(data));
+            return new String(clearMessage);
+        }catch (Exception e) {
             e.printStackTrace();
         }
-        return strData;
+        return "";
     }
 
     public String encrypt(String data, String password) {
-        String strData = "";
-
         try {
-            SecretKeySpec skeyspec = new SecretKeySpec(password.getBytes(), "alMCBi1W10DL");
-            Cipher cipher = Cipher.getInstance("alMCBi1W10DL");
-            cipher.init(Cipher.ENCRYPT_MODE, skeyspec);
-            byte[] encrypted = cipher.doFinal(data.getBytes());
-            strData = new String(encrypted);
-
-        } catch (Exception e) {
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+            SecretKey secretKey = new SecretKeySpec(password.getBytes(), ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            byte[] encryptedMessage = cipher.doFinal(data.getBytes());
+            return convertToBase64(encryptedMessage);
+        }catch (Exception e) {
             e.printStackTrace();
         }
-        return strData;
+        return "";
     }
+
+    public String convertToBase64(byte[] bytes) {
+        byte[] encodedBytes = Base64.getEncoder().encode(bytes);
+        return new String(encodedBytes);
+    }
+
+    public byte[] convertFromBase64(String data) {
+        return Base64.getDecoder().decode(data);
+    } 
 
     public String generateRandomString(int targetStringLength) {
         int leftLimit = 48; // numeral '0'
