@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.List;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -28,7 +27,10 @@ public class SampleController {
     private static final String DATA_SEPARATOR = "%%%";
     private static final String ENCRYPTION_FLAG = "e";
     private static final String JOIN_COMMAND = "join";
+    private static final String MEMBER_COMMAND = "members";
     private static final String REQUEST_PUBLIC_KEY_COMMAND = "pkey";
+    private static final String OK_RESULT = "200";
+    private static final String ALREADY_REGISTERED_RESULT = "460";
 
     private IApp parent;
     private List<Square> squares;
@@ -322,28 +324,43 @@ public class SampleController {
         String[] split = invite.split(TILDE);
         Client client = new Client(split[1], Integer.valueOf(split[2]), split[3]);
         boolean encrypt = false;
+        SquareKeyPair tempKeys = new SquareKeyPair();
+
         if (split[0].equals(ENCRYPTION_FLAG)) {
             encrypt = true;
         }
         String data = JOIN_COMMAND + DATA_SEPARATOR + defaultName.getText() + DATA_SEPARATOR + publicKey + DATA_SEPARATOR + remoteIP.getText() + DATA_SEPARATOR
                         + port.getText() + DATA_SEPARATOR + uniqueId.getText();
-        LogIt.LogInfo(data);
+        
         if (encrypt) {
             String remotePublicKey = client.sendMessage(REQUEST_PUBLIC_KEY_COMMAND, false);
-            String[] keyInfo = remotePublicKey.split(":");
-            if (!keyInfo[0].equals("200")) {
+            SquareResponse response = processTCPReturn(remotePublicKey);
+            if (!response.getCode().equals(OK_RESULT)) {
                 return;
             }
-            SquareKeyPair tempKeys = new SquareKeyPair();
-            tempKeys.setPublicKeyFromBase64(keyInfo[1]);
+            
+            tempKeys.setPublicKeyFromBase64(response.getMessage());
 
             Utility utility = Utility.create();
-            String password = utility.generateRandomString(12);
+            String password = utility.generateRandomString(16);
             StringBuilder temp = new StringBuilder();
             temp.append(utility.encrypt(data, password));
             data = tempKeys.encryptToBase64(password) + DATA_SEPARATOR + temp.toString();
         }
+        
+         SquareResponse response = processTCPReturn(client.sendMessage(data, encrypt));
 
-        client.sendMessage(data, encrypt);
+         if (response.getCode().equals(OK_RESULT) || response.getCode().equals(ALREADY_REGISTERED_RESULT)) {
+            String temp = MEMBER_COMMAND + DATA_SEPARATOR + uniqueId.getText();
+            Utility utility = Utility.create();
+            String password = utility.generateRandomString(16);
+            data = tempKeys.encryptToBase64(password) + DATA_SEPARATOR + utility.encrypt(temp, password);
+            response = processTCPReturn(client.sendMessage(data, encrypt));
+            utility.writeFile("test.txt", response.getMessage().replace(DATA_SEPARATOR, "\n"));
+         }
+    }
+
+    private SquareResponse processTCPReturn(String result) {
+        return new SquareResponse(result);
     }
 }
