@@ -5,6 +5,7 @@ public class SquareController implements ISquareController {
     private static final String POST_COMMAND = "post";
     private static final String READ_COMMAND = "read";
     private static final String READ_MEMBERS_COMMAND = "members";
+    private static final String REQUEST_PUBLIC_KEY_COMMAND = "pkey";
     private static final String ACK_COMMAND = "ack";
     private static final String COMMAND_ARG_SEPARATOR = "%%%";
     private static final String DATA_SEPARATOR = "~_~";
@@ -14,6 +15,7 @@ public class SquareController implements ISquareController {
     private static final String COLON = ":";
     private static final String PERCENT = "%";
     private static final String EMPTY_STRING = "";
+    private static final String ACK_BACK = "ack back";
     private static final boolean SEARCH_STARTS_WITH = true;
     private static final boolean SEARCH_CONTAINS = false;
     private static final String FAILURE_COMMAND = "failure";
@@ -93,7 +95,6 @@ public class SquareController implements ISquareController {
         }
 
         if (split[2].trim().equals(JOIN_COMMAND)) {
-            LogIt.LogInfo(split[4]);
             result.setResponse(processJoinRequest(split, square));
         } else if (split[2].trim().equals(POST_COMMAND)) {
             result.setResponse(processPostMessage(split, square));
@@ -101,8 +102,10 @@ public class SquareController implements ISquareController {
             result.setResponse(buildResult(OK_RESULT, getPosts(square, split)));
         } else if (split[2].trim().equals(READ_MEMBERS_COMMAND)) {
             result.setResponse(buildResult(OK_RESULT, getMembers(square, split)));
+        } else if (split[2].trim().equals(REQUEST_PUBLIC_KEY_COMMAND)) {
+            result.setResponse(processPublicKeyMessage());
         } else if (split[2].trim().equals(ACK_COMMAND)) {
-            result.setResponse(buildResult(OK_RESULT, "ack back"));
+            result.setResponse(buildResult(OK_RESULT, ACK_BACK));
         } else if (split[2].equals(FAILURE_COMMAND)) {
             result.setResponse(buildResult(DECRYPTION_FAILURE_RESULT, DECRYPTION_FAILURE_MESSAGE));
         } else {
@@ -143,8 +146,9 @@ public class SquareController implements ISquareController {
         // 4 == member public key
         // 5 == ip address
         // 6 == port
+        // 7 == unique id of member
 
-        if (args.length == 7) {
+        if (args.length == 8) {
             String file = square.getSafeLowerName() + MEMBER_FILE_EXT;
             String[] sameNames = utility.searchFile(file, args[3], SEARCH_STARTS_WITH);
             String[] sameIds = utility.searchFile(file, args[4], SEARCH_CONTAINS);
@@ -218,6 +222,11 @@ public class SquareController implements ISquareController {
         }
 
         return EMPTY_STRING;
+    }
+
+    private String processPublicKeyMessage() {
+        String key = utility.readFile("public.key");
+        return buildResult(OK_RESULT, key);
     }
 
     private String getMembers(Square square, String[] split) {

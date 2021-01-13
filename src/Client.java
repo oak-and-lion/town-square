@@ -10,7 +10,6 @@ import java.net.UnknownHostException;
 
 public class Client {
     private static final String EMPTY_STRING = "";
-    private static final String ACK_COMMAND = "ack";
     private static final String COMMAND_DATA_SEPARATOR = "%%%";
 
     private int port;
@@ -21,25 +20,12 @@ public class Client {
         this.hostName = hostName;
         this.port = port;
         this.squareId = squareId;
-        //connectToServer();
     }
 
     public Client(Square square) {
         port = Integer.valueOf(square.getPort());
         hostName = square.getIP();
         squareId = square.getId();
-        //connectToServer();
-    }
-
-    private void connectToServer() {
-        try {
-            
-            String time = sendMessage(ACK_COMMAND, false);
-            
-            LogIt.LogInfo(time);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public String sendMessage(String text, boolean encrypt) {

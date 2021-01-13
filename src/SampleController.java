@@ -312,6 +312,11 @@ public class SampleController {
     }
 
     public void processInvitation(String invite) {
+        // sample invitation
+        // 0 == encryption flag
+        // 1 == ip of the remote host to process invitation
+        // 2 == port of remote host
+        // 3 == id of the square being invited to
         // u~207.244.84.59~44123~a7075b5b-b91d-4448-a0f9-d9b0bec1a726
         String[] split = invite.split(TILDE);
         Client client = new Client(split[1], Integer.valueOf(split[2]), split[3]);
@@ -319,6 +324,6 @@ public class SampleController {
         if (split[0].equals(ENCRYPTION_FLAG)) {
             encrypt = true;
         }
-        client.sendMessage(JOIN_COMMAND + DATA_SEPARATOR + defaultName.getText() + DATA_SEPARATOR + publicKey + DATA_SEPARATOR + remoteIP.getText() + DATA_SEPARATOR + port.getText(), encrypt);
+        client.sendMessage(JOIN_COMMAND + DATA_SEPARATOR + defaultName.getText() + DATA_SEPARATOR + publicKey + DATA_SEPARATOR + remoteIP.getText() + DATA_SEPARATOR + port.getText() + DATA_SEPARATOR + uniqueId.getText(), encrypt);
     }
 }
