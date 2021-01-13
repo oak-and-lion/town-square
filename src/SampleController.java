@@ -28,7 +28,8 @@ public class SampleController {
     private static final String DATA_SEPARATOR = "%%%";
     private static final String ENCRYPTION_FLAG = "e";
     private static final String JOIN_COMMAND = "join";
-    
+    private static final String REQUEST_PUBLIC_KEY_COMMAND = "pkey";
+
     private IApp parent;
     private List<Square> squares;
     private List<String> squareNames;
@@ -56,7 +57,7 @@ public class SampleController {
     @FXML
     private TextField port;
 
-    @FXML 
+    @FXML
     private MenuItem mnuJoinSquare;
 
     @FXML
@@ -324,6 +325,27 @@ public class SampleController {
         if (split[0].equals(ENCRYPTION_FLAG)) {
             encrypt = true;
         }
-        client.sendMessage(JOIN_COMMAND + DATA_SEPARATOR + defaultName.getText() + DATA_SEPARATOR + publicKey + DATA_SEPARATOR + remoteIP.getText() + DATA_SEPARATOR + port.getText() + DATA_SEPARATOR + uniqueId.getText(), encrypt);
+        String data = JOIN_COMMAND + DATA_SEPARATOR + defaultName.getText() + DATA_SEPARATOR + publicKey + DATA_SEPARATOR + remoteIP.getText() + DATA_SEPARATOR
+                        + port.getText() + DATA_SEPARATOR + uniqueId.getText();
+        LogIt.LogInfo(data);
+        if (encrypt) {
+            String remotePublicKey = client.sendMessage(REQUEST_PUBLIC_KEY_COMMAND, false);
+            String[] keyInfo = remotePublicKey.split(":");
+            if (!keyInfo[0].equals("200")) {
+                return;
+            }
+            SquareKeyPair tempKeys = new SquareKeyPair();
+            tempKeys.setPublicKeyFromBase64(keyInfo[1]);
+
+            Utility utility = Utility.create();
+            String password = utility.generateRandomString(12);
+            StringBuilder temp = new StringBuilder();
+            password = "123";
+            data = "test data";
+            temp.append(utility.encrypt(data, password));
+            data = tempKeys.encryptToBase64(password) + DATA_SEPARATOR + temp.toString();
+        }
+
+        client.sendMessage(data, encrypt);
     }
 }

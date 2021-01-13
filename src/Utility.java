@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.net.*;
 import java.io.*;
@@ -24,8 +25,10 @@ public class Utility {
     private static final int NOT_FOUND_ROW = -1;
     private static final String EMPTY_STRING = "";
 
-    private Utility() {
+    private Random random;
 
+    private Utility() {
+        random = new Random();
     }
 
     public static Utility create() {
@@ -342,6 +345,15 @@ public class Utility {
         }
 
         return null;
+    }
+
+    public String generateRandomString(int targetStringLength) {
+        int leftLimit = 48; // numeral '0'
+        int rightLimit = 122; // letter 'z'
+
+        return random.ints(leftLimit, rightLimit + 1).filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
     }
 
     private String getFilePath(String file) {
