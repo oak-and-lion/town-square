@@ -72,12 +72,20 @@ public class SquareKeyPair {
         return new String(encodedBytes);
     }
 
+    private byte[] convertFromBase64(String data) {
+        return Base64.getDecoder().decode(data);
+    } 
+
     public PublicKey getPublicKey() {
         return publicKey;
     }
 
     public Key getPrivateKey() {
         return privateKey;
+    }
+
+    public String encryptToBase64(String data) {
+        return convertToBase64(encrypt(data));
     }
 
     public byte[] encrypt(String data) {
@@ -98,6 +106,10 @@ public class SquareKeyPair {
         }
 
         return new byte[0];
+    }
+
+    public String decryptFromBase64(String data) {
+        return decrypt(convertFromBase64(data));
     }
 
     public String decrypt(byte[] data) {
