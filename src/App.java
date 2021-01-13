@@ -9,6 +9,7 @@ public class App extends Application implements IApp {
     private static final String UNIQUE_ID_FILE = "unique.id";
     private static final String DEFAULT_NAME_FILE = "default.name";
     private static final String DEFAULT_SQUARE_FILE = "my_square.square";
+    private static final String DEFAULT_SQUARE_ME_FILE = "my_square.members";
     private static final String PORT_FILE = "port.id";
     private static final String FXML_FILE = "sample.fxml";
     private static final String PUBLIC_KEY_FILE = "public.key";
@@ -22,6 +23,7 @@ public class App extends Application implements IApp {
     private static final String DEFAULT_PORT = "44123";
     private static final String EMPTY_STRING = "";
     private static final String NO_PASSWORD_VALUE = "~~~~~~~";
+    private static final String DATA_SEPARATOR = "~_~";
 
     private Utility utility;
     private Server server;
@@ -88,6 +90,9 @@ public class App extends Application implements IApp {
                 keys = cryptoUtils.generateKeyPair();
                 utility.writeFile(PUBLIC_KEY_FILE, keys.getPublicKeyBase64());
                 utility.writeFile(PRIVATE_KEY_FILE, keys.getPrivateKeyBase64());
+            }
+            if (!utility.checkFileExists(DEFAULT_SQUARE_ME_FILE)) {
+                utility.writeFile(DEFAULT_SQUARE_ME_FILE, defaultName + DATA_SEPARATOR + keys.getPublicKeyBase64() + DATA_SEPARATOR + utility.getRemoteIP() + DATA_SEPARATOR + port +  DATA_SEPARATOR + uniqueId);
             }
 
             primaryStage.show();
