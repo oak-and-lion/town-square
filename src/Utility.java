@@ -334,6 +334,16 @@ public class Utility {
         return null;
     }
 
+    public String encrypt(String data, String password) {
+        try {
+            return EncryptorAesGcmPassword.encrypt(data.getBytes(), password);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     private String getFilePath(String file) {
         return System.getProperty(USER_DIR) + PATH_DELIMITER + file;
     }

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SquareController implements ISquareController {
     private static final String JOIN_COMMAND = "join";
@@ -15,6 +16,8 @@ public class SquareController implements ISquareController {
     private static final String COLON = ":";
     private static final String PERCENT = "%";
     private static final String EMPTY_STRING = "";
+    private static final String PUBLIC_KEY_FILE = "public.key";
+    private static final String PRIVATE_KEY_FILE = "private.key";
     private static final String ACK_BACK = "ack back";
     private static final boolean SEARCH_STARTS_WITH = true;
     private static final boolean SEARCH_CONTAINS = false;
@@ -35,16 +38,21 @@ public class SquareController implements ISquareController {
     private static final String FORBIDDEN_MESSAGE = "forbidden";
     private static final String ALREADY_REGISTERED_MESSAGE = "already registered";
 
-    Utility utility;
-    SampleController sampleController;
+    private Utility utility;
+    private SampleController sampleController;
+    private SquareKeyPair keys;
 
     public SquareController(Utility mainUtility, SampleController controller) {
         utility = mainUtility;
         sampleController = controller;
+        keys = new SquareKeyPair();
+        keys.setPrivateKeyFromBase64(utility.readFile(PRIVATE_KEY_FILE));
+        keys.setPublicKeyFromBase64(utility.readFile(PUBLIC_KEY_FILE));
     }
 
     public SquareResponse processRequest(String request) {
         SquareResponse result = new SquareResponse();
+        boolean okToProcess = true;
 
         // command structure
         // 0 == encryption flag
@@ -56,32 +64,40 @@ public class SquareController implements ISquareController {
             String[] newSplit;
             if (split[0].equals("e")) {
                 newSplit = decryptArray(split);
+                if (newSplit.length ==0) {
+                    result.setResponse(buildResult(MALFORMED_REQUEST_RESULT, MALFORMED_REQUEST_MESSAGE));
+                    okToProcess = false;
+                }
             } else {
                 LogIt.LogInfo("unencrypted");
                 newSplit = split;
             }
 
-            result = processRequestCommand(newSplit);
+            if (okToProcess) {
+                result = processRequestCommand(newSplit);
+            }
         }
 
         return result;
     }
 
     private String[] decryptArray(String[] split) {
+        ArrayList<String> result = new ArrayList<String>();
+
         Square square = sampleController.getSquareByInvite(split[1]);
         if (square != null) {
-            for (int x = 2; x < split.length; x++) {
-                String temp = utility.decrypt(split[x], square.getPassword());
-                if (temp != null) {
-                    split[x] = temp;
-                } else {
-                    split[2] = FAILURE_COMMAND;
-                    break;
-                }
-            }
+            String temp = keys.decryptFromBase64(split[2]);
+            
+            String raw = utility.decrypt(split[3], temp);
+
+            String[] data = raw.split(COMMAND_ARG_SEPARATOR);
+
+            result.add(split[0]);
+            result.add(split[1]);
+            result.addAll(Arrays.asList(data));
         }
 
-        return split;
+        return result.toArray(new String[result.size()]);
     }
 
     private SquareResponse processRequestCommand(String[] split) {
@@ -225,7 +241,7 @@ public class SquareController implements ISquareController {
     }
 
     private String processPublicKeyMessage() {
-        String key = utility.readFile("public.key");
+        String key = utility.readFile(PUBLIC_KEY_FILE);
         return buildResult(OK_RESULT, key);
     }
 
