@@ -255,7 +255,10 @@ public class Utility {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 if (count > lastKnownRow) {
-                    temp.add(checkMatch(startsWith, value, line));
+                    String s = checkMatch(startsWith, value, line);
+                    if (!s.equals(EMPTY_STRING)) {
+                        temp.add(s);
+                    }
                 }
 
                 count++;
