@@ -69,7 +69,6 @@ public class SquareController implements ISquareController {
                     okToProcess = false;
                 }
             } else {
-                LogIt.LogInfo("unencrypted");
                 newSplit = split;
             }
 
@@ -86,10 +85,10 @@ public class SquareController implements ISquareController {
 
         Square square = sampleController.getSquareByInvite(split[1]);
         if (square != null) {
-            String temp = "123"; // keys.decryptFromBase64(split[2]).trim();
+            String temp = keys.decryptFromBase64(split[2]).trim();
             LogIt.LogInfo(split[3]);
             try {
-                String raw = EncryptorAesGcmPassword.decrypt(split[3].trim(), temp); // utility.decrypt(split[3], temp);
+                String raw = utility.decrypt(split[3], temp);
 
                 String[] data = raw.split(COMMAND_ARG_SEPARATOR);
 
@@ -171,14 +170,14 @@ public class SquareController implements ISquareController {
         if (args.length == 8) {
             String file = square.getSafeLowerName() + MEMBER_FILE_EXT;
             String[] sameNames = utility.searchFile(file, args[3], SEARCH_STARTS_WITH);
-            String[] sameIds = utility.searchFile(file, args[4], SEARCH_CONTAINS);
+            String[] sameIds = utility.searchFile(file, args[7], SEARCH_CONTAINS);
             String registeredName = args[3];
             if (sameIds.length < 1) {
                 if (sameNames.length > 0) {
                     registeredName += PERCENT + Integer.toString(sameNames.length);
                 }
 
-                String data = args[4] + DATA_SEPARATOR + args[5] + DATA_SEPARATOR + args[6];
+                String data = args[4] + DATA_SEPARATOR + args[5] + DATA_SEPARATOR + args[6] + DATA_SEPARATOR + args[7];
                 LogIt.LogInfo(data);
                 return processCommand(registeredName, data, file, square);
             } else {
@@ -259,7 +258,7 @@ public class SquareController implements ISquareController {
         String memberId = split[3];
 
         if (checkSquareAccess(square, memberId)) {
-            return utility.readFile(square.getSafeLowerName() + MEMBER_FILE_EXT);
+            return utility.readFile(square.getSafeLowerName() + MEMBER_FILE_EXT).replace("\n", COMMAND_ARG_SEPARATOR);
         }
 
         return EMPTY_STRING;
