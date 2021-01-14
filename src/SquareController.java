@@ -148,7 +148,7 @@ public class SquareController implements ISquareController {
 
             if (b.isSuccessful()) {
                 result = buildResult(OK_RESULT, ADDED_MESSAGE + COLON + data + COLON + sampleController.getDefaultName()
-                        + " - " + square.getName() + COLON + Integer.toString(b.getLineCount()));
+                        + "-" + square.getSafeLowerName() + COLON + Integer.toString(b.getLineCount()));
             } else {
                 result = buildResult(INTERNAL_ERROR_RESULT, ADDING_MEMBER_MESSAGE);
             }
@@ -178,10 +178,10 @@ public class SquareController implements ISquareController {
                 }
 
                 String data = args[4] + DATA_SEPARATOR + args[5] + DATA_SEPARATOR + args[6] + DATA_SEPARATOR + args[7];
-                LogIt.LogInfo(data);
+
                 return processCommand(registeredName, data, file, square);
             } else {
-                return buildResult(ALREADY_REGISTERED_RESULT, ALREADY_REGISTERED_MESSAGE);
+                return buildResult(ALREADY_REGISTERED_RESULT, ALREADY_REGISTERED_MESSAGE + COLON + "_" + COLON + sampleController.getDefaultName() + "_" + square.getSafeLowerName() + COLON + "-1");
             }
         }
 
