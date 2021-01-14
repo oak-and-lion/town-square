@@ -36,6 +36,7 @@ public class SampleController {
     private static final String ALREADY_REGISTERED_RESULT = "460";
     private static final String MEMBER_FILE_EXT = ".members";
     private static final String SQUARE_FILE_EXT = ".square";
+    private static final String MY_SQUARE_DEFAULT = "my_square";
 
     private IApp parent;
     private List<Square> squares;
@@ -230,6 +231,10 @@ public class SampleController {
 
         privacyControls.getChildren().addAll(privateLabel, privateValueCheckBox, password, spacer, updatePrivacy);
 
+        privacyControls.setVisible(false);
+        privacyControls.setMaxHeight(0);
+        privacyControls.setMinHeight(0);
+        
         return privacyControls;
     }
 
@@ -285,12 +290,11 @@ public class SampleController {
     }
 
     private String determineSquarePrivacy(Square square) {
-        String encrypt = "e";
-        if (!square.isPrivate()) {
-            encrypt = "u";
+        if (square != null) {
+            return ENCRYPTION_FLAG;
         }
 
-        return encrypt;
+        return ENCRYPTION_FLAG;
     }
 
     private Square getSquare(String name) {
@@ -334,16 +338,17 @@ public class SampleController {
         if (split[0].equals(ENCRYPTION_FLAG)) {
             encrypt = true;
         }
-        String data = JOIN_COMMAND + DATA_SEPARATOR + defaultName.getText() + DATA_SEPARATOR + publicKey + DATA_SEPARATOR + remoteIP.getText() + DATA_SEPARATOR
-                        + port.getText() + DATA_SEPARATOR + uniqueId.getText();
-        
+        String data = JOIN_COMMAND + DATA_SEPARATOR + defaultName.getText() + DATA_SEPARATOR + publicKey
+                + DATA_SEPARATOR + remoteIP.getText() + DATA_SEPARATOR + port.getText() + DATA_SEPARATOR
+                + uniqueId.getText();
+
         if (encrypt) {
             String remotePublicKey = client.sendMessage(REQUEST_PUBLIC_KEY_COMMAND, false);
             SquareResponse response = processTCPReturn(remotePublicKey);
             if (!response.getCode().equals(OK_RESULT)) {
                 return;
             }
-            
+
             tempKeys.setPublicKeyFromBase64(response.getMessage());
 
             Utility utility = Utility.create();
@@ -352,33 +357,36 @@ public class SampleController {
             temp.append(utility.encrypt(data, password));
             data = tempKeys.encryptToBase64(password) + DATA_SEPARATOR + temp.toString();
         }
-        
-         SquareResponse response = processTCPReturn(client.sendMessage(data, encrypt));
 
-         if (response.getCode().equals(OK_RESULT) || response.getCode().equals(ALREADY_REGISTERED_RESULT)) {
+        SquareResponse response = processTCPReturn(client.sendMessage(data, encrypt));
+
+        if (response.getCode().equals(OK_RESULT) || response.getCode().equals(ALREADY_REGISTERED_RESULT)) {
             String[] responseData = response.getResponseSplit();
             String temp = MEMBER_COMMAND + DATA_SEPARATOR + uniqueId.getText();
             Utility utility = Utility.create();
             String password = utility.generateRandomString(16);
             data = tempKeys.encryptToBase64(password) + DATA_SEPARATOR + utility.encrypt(temp, password);
             response = processTCPReturn(client.sendMessage(data, encrypt));
-            String squareSafeName = responseData[3].replace(" ","_").toLowerCase();
+            String squareSafeName = responseData[3].replace(" ", "_").toLowerCase();
             utility.writeFile(squareSafeName + MEMBER_FILE_EXT, response.getMessage().replace(DATA_SEPARATOR, "\n"));
-            String info = responseData[3] + COMMA + client.getSquareId() + COMMA + "tab" + squareSafeName + COMMA + ZERO + NO_PASSWORD_VALUE;
-            Square square = new Square(info, port.getText(), remoteIP.getText(), new SquareController(utility, this), utility);
+            String info = responseData[3] + COMMA + client.getSquareId() + COMMA + "tab" + squareSafeName + COMMA + ZERO
+                    + NO_PASSWORD_VALUE;
+            Square square = new Square(info, port.getText(), remoteIP.getText(), new SquareController(utility, this),
+                    utility);
             utility.writeFile(squareSafeName + SQUARE_FILE_EXT, info);
             setTabSquare(square);
-         }
+        }
     }
 
     public void buildSquares(Utility utility) {
         String[] files = utility.getFiles(SQUARE_FILE_EXT);
-        for(String file : files) {
-            if (file.equals("my_square" + SQUARE_FILE_EXT)) {
+        for (String file : files) {
+            if (file.equals(MY_SQUARE_DEFAULT + SQUARE_FILE_EXT)) {
                 continue;
             }
             String contents = utility.readFile(file);
-            setTabSquare(new Square(contents, port.getText(), remoteIP.getText(), new SquareController(utility, this), utility));
+            setTabSquare(new Square(contents, port.getText(), remoteIP.getText(), new SquareController(utility, this),
+                    utility));
         }
     }
 

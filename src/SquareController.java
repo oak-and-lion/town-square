@@ -15,7 +15,10 @@ public class SquareController implements ISquareController {
     private static final String NEWLINE = "\n";
     private static final String COLON = ":";
     private static final String PERCENT = "%";
+    private static final String DASH = "-";
+    private static final String UNDERSCORE = "_";
     private static final String EMPTY_STRING = "";
+    private static final String NO_ROWS = "-1";
     private static final String PUBLIC_KEY_FILE = "public.key";
     private static final String PRIVATE_KEY_FILE = "private.key";
     private static final String ACK_BACK = "ack back";
@@ -148,7 +151,7 @@ public class SquareController implements ISquareController {
 
             if (b.isSuccessful()) {
                 result = buildResult(OK_RESULT, ADDED_MESSAGE + COLON + data + COLON + sampleController.getDefaultName()
-                        + "-" + square.getSafeLowerName() + COLON + Integer.toString(b.getLineCount()));
+                        + DASH + square.getSafeLowerName() + COLON + Integer.toString(b.getLineCount()));
             } else {
                 result = buildResult(INTERNAL_ERROR_RESULT, ADDING_MEMBER_MESSAGE);
             }
@@ -181,7 +184,8 @@ public class SquareController implements ISquareController {
 
                 return processCommand(registeredName, data, file, square);
             } else {
-                return buildResult(ALREADY_REGISTERED_RESULT, ALREADY_REGISTERED_MESSAGE + COLON + "_" + COLON + sampleController.getDefaultName() + "_" + square.getSafeLowerName() + COLON + "-1");
+                return buildResult(ALREADY_REGISTERED_RESULT, ALREADY_REGISTERED_MESSAGE + COLON + DASH + COLON
+                        + sampleController.getDefaultName() + UNDERSCORE + square.getSafeLowerName() + COLON + NO_ROWS);
             }
         }
 
@@ -258,7 +262,7 @@ public class SquareController implements ISquareController {
         String memberId = split[3];
 
         if (checkSquareAccess(square, memberId)) {
-            return utility.readFile(square.getSafeLowerName() + MEMBER_FILE_EXT).replace("\n", COMMAND_ARG_SEPARATOR);
+            return utility.readFile(square.getSafeLowerName() + MEMBER_FILE_EXT).replace(NEWLINE, COMMAND_ARG_SEPARATOR);
         }
 
         return EMPTY_STRING;
