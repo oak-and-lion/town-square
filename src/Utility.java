@@ -318,6 +318,32 @@ public class Utility {
         return result;
     }
 
+    public String readLastLineOfFile(String file) {
+        if (!checkFileExists(file)) {
+            return EMPTY_STRING;
+        }
+
+        String result = EMPTY_STRING;
+
+        // using class of nio file package
+        Path filePath = Paths.get(file);
+
+        // converting to UTF 8
+        Charset charset = StandardCharsets.UTF_8;
+
+        // try with resource
+        try (BufferedReader bufferedReader = Files.newBufferedReader(filePath, charset)) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                result = line;
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return result;
+    }
+
     public int findFirstOccurence(String file, String value, boolean startsWith) {
         if (!checkFileExists(file)) {
             return NOT_FOUND_ROW;

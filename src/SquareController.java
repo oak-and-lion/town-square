@@ -240,8 +240,7 @@ public class SquareController implements ISquareController {
                 memberIds.add(data[1]);
             }
 
-            return replaceValues(posts, memberIds.toArray(new String[memberIds.size()]),
-                    memberNames.toArray(new String[memberNames.size()]));
+            return posts;
         }
 
         return EMPTY_STRING;
@@ -277,17 +276,5 @@ public class SquareController implements ISquareController {
         int first = utility.findFirstOccurence(file, memberId, SEARCH_CONTAINS);
 
         return (first > -1);
-    }
-
-    private String replaceValues(String source, String[] oldValues, String[] newValues) {
-        String result = source;
-
-        if (oldValues.length == newValues.length) {
-            for (int x = 0; x < oldValues.length; x++) {
-                result = source.replace(oldValues[x], newValues[x]);
-            }
-        }
-
-        return result;
     }
 }

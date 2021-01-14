@@ -92,7 +92,8 @@ public class App extends Application implements IApp {
                 utility.writeFile(PRIVATE_KEY_FILE, keys.getPrivateKeyBase64());
             }
             if (!utility.checkFileExists(DEFAULT_SQUARE_ME_FILE)) {
-                utility.writeFile(DEFAULT_SQUARE_ME_FILE, defaultName + DATA_SEPARATOR + keys.getPublicKeyBase64() + DATA_SEPARATOR + utility.getRemoteIP() + DATA_SEPARATOR + port +  DATA_SEPARATOR + uniqueId);
+                utility.writeFile(DEFAULT_SQUARE_ME_FILE, defaultName + DATA_SEPARATOR + keys.getPublicKeyBase64()
+                        + DATA_SEPARATOR + utility.getRemoteIP() + DATA_SEPARATOR + port + DATA_SEPARATOR + uniqueId);
             }
 
             primaryStage.show();
@@ -100,7 +101,8 @@ public class App extends Application implements IApp {
 
             squareController = SquareFactory.create(utility, controller);
 
-            defaultSquare = new Square(defaultSquareInfo, port, utility.getRemoteIP(), squareController, utility, controller);
+            defaultSquare = new Square(defaultSquareInfo, port, utility.getRemoteIP(), squareController, utility,
+                    controller, uniqueId);
 
             controller.setParent(this);
             controller.setUniqueId(uniqueId);

@@ -12,20 +12,21 @@ public class Square {
     private String port;
     private Object temp;
     private String password;
-    private ClientThread clientThread;
     private ISquareController controller;
     private Utility utility;
     private int lastKnownPost;
     private ScrollPane postsScrollPane;
     private VBox postsVBox;
     private SampleController sampleController;
+    private String uniqueId;
 
     private static final String COMMA = ",";
     private static final String NO_PASSWORD_VALUE = "~~~~~~~";
     private static final String EMPTY_STRING = "";
     private static final String POSTS_FILE_EXT = ".posts";
 
-    public Square(String info, String port, String ip, ISquareController squareController, Utility utility, SampleController sampleController) {
+    public Square(String info, String port, String ip, ISquareController squareController, Utility utility,
+            SampleController sampleController, String uniqueId) {
         setPassword("");
         this.port = port;
         this.ip = ip;
@@ -48,6 +49,7 @@ public class Square {
             }
         }
 
+        this.uniqueId = uniqueId;
         lastKnownPost = -1;
         this.utility = utility;
         controller = squareController;
@@ -56,7 +58,7 @@ public class Square {
     }
 
     private void initializeClientThread() {
-        clientThread = new ClientThread(this, utility);
+        ClientThread clientThread = new ClientThread(this, utility, uniqueId);
 
         if (utility.checkFileExists(getSafeLowerName() + POSTS_FILE_EXT)) {
             lastKnownPost = utility.countLinesInFile(getSafeLowerName() + POSTS_FILE_EXT);
@@ -74,7 +76,7 @@ public class Square {
             Thread.currentThread().interrupt();
         }
     }
-    
+
     public String toString() {
         String isPrivate = "0";
         if (this.isPrivate()) {

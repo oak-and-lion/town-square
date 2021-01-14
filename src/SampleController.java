@@ -431,7 +431,7 @@ public class SampleController {
             String info = responseData[3] + COMMA + client.getSquareId() + COMMA + "tab" + squareSafeName + COMMA + ZERO
                     + NO_PASSWORD_VALUE;
             Square square = new Square(info, port.getText(), remoteIP.getText(), new SquareController(utility, this),
-                    utility, this);
+                    utility, this, uniqueId.getText());
             utility.writeFile(squareSafeName + SQUARE_FILE_EXT, info);
             setTabSquare(square);
         }
@@ -445,7 +445,7 @@ public class SampleController {
             }
             String contents = utility.readFile(file);
             setTabSquare(new Square(contents, port.getText(), remoteIP.getText(), new SquareController(utility, this),
-                    utility, this));
+                    utility, this, uniqueId.getText()));
         }
     }
 
