@@ -1,3 +1,8 @@
+import java.util.concurrent.ThreadLocalRandom;
+
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.VBox;
+
 public class Square {
     private String name;
     private String invite;
@@ -11,13 +16,16 @@ public class Square {
     private ISquareController controller;
     private Utility utility;
     private int lastKnownPost;
+    private ScrollPane postsScrollPane;
+    private VBox postsVBox;
+    private SampleController sampleController;
 
     private static final String COMMA = ",";
     private static final String NO_PASSWORD_VALUE = "~~~~~~~";
     private static final String EMPTY_STRING = "";
     private static final String POSTS_FILE_EXT = ".posts";
 
-    public Square(String info, String port, String ip, ISquareController squareController, Utility utility) {
+    public Square(String info, String port, String ip, ISquareController squareController, Utility utility, SampleController sampleController) {
         setPassword("");
         this.port = port;
         this.ip = ip;
@@ -40,9 +48,10 @@ public class Square {
             }
         }
 
-        lastKnownPost = 0;
+        lastKnownPost = -1;
         this.utility = utility;
         controller = squareController;
+        this.sampleController = sampleController;
         initializeClientThread();
     }
 
@@ -53,7 +62,16 @@ public class Square {
             lastKnownPost = utility.countLinesInFile(getSafeLowerName() + POSTS_FILE_EXT);
         }
 
-        clientThread.start();
+        try {
+            long millis = ThreadLocalRandom.current().nextLong(1000);
+            if (millis < 0) {
+                millis *= -1;
+            }
+            Thread.sleep(millis);
+            clientThread.start();
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }
     }
     
     public String toString() {
@@ -128,5 +146,29 @@ public class Square {
 
     public int getLastKnownPost() {
         return lastKnownPost;
+    }
+
+    public void setLastKnownPost(int value) {
+        lastKnownPost = value;
+    }
+
+    public void setPostsScrollPane(ScrollPane value) {
+        postsScrollPane = value;
+    }
+
+    public ScrollPane getPostsScrollPane() {
+        return postsScrollPane;
+    }
+
+    public void setPostsVBox(VBox value) {
+        postsVBox = value;
+    }
+
+    public VBox getPostsVBox() {
+        return postsVBox;
+    }
+
+    public SampleController getSampleController() {
+        return sampleController;
     }
 }

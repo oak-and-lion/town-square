@@ -237,8 +237,8 @@ public class Utility {
                     result.append(line);
                     first = false;
                 }
+                count++;
             }
-            count++;
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -281,7 +281,7 @@ public class Utility {
             ex.printStackTrace();
         }
 
-        return new String[temp.size()];
+        return temp.toArray(new String[temp.size()]);
     }
 
     private String checkMatch(boolean startsWith, String value, String line) {

@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -20,6 +21,8 @@ public class SampleController {
     private static final String INVITATION_LABEL_TEXT = "Invitation:";
     private static final String INVITE_CODE_LABEL = "Invite Code:";
     private static final int TEXTFIELD_WIDTH = 400;
+    private static final int POSTS_PANE_WIDTH = 565;
+    private static final int POSTS_TEXTFIELD_WIDTH = 515;
     private static final String PASSWORD_PROMPT_TEXT = "Password";
     private static final String EMPTY_STRING = "";
     private static final String UPDATE_BUTTON_TEXT = "Update";
@@ -36,7 +39,9 @@ public class SampleController {
     private static final String ALREADY_REGISTERED_RESULT = "460";
     private static final String MEMBER_FILE_EXT = ".members";
     private static final String SQUARE_FILE_EXT = ".square";
+    private static final String POSTS_FILE_EXT = ".posts";
     private static final String MY_SQUARE_DEFAULT = "my_square";
+    private static final String FILE_DATA_SEPARATOR = "~_~";
 
     private IApp parent;
     private List<Square> squares;
@@ -153,9 +158,57 @@ public class SampleController {
         HBox generateInviteControls = createGenerateInviteControls(square, index);
         main.getChildren().add(generateInviteControls);
 
+        VBox generatePostControls = createGeneratePostControls(square);
+        main.getChildren().add(generatePostControls);
+
         // add main
         tab.setContent(main);
         tabPane.getTabs().add(0, tab);
+    }
+
+    private VBox createGeneratePostControls(Square square) {
+        VBox generatePostControls = createVBox(0, 10, 0, 10);
+        generatePostControls.setMinHeight(281);
+        generatePostControls.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;" + "-fx-border-width: 2;"
+                + "-fx-border-insets: 5;" + "-fx-border-radius: 5;" + "-fx-border-color: #333;");
+
+        HBox postsLabelHBox = createHBox(0, 0, 0, 0);
+        Label postsLabel = createLabel("Posts", 0, 0, 0, 0);
+        postsLabelHBox.getChildren().add(postsLabel);
+
+        HBox postsHBox = createHBox(10, 0, 10, 0);
+
+        VBox postsList = createVBox(5, 5, 5, 5);
+        ScrollPane postsPane = new ScrollPane(postsList);
+        postsPane.setMinHeight(190);
+        postsPane.setMinWidth(POSTS_PANE_WIDTH);
+        postsHBox.getChildren().add(postsPane);
+
+        square.setPostsScrollPane(postsPane);
+        square.setPostsVBox(postsList);
+
+        HBox postsButtonHBox = createHBox(0, 0, 7, 0);
+
+        TextField postsTextField = createTextField(EMPTY_STRING, "Type your message", true, POSTS_TEXTFIELD_WIDTH);
+
+        TownSquareButton postsButton = new TownSquareButton("Post", square, postsTextField);
+        postsButton.setOnAction(event -> {
+            Utility utility = Utility.create();
+            Square newSquare = postsButton.getSquare();
+            long currentMillis = System.currentTimeMillis();
+            String data = Long.toString(currentMillis) + FILE_DATA_SEPARATOR + postsButton.getPostMessage()
+                    + FILE_DATA_SEPARATOR + uniqueId.getText();
+            utility.appendToFile(newSquare.getSafeLowerName() + POSTS_FILE_EXT, "\n" + data);
+            postsButton.clearPostMessage();
+        });
+
+        Label spacer = createLabel(EMPTY_STRING, 0, 5, 0, 5);
+
+        postsButtonHBox.getChildren().addAll(postsButton, spacer, postsTextField);
+
+        generatePostControls.getChildren().addAll(postsLabelHBox, postsHBox, postsButtonHBox);
+
+        return generatePostControls;
     }
 
     private HBox createGenerateInviteControls(Square square, int index) {
@@ -182,6 +235,12 @@ public class SampleController {
 
     private HBox createHBox(int top, int right, int bottom, int left) {
         HBox result = new HBox();
+        result.setPadding(new Insets(top, right, bottom, left));
+        return result;
+    }
+
+    private VBox createVBox(int top, int right, int bottom, int left) {
+        VBox result = new VBox();
         result.setPadding(new Insets(top, right, bottom, left));
         return result;
     }
@@ -234,7 +293,7 @@ public class SampleController {
         privacyControls.setVisible(false);
         privacyControls.setMaxHeight(0);
         privacyControls.setMinHeight(0);
-        
+
         return privacyControls;
     }
 
@@ -372,7 +431,7 @@ public class SampleController {
             String info = responseData[3] + COMMA + client.getSquareId() + COMMA + "tab" + squareSafeName + COMMA + ZERO
                     + NO_PASSWORD_VALUE;
             Square square = new Square(info, port.getText(), remoteIP.getText(), new SquareController(utility, this),
-                    utility);
+                    utility, this);
             utility.writeFile(squareSafeName + SQUARE_FILE_EXT, info);
             setTabSquare(square);
         }
@@ -386,11 +445,19 @@ public class SampleController {
             }
             String contents = utility.readFile(file);
             setTabSquare(new Square(contents, port.getText(), remoteIP.getText(), new SquareController(utility, this),
-                    utility));
+                    utility, this));
         }
     }
 
     private SquareResponse processTCPReturn(String result) {
         return new SquareResponse(result);
+    }
+
+    public void addPostMessages(VBox messageList, ScrollPane scrollPane, String message) {
+        Label label = new Label();
+        label.setText(message);
+        messageList.getChildren().addAll(label);
+        scrollPane.setVvalue(Double.MIN_VALUE);
+        scrollPane.setVvalue(Double.MAX_VALUE);
     }
 }

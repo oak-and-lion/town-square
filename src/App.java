@@ -100,7 +100,7 @@ public class App extends Application implements IApp {
 
             squareController = SquareFactory.create(utility, controller);
 
-            defaultSquare = new Square(defaultSquareInfo, port, utility.getRemoteIP(), squareController, utility);
+            defaultSquare = new Square(defaultSquareInfo, port, utility.getRemoteIP(), squareController, utility, controller);
 
             controller.setParent(this);
             controller.setUniqueId(uniqueId);
