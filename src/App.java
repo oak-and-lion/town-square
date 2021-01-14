@@ -110,6 +110,7 @@ public class App extends Application implements IApp {
             controller.setPort(port);
             controller.setTabSquare(defaultSquare);
             controller.setPublicKey(keys.getPublicKeyBase64());
+            controller.buildSquares(utility);
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }

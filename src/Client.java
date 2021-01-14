@@ -54,6 +54,18 @@ public class Client {
         return EMPTY_STRING;
     }
 
+    public String getPort() {
+        return Integer.toString(port);
+    }
+
+    public String getHostname() {
+        return hostName;
+    }
+
+    public String getSquareId() {
+        return squareId;
+    }
+
     private String communicateWithServer(String text, PrintWriter writer, Socket socket) {
         try {
             writer.println(text);

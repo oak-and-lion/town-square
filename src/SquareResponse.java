@@ -31,4 +31,8 @@ public class SquareResponse {
     public String getMessage() {
         return responseSplit[1];
     }
+
+    public String[] getResponseSplit() {
+        return responseSplit;
+    }
 }

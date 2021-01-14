@@ -71,6 +71,20 @@ public class Utility {
         return result;
     }
 
+    public String[] getFiles(String match) {
+        String finalString  = match.toLowerCase().trim();
+        //Creating a File object for directory
+        File directoryPath = new File(System.getProperty(USER_DIR) + PATH_DELIMITER);
+        FilenameFilter textFilefilter = new FilenameFilter(){
+        public boolean accept(File dir, String name) {
+                String lowercaseName = name.toLowerCase();
+                return (lowercaseName.contains(finalString));
+            }
+        };
+        //List of all the text files
+        return directoryPath.list(textFilefilter);
+    }
+
     private String bufferedReaderRead(BufferedReader in) {
         String result = "";
         try {

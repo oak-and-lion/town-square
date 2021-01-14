@@ -25,12 +25,17 @@ public class SampleController {
     private static final String UPDATE_BUTTON_TEXT = "Update";
     private static final String PRIVATE_LABEL_TEXT = "Is Private:";
     private static final String DATA_SEPARATOR = "%%%";
+    private static final String NO_PASSWORD_VALUE = "~~~~~~~";
+    private static final String ZERO = "0";
+    private static final String COMMA = ",";
     private static final String ENCRYPTION_FLAG = "e";
     private static final String JOIN_COMMAND = "join";
     private static final String MEMBER_COMMAND = "members";
     private static final String REQUEST_PUBLIC_KEY_COMMAND = "pkey";
     private static final String OK_RESULT = "200";
     private static final String ALREADY_REGISTERED_RESULT = "460";
+    private static final String MEMBER_FILE_EXT = ".members";
+    private static final String SQUARE_FILE_EXT = ".square";
 
     private IApp parent;
     private List<Square> squares;
@@ -351,13 +356,30 @@ public class SampleController {
          SquareResponse response = processTCPReturn(client.sendMessage(data, encrypt));
 
          if (response.getCode().equals(OK_RESULT) || response.getCode().equals(ALREADY_REGISTERED_RESULT)) {
+            String[] responseData = response.getResponseSplit();
             String temp = MEMBER_COMMAND + DATA_SEPARATOR + uniqueId.getText();
             Utility utility = Utility.create();
             String password = utility.generateRandomString(16);
             data = tempKeys.encryptToBase64(password) + DATA_SEPARATOR + utility.encrypt(temp, password);
             response = processTCPReturn(client.sendMessage(data, encrypt));
-            utility.writeFile("test.txt", response.getMessage().replace(DATA_SEPARATOR, "\n"));
+            String squareSafeName = responseData[3].replace(" ","_").toLowerCase();
+            utility.writeFile(squareSafeName + MEMBER_FILE_EXT, response.getMessage().replace(DATA_SEPARATOR, "\n"));
+            String info = responseData[3] + COMMA + client.getSquareId() + COMMA + "tab" + squareSafeName + COMMA + ZERO + NO_PASSWORD_VALUE;
+            Square square = new Square(info, port.getText(), remoteIP.getText(), new SquareController(utility, this), utility);
+            utility.writeFile(squareSafeName + SQUARE_FILE_EXT, info);
+            setTabSquare(square);
          }
+    }
+
+    public void buildSquares(Utility utility) {
+        String[] files = utility.getFiles(SQUARE_FILE_EXT);
+        for(String file : files) {
+            if (file.equals("my_square" + SQUARE_FILE_EXT)) {
+                continue;
+            }
+            String contents = utility.readFile(file);
+            setTabSquare(new Square(contents, port.getText(), remoteIP.getText(), new SquareController(utility, this), utility));
+        }
     }
 
     private SquareResponse processTCPReturn(String result) {
