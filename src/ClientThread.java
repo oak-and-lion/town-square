@@ -2,7 +2,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javafx.application.Platform;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 
@@ -21,10 +20,15 @@ public class ClientThread extends Thread {
         square = s;
         this.utility = utility;
         process = true;
+        squareName = square.getName();
     }
 
     public void setLastKnownPost(int index) {
         lastKnownPost = index;
+    }
+
+    public String getSquareName() {
+        return squareName;
     }
 
     @Override

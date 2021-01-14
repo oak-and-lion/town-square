@@ -71,6 +71,7 @@ public class Square {
             clientThread.start();
         } catch (InterruptedException ie) {
             ie.printStackTrace();
+            Thread.currentThread().interrupt();
         }
     }
     
