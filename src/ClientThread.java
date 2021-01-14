@@ -7,7 +7,6 @@ import javafx.scene.layout.VBox;
 
 public class ClientThread extends Thread {
     private String squareName;
-    private ISquareController controller;
     private int lastKnownPost;
     private Square square;
     private Utility utility;
@@ -24,7 +23,6 @@ public class ClientThread extends Thread {
 
     public ClientThread(Square s, Utility utility, String uniqueId) {
         squareName = s.getName();
-        controller = s.getController();
         lastKnownPost = s.getLastKnownPost();
         square = s;
         this.utility = utility;
@@ -57,7 +55,7 @@ public class ClientThread extends Thread {
                 if (!raw.equals(EMPTY_STRING)) {
                     String[] msg = raw.split(DATA_SEPARATOR);
                     Client client = new Client(square);
-                    String response = client.sendMessage(ENCRYPT_FLAG + REQUEST_DATA_SEPARATOR + square.getId() + REQUEST_DATA_SEPARATOR
+                    String response = client.sendMessage(ENCRYPT_FLAG + REQUEST_DATA_SEPARATOR + square.getInvite() + REQUEST_DATA_SEPARATOR
                             + READ_COMMAND + DATA_SEPARATOR + msg[0] + DATA_SEPARATOR + uniqueId, false);
                     LogIt.LogInfo(response);
                 }
