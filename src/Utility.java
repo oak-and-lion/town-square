@@ -232,7 +232,7 @@ public class Utility {
             while ((line = bufferedReader.readLine()) != null) {
                 if (count > lastKnownRow) {
                     if (!first) {
-                        result.append("\n");
+                        result.append("%%%");
                     }
                     result.append(line);
                     first = false;

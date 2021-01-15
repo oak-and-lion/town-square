@@ -20,6 +20,7 @@ public class ClientThread extends Thread {
     private static final String MEMBERS_FILE_EXT = ".members";
     private static final String ENCRYPT_FLAG = "u";
     private static final String READ_COMMAND = "read";
+    private static final String NEWLINE = "\n";
 
     public ClientThread(Square s, Utility utility, String uniqueId) {
         squareName = s.getName();
@@ -45,6 +46,9 @@ public class ClientThread extends Thread {
             String file = square.getSafeLowerName() + POSTS_FILE_EXT;
             String raw;
             while (process) {
+                if (square.getName().equals("My Square")) {
+                    continue;
+                }
                 raw = utility.readFile(file, lastKnownPost);
                 if (!raw.equals(EMPTY_STRING)) {
                     processMessages(raw);
@@ -52,12 +56,32 @@ public class ClientThread extends Thread {
 
                 raw = utility.readLastLineOfFile(file);
 
-                if (!raw.equals(EMPTY_STRING)) {
-                    String[] msg = raw.split(DATA_SEPARATOR);
-                    Client client = new Client(square);
-                    String response = client.sendMessage(ENCRYPT_FLAG + REQUEST_DATA_SEPARATOR + square.getInvite() + REQUEST_DATA_SEPARATOR
-                            + READ_COMMAND + DATA_SEPARATOR + msg[0] + DATA_SEPARATOR + uniqueId, false);
-                    LogIt.LogInfo(response);
+                String[] msg;
+                if (raw.equals(EMPTY_STRING)) {
+                    msg = new String[1];
+                    msg[0] = "-1";
+                } else {
+                    msg = raw.split(DATA_SEPARATOR);
+                }
+
+                String memberRaw = utility.readFile(square.getSafeLowerName() + MEMBERS_FILE_EXT, -1);
+                String[] members = memberRaw.split(REQUEST_DATA_SEPARATOR);
+                for (String info : members) {
+                    if (info.contains(uniqueId)) {
+                        continue;
+                    }
+                    String[] member = info.split(DATA_SEPARATOR);
+                    Client client = new Client(member[2], Integer.valueOf(member[3]), square.getInvite());
+                    String response = client.sendMessage(
+                            READ_COMMAND + REQUEST_DATA_SEPARATOR + msg[0] + REQUEST_DATA_SEPARATOR + uniqueId, false);
+                    if (response.equals(EMPTY_STRING)) {
+                        continue;
+                    }
+                    String[] responseSplit = response.split(":");
+                    if (responseSplit.length == 2 && responseSplit[0].equals("200") && !responseSplit[1].equals(EMPTY_STRING)) {
+                        String posts = NEWLINE + responseSplit[1].replace(REQUEST_DATA_SEPARATOR, NEWLINE);
+                        utility.appendToFile(file, posts);
+                    }
                 }
                 Thread.sleep(1000);
             }
@@ -68,7 +92,7 @@ public class ClientThread extends Thread {
     }
 
     private void processMessages(String raw) {
-        String[] posts = raw.split("\n");
+        String[] posts = raw.split("%%%");
         ScrollPane scrollPane = square.getPostsScrollPane();
         VBox vbox = square.getPostsVBox();
         if (scrollPane == null || vbox == null) {
