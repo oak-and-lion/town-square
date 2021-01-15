@@ -13,6 +13,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -200,6 +201,12 @@ public class SampleController {
                     + FILE_DATA_SEPARATOR + uniqueId.getText();
             utility.appendToFile(newSquare.getSafeLowerName() + POSTS_FILE_EXT, "\n" + data);
             postsButton.clearPostMessage();
+        });
+
+        postsTextField.setOnKeyPressed(event -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                postsButton.fire();
+            }
         });
 
         Label spacer = createLabel(EMPTY_STRING, 0, 5, 0, 5);

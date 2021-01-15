@@ -181,7 +181,7 @@ public class Square {
 
     private boolean okToClient() {
         if (OK_TO_CLIENT) {
-            if (LIMIT_TO_MY_SQUARE)
+            if (LIMIT_TO_MY_SQUARE) {
                 if (getSafeLowerName().equals("my_square")) {
                     return true;
                 } else {
