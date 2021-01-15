@@ -344,7 +344,7 @@ public class Utility {
         return result;
     }
 
-    public int findFirstOccurence(String file, String value, boolean startsWith) {
+    public int findFirstOccurence(String file, String value, boolean startsWith, boolean notFoundReturnZero) {
         if (!checkFileExists(file)) {
             return NOT_FOUND_ROW;
         }
@@ -377,6 +377,10 @@ public class Utility {
             }
         } catch (IOException ex) {
             ex.printStackTrace();
+        }
+
+        if (!notFoundReturnZero && !found) {
+            result = count;
         }
 
         return result;

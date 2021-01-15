@@ -19,6 +19,7 @@ public class SquareController implements ISquareController {
     private static final String UNDERSCORE = "_";
     private static final String EMPTY_STRING = "";
     private static final String NO_ROWS = "-1";
+    private static final boolean NOT_FOUND_RETURN_ZERO = true;
     private static final String PUBLIC_KEY_FILE = "public.key";
     private static final String PRIVATE_KEY_FILE = "private.key";
     private static final String ACK_BACK = "ack back";
@@ -226,7 +227,7 @@ public class SquareController implements ISquareController {
         if (checkSquareAccess(square, memberId)) {
             String file = square.getSafeLowerName() + POST_FILE_EXT;
             String memberFile = square.getSafeLowerName() + MEMBER_FILE_EXT;
-            int firstRow = utility.findFirstOccurence(file, start, SEARCH_CONTAINS);
+            int firstRow = utility.findFirstOccurence(file, start, SEARCH_CONTAINS, NOT_FOUND_RETURN_ZERO);
             String posts = utility.readFile(file, firstRow);
 
             String[] members = utility.readFile(memberFile).split(COMMAND_ARG_SEPARATOR);
@@ -273,7 +274,7 @@ public class SquareController implements ISquareController {
 
     private boolean checkSquareAccess(Square square, String memberId) {
         String file = square.getSafeLowerName() + MEMBER_FILE_EXT;
-        int first = utility.findFirstOccurence(file, memberId, SEARCH_CONTAINS);
+        int first = utility.findFirstOccurence(file, memberId, SEARCH_CONTAINS, false);
 
         return (first > -1);
     }
