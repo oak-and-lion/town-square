@@ -25,7 +25,7 @@ public class Square {
     private static final String EMPTY_STRING = "";
     private static final String POSTS_FILE_EXT = ".posts";
     private static final boolean OK_TO_CLIENT = true;
-    private static final boolean LIMIT_TO_MY_SQUARE = true;
+    private static final boolean LIMIT_TO_MY_SQUARE = false;
 
     public Square(String info, String port, String ip, ISquareController squareController, Utility utility,
             SampleController sampleController, String uniqueId) {
@@ -183,8 +183,6 @@ public class Square {
         if (OK_TO_CLIENT) {
             if (LIMIT_TO_MY_SQUARE && getSafeLowerName().equals("my_square")) {
                 return true;
-            } else if (!LIMIT_TO_MY_SQUARE) {
-                return false;
             }
 
             return true;
