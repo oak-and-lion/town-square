@@ -19,7 +19,7 @@ public class SquareController implements ISquareController {
     private static final String UNDERSCORE = "_";
     private static final String EMPTY_STRING = "";
     private static final String NO_ROWS = "-1";
-    private static final boolean NOT_FOUND_RETURN_ZERO = true;
+    private static final boolean NOT_FOUND_RETURN_ZERO = false;
     private static final String PUBLIC_KEY_FILE = "public.key";
     private static final String PRIVATE_KEY_FILE = "private.key";
     private static final String ACK_BACK = "ack back";
