@@ -52,13 +52,13 @@ public class ClientThread extends Thread {
 
                 raw = utility.readLastLineOfFile(file);
 
-                if (!raw.equals(EMPTY_STRING)) {
+                /*if (!raw.equals(EMPTY_STRING)) {
                     String[] msg = raw.split(DATA_SEPARATOR);
                     Client client = new Client(square);
                     String response = client.sendMessage(ENCRYPT_FLAG + REQUEST_DATA_SEPARATOR + square.getInvite() + REQUEST_DATA_SEPARATOR
                             + READ_COMMAND + DATA_SEPARATOR + msg[0] + DATA_SEPARATOR + uniqueId, false);
                     LogIt.LogInfo(response);
-                }
+                }*/
                 Thread.sleep(1000);
             }
         } catch (InterruptedException ie) {

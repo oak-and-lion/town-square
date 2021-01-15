@@ -229,7 +229,7 @@ public class SquareController implements ISquareController {
             int firstRow = utility.findFirstOccurence(file, start, SEARCH_CONTAINS);
             String posts = utility.readFile(file, firstRow);
 
-            String[] members = utility.readFile(memberFile).split(NEWLINE);
+            String[] members = utility.readFile(memberFile).split(COMMAND_ARG_SEPARATOR);
 
             ArrayList<String> memberIds = new ArrayList<String>();
             ArrayList<String> memberNames = new ArrayList<String>();
