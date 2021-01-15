@@ -89,8 +89,6 @@ public class ClientThread extends Thread {
                         && !responseSplit[1].equals(EMPTY_STRING)) {
                     String posts = NEWLINE + responseSplit[1].replace(REQUEST_DATA_SEPARATOR, NEWLINE);
                     utility.appendToFile(file, posts);
-                    String[] temp = responseSplit[1].split(REQUEST_DATA_SEPARATOR);
-                    lastKnownPost += temp.length;
                 }
             }
         }

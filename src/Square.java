@@ -24,6 +24,8 @@ public class Square {
     private static final String NO_PASSWORD_VALUE = "~~~~~~~";
     private static final String EMPTY_STRING = "";
     private static final String POSTS_FILE_EXT = ".posts";
+    private static final boolean OK_TO_CLIENT = true;
+    private static final boolean LIMIT_TO_MY_SQUARE = true;
 
     public Square(String info, String port, String ip, ISquareController squareController, Utility utility,
             SampleController sampleController, String uniqueId) {
@@ -54,7 +56,9 @@ public class Square {
         this.utility = utility;
         controller = squareController;
         this.sampleController = sampleController;
-        initializeClientThread();
+        if (okToClient()) {
+            initializeClientThread();
+        }
     }
 
     private void initializeClientThread() {
@@ -173,5 +177,19 @@ public class Square {
 
     public SampleController getSampleController() {
         return sampleController;
+    }
+
+    private boolean okToClient() {
+        if (OK_TO_CLIENT) {
+            if (LIMIT_TO_MY_SQUARE && getSafeLowerName().equals("my_square")) {
+                return true;
+            } else if (!LIMIT_TO_MY_SQUARE) {
+                return false;
+            }
+
+            return true;
+        }
+        
+        return false;
     }
 }
