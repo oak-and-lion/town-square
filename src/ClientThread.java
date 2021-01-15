@@ -116,7 +116,11 @@ public class ClientThread extends Thread {
                 });
             }
         }
-        setLastKnownPost(lastKnownPost + posts.length);
-        square.setLastKnownPost(lastKnownPost + posts.length);
+        int temp = lastKnownPost + posts.length;
+        if (temp > 2) {
+            temp = 2;
+        }
+        setLastKnownPost(temp);
+        square.setLastKnownPost(temp);
     }
 }
