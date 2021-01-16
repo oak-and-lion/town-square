@@ -75,18 +75,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         if (type == Constants.JOIN_TYPE) {
             processInvitation(input);
         } else if (type == Constants.CREATE_TYPE) {
-            String memberInfo = defaultName.getText() + Constants.FILE_DATA_SEPARATOR + publicKey
-                    + Constants.FILE_DATA_SEPARATOR + remoteIP.getValue().getDisplay() + Constants.FILE_DATA_SEPARATOR
-                    + port.getText() + Constants.FILE_DATA_SEPARATOR + uniqueId.getText();
-            utility.writeFile(
-                    input.replace(Constants.SPACE, Constants.UNDERSCORE).toLowerCase() + Constants.MEMBERS_FILE_EXT,
-                    memberInfo);
-            // My Square,a7075b5b-b91d-4448-a0f9-d9b0bec1a726,tabDefaultSquare,0,~~~~~~~
-            String contents = input + Constants.COMMA + utility.createUUID() + Constants.COMMA + Constants.TAB_PREFIX
-                    + input.replace(Constants.SPACE, Constants.UNDERSCORE).toLowerCase() + Constants.COMMA
-                    + Constants.ZERO + Constants.NO_PASSWORD_VALUE;
-            setTabSquare(new Square(contents, port.getText(), remoteIP.getValue().getDisplay(),
-                    new SquareController(utility, this), utility, this, uniqueId.getText()));
+            processCreateSquare(input);
         }
     }
 
@@ -432,5 +421,23 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         messageList.getChildren().addAll(label);
         scrollPane.setVvalue(Double.MIN_VALUE);
         scrollPane.setVvalue(Double.MAX_VALUE);
+    }
+
+    private void processCreateSquare(String input) {
+        String memberInfo = defaultName.getText() + Constants.FILE_DATA_SEPARATOR + publicKey
+                    + Constants.FILE_DATA_SEPARATOR + remoteIP.getValue().getDisplay() + Constants.FILE_DATA_SEPARATOR
+                    + port.getText() + Constants.FILE_DATA_SEPARATOR + uniqueId.getText();
+            utility.writeFile(
+                    input.replace(Constants.SPACE, Constants.UNDERSCORE).toLowerCase() + Constants.MEMBERS_FILE_EXT,
+                    memberInfo);
+            // My Square,a7075b5b-b91d-4448-a0f9-d9b0bec1a726,tabDefaultSquare,0,~~~~~~~
+            String uuid = utility.createUUID();
+            String safeName = input.replace(Constants.SPACE, Constants.UNDERSCORE).toLowerCase();
+            String contents = input + Constants.COMMA + uuid + Constants.COMMA + Constants.TAB_PREFIX
+                    + safeName + Constants.COMMA
+                    + Constants.ZERO + Constants.NO_PASSWORD_VALUE;
+            utility.writeFile(safeName + Constants.SQUARE_FILE_EXT, contents);
+            setTabSquare(new Square(contents, port.getText(), remoteIP.getValue().getDisplay(),
+                    new SquareController(utility, this), utility, this, uniqueId.getText()));
     }
 }
