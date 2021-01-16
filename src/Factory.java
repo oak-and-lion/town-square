@@ -21,7 +21,7 @@ public class Factory {
     }
 
     public static ISquareController createSquareController(int type, IUtility mainUtility,
-            ISampleController controller) {
+            IDialogController controller) {
         if (type == Constants.BASE_SQUARE_CONTROLLER) {
             return new SquareController(mainUtility, controller);
         }
@@ -54,7 +54,7 @@ public class Factory {
     }
 
     public static ISquare createSquare(int type, String defaultSquareInfo, String port, String ip,
-            ISquareController squareController, IUtility utility, ISampleController controller, String uniqueId) {
+            ISquareController squareController, IUtility utility, IDialogController controller, String uniqueId) {
         if (type == Constants.BASE_SQUARE) {
             return new Square(defaultSquareInfo, port, ip, squareController, utility, controller, uniqueId);
         }

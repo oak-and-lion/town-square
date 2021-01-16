@@ -17,7 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
-public class SampleController implements ITextDialogBoxCallback, ISampleController {
+public class DialogController implements ITextDialogBoxCallback, IDialogController {
     private IApp parent;
     private List<ISquare> squares;
     private List<String> squareNames;
@@ -90,7 +90,7 @@ public class SampleController implements ITextDialogBoxCallback, ISampleControll
         }
     }
 
-    public SampleController() {
+    public DialogController() {
         squares = new ArrayList<ISquare>();
         squareNames = new ArrayList<String>();
         squareInvites = new ArrayList<String>();

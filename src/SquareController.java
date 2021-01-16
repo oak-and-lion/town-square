@@ -3,10 +3,10 @@ import java.util.Arrays;
 
 public class SquareController implements ISquareController {
     private IUtility utility;
-    private ISampleController sampleController;
+    private IDialogController sampleController;
     private ISquareKeyPair keys;
 
-    public SquareController(IUtility mainUtility, ISampleController controller) {
+    public SquareController(IUtility mainUtility, IDialogController controller) {
         utility = mainUtility;
         sampleController = controller;
         keys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR);

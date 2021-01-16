@@ -17,11 +17,11 @@ public class Square implements ISquare {
     private int lastKnownPost;
     private ScrollPane postsScrollPane;
     private VBox postsVBox;
-    private ISampleController sampleController;
+    private IDialogController sampleController;
     private String uniqueId;
 
     public Square(String info, String port, String ip, ISquareController squareController, IUtility utility,
-            ISampleController sampleController, String uniqueId) {
+            IDialogController sampleController, String uniqueId) {
         setPassword("");
         this.port = port;
         this.ip = ip;
@@ -171,7 +171,7 @@ public class Square implements ISquare {
         return postsVBox;
     }
 
-    public ISampleController getSampleController() {
+    public IDialogController getSampleController() {
         return sampleController;
     }
 }

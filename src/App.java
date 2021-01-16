@@ -21,7 +21,7 @@ public class App extends Application implements IApp {
         String ip = Constants.DEFAULT_IP;
         defaultName = Constants.EMPTY_STRING;
 
-        ISampleController controller = null;
+        IDialogController controller = null;
         ISquareController squareController = null;
         ICryptoUtils cryptoUtils = Factory.createCryptoUtils(Constants.BASE_CRYPTO_UTILS);
 
@@ -85,7 +85,7 @@ public class App extends Application implements IApp {
             }
 
             primaryStage.show();
-            controller = loader.<SampleController>getController();
+            controller = loader.<DialogController>getController();
 
             squareController = Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, controller);
 

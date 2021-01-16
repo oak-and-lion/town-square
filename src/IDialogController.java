@@ -2,7 +2,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 
-public interface ISampleController {
+public interface IDialogController {
     ISquare getSquareByInvite(String id);
     String getDefaultName();
     void setDefaultName(String name);
