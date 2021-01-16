@@ -84,6 +84,9 @@ public class ClientThread extends Thread {
                     String posts = newLine
                             + responseSplit[1].replace(Constants.COMMAND_DATA_SEPARATOR, Constants.NEWLINE);
                     utility.appendToFile(file, posts);
+                    String[] msgs = responseSplit[1].split(Constants.COMMAND_DATA_SEPARATOR);
+                    String[] lastMsg = msgs[msgs.length - 1].split(Constants.DATA_SEPARATOR);
+                    msg[0] = lastMsg[0];
                 }
             }
         }

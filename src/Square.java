@@ -49,7 +49,9 @@ public class Square implements ISquare {
         this.utility = utility;
         controller = squareController;
         this.sampleController = sampleController;
+        if (getInvite().equals("a7075b5b-b91d-4448-a0f9-d9b0bec1a726") ){
         initializeClientThread();
+        }
     }
 
     private void initializeClientThread() {
