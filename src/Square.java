@@ -65,7 +65,9 @@ public class Square implements ISquare {
                 millis *= -1;
             }
             Thread.sleep(millis);
+            if (getInvite().equals("d3b59368-c445-4459-b152-562fd15d3a24")) {
             clientThread.start();
+            }
         } catch (InterruptedException ie) {
             ie.printStackTrace();
             Thread.currentThread().interrupt();

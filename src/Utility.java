@@ -189,16 +189,20 @@ public class Utility implements IUtility {
 
     public FileWriteResponse appendToFile(String file, String data) {
         FileWriteResponse result = new FileWriteResponse(false, 0);
-        String path = System.getProperty(Constants.USER_DIR) + Constants.PATH_DELIMITER + file;
+        if (!checkFileExists(file)) {
+            result = writeFile(file, data);
+        } else {
+            String path = System.getProperty(Constants.USER_DIR) + Constants.PATH_DELIMITER + file;
 
-        try {
-            Charset charset = StandardCharsets.UTF_8;
-            Files.writeString(Paths.get(path), data, StandardOpenOption.APPEND);
-            List<String> s = Files.readAllLines(Paths.get(path), charset);
-            result.setLineCount(s.size());
-            result.setSuccessful(true);
-        } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                Charset charset = StandardCharsets.UTF_8;
+                Files.writeString(Paths.get(path), data, StandardOpenOption.APPEND);
+                List<String> s = Files.readAllLines(Paths.get(path), charset);
+                result.setLineCount(s.size());
+                result.setSuccessful(true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return result;
