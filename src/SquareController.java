@@ -194,8 +194,12 @@ public class SquareController implements ISquareController {
         if (checkSquareAccess(square, memberId)) {
             String file = square.getSafeLowerName() + Constants.POSTS_FILE_EXT;
             String memberFile = square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT;
-            int firstRow = utility.findFirstOccurence(file, start, Constants.SEARCH_CONTAINS,
-                    Constants.NOT_FOUND_RETURN_ZERO);
+            boolean getEntireFile = Long.valueOf(start) > -1 ? Constants.NOT_FOUND_RETURN_ZERO
+                    : !Constants.NOT_FOUND_RETURN_ZERO;
+            if (getEntireFile != Constants.NOT_FOUND_RETURN_ZERO) {
+                LogIt.logInfo("Need whole file");
+            }
+            int firstRow = utility.findFirstOccurence(file, start, Constants.SEARCH_CONTAINS, getEntireFile);
             String posts = utility.readFile(file, firstRow);
 
             String[] members = utility.readFile(memberFile).split(Constants.COMMAND_DATA_SEPARATOR);
