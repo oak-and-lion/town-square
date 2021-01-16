@@ -2,7 +2,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server extends Thread {
+public class Server extends Thread implements IServer {
     private int port;
     private boolean running;
     private static Server server;
@@ -30,7 +30,7 @@ public class Server extends Thread {
     }
 
     public void teardown() {
-        LogIt.LogInfo("Ending Server");
+        LogIt.logInfo("Ending Server");
         running = false;
 
         serverThread = null;
@@ -41,14 +41,14 @@ public class Server extends Thread {
         running = true;
         try (ServerSocket serverSocket = new ServerSocket(port)) {
 
-            LogIt.LogInfo("Listening");
+            LogIt.logInfo("Listening");
 
             while (running) {
                 running = startServer(serverSocket);
             }
 
         } catch (IOException ex) {
-            LogIt.LogInfo(ex.getMessage());
+            LogIt.logInfo(ex.getMessage());
             ex.printStackTrace();
         }
     }
@@ -57,7 +57,7 @@ public class Server extends Thread {
         boolean result = true;
         try {
             Socket socket = serverSocket.accept();
-            LogIt.LogInfo("New client connected");
+            LogIt.logInfo("New client connected");
 
             serverThread = new ServerThread(socket, squareController);
             serverThread.start();

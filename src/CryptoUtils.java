@@ -14,8 +14,7 @@ import java.security.spec.KeySpec;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CryptoUtils {
-
+public class CryptoUtils implements ICryptoUtils {
     public static byte[] getRandomNonce(int numBytes) {
         byte[] nonce = new byte[numBytes];
         new SecureRandom().nextBytes(nonce);

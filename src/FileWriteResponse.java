@@ -1,6 +1,7 @@
 public class FileWriteResponse {
     private boolean success;
     private int lines;
+    
     public FileWriteResponse(boolean result, int lineCount) {
         success = result;
         lines = lineCount;

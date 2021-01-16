@@ -17,50 +17,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
-public class SampleController implements ITextDialogBoxCallback {
-    private static final String TILDE = "~";
-    private static final String NEWLINE = "\n";
-    private static final String INVITATION_LABEL_TEXT = "Invitation:";
-    private static final String INVITE_CODE_LABEL = "Invite Code:";
-    private static final String POSTS_LABEL = "Posts";
-    private static final int TEXTFIELD_WIDTH = 400;
-    private static final int POSTS_PANE_WIDTH = 565;
-    private static final int POSTS_TEXTFIELD_WIDTH = 515;
-    private static final double INVITATION_DIALOG_WIDTH = 550;
-    private static final String JOIN_SQUARE_TITLE = "Join Square";
-    private static final String JOIN_SQUARE_HEADER_TEXT = "Paste the Invitation";
-    private static final String CREATE_SQUARE_TITLE = "Create Square";
-    private static final String CREATE_SQUARE_HEADER_TEXT = "Name your new Square";
-    private static final String POST_PROMPT_TEXT = "Type your message";
-    private static final String POST_BUTTON_TEXT = "Post";
-    private static final String EMPTY_STRING = "";
-    private static final String DATA_SEPARATOR = "%%%";
-    private static final String NO_PASSWORD_VALUE = "~~~~~~~";
-    private static final String ZERO = "0";
-    private static final String COMMA = ",";
-    private static final String TAB_PREFIX = "tab";
-    private static final String ENCRYPTION_FLAG = "e";
-    private static final String JOIN_COMMAND = "join";
-    private static final String MEMBER_COMMAND = "members";
-    private static final String REQUEST_PUBLIC_KEY_COMMAND = "pkey";
-    private static final String OK_RESULT = "200";
-    private static final String ALREADY_REGISTERED_RESULT = "460";
-    private static final String MEMBER_FILE_EXT = ".members";
-    private static final String SQUARE_FILE_EXT = ".square";
-    private static final String POSTS_FILE_EXT = ".posts";
-    private static final String IP_FILE = "ip.id";
-    private static final String MY_SQUARE_DEFAULT = "my_square";
-    private static final String FILE_DATA_SEPARATOR = "~_~";
-    private static final String UNDERSCORE = "_";
-    private static final String SPACE = " ";
-    private static final int JOIN_TYPE = 1;
-    private static final int CREATE_TYPE = 2;
-
+public class SampleController implements ITextDialogBoxCallback, ISampleController {
     private IApp parent;
-    private List<Square> squares;
+    private List<ISquare> squares;
     private List<String> squareNames;
     private List<String> squareInvites;
     private String publicKey;
+    private IUtility utility;
 
     @FXML
     private TextField uniqueId;
@@ -96,39 +59,45 @@ public class SampleController implements ITextDialogBoxCallback {
 
     @FXML
     private void joinSquare(ActionEvent event) {
-        TextDialogBox dialogBox = new TextDialogBox(JOIN_SQUARE_TITLE, JOIN_SQUARE_HEADER_TEXT, EMPTY_STRING, this,
-                INVITATION_DIALOG_WIDTH, JOIN_TYPE);
+        TextDialogBox dialogBox = new TextDialogBox(Constants.JOIN_SQUARE_TITLE, Constants.JOIN_SQUARE_HEADER_TEXT,
+                Constants.EMPTY_STRING, this, Constants.INVITATION_DIALOG_WIDTH, Constants.JOIN_TYPE);
         dialogBox.show();
     }
 
     @FXML
     private void createSquare(ActionEvent event) {
-        TextDialogBox dialogBox = new TextDialogBox(CREATE_SQUARE_TITLE, CREATE_SQUARE_HEADER_TEXT, EMPTY_STRING, this,
-                INVITATION_DIALOG_WIDTH, CREATE_TYPE);
+        TextDialogBox dialogBox = new TextDialogBox(Constants.CREATE_SQUARE_TITLE, Constants.CREATE_SQUARE_HEADER_TEXT,
+                Constants.EMPTY_STRING, this, Constants.INVITATION_DIALOG_WIDTH, Constants.CREATE_TYPE);
         dialogBox.show();
     }
 
     public void callback(String input, int type) {
-        if (type == JOIN_TYPE) {
+        if (type == Constants.JOIN_TYPE) {
             processInvitation(input);
-        } else if (type == CREATE_TYPE) {
-            Utility utility = Utility.create();
-            String memberInfo = defaultName.getText() + FILE_DATA_SEPARATOR + publicKey + FILE_DATA_SEPARATOR
-                    + remoteIP.getValue().getDisplay() + FILE_DATA_SEPARATOR + port.getText() + FILE_DATA_SEPARATOR
-                    + uniqueId.getText();
-            utility.writeFile(input.replace(SPACE, UNDERSCORE).toLowerCase() + MEMBER_FILE_EXT, memberInfo);
+        } else if (type == Constants.CREATE_TYPE) {
+            String memberInfo = defaultName.getText() + Constants.FILE_DATA_SEPARATOR + publicKey
+                    + Constants.FILE_DATA_SEPARATOR + remoteIP.getValue().getDisplay() + Constants.FILE_DATA_SEPARATOR
+                    + port.getText() + Constants.FILE_DATA_SEPARATOR + uniqueId.getText();
+            utility.writeFile(
+                    input.replace(Constants.SPACE, Constants.UNDERSCORE).toLowerCase() + Constants.MEMBERS_FILE_EXT,
+                    memberInfo);
             // My Square,a7075b5b-b91d-4448-a0f9-d9b0bec1a726,tabDefaultSquare,0,~~~~~~~
-            String contents = input + COMMA + utility.createUUID() + COMMA + TAB_PREFIX
-                    + input.replace(SPACE, UNDERSCORE).toLowerCase() + COMMA + ZERO + NO_PASSWORD_VALUE;
+            String contents = input + Constants.COMMA + utility.createUUID() + Constants.COMMA + Constants.TAB_PREFIX
+                    + input.replace(Constants.SPACE, Constants.UNDERSCORE).toLowerCase() + Constants.COMMA
+                    + Constants.ZERO + Constants.NO_PASSWORD_VALUE;
             setTabSquare(new Square(contents, port.getText(), remoteIP.getValue().getDisplay(),
                     new SquareController(utility, this), utility, this, uniqueId.getText()));
         }
     }
 
     public SampleController() {
-        squares = new ArrayList<Square>();
+        squares = new ArrayList<ISquare>();
         squareNames = new ArrayList<String>();
         squareInvites = new ArrayList<String>();
+    }
+
+    public void setUtilityController(IUtility utilityController) {
+        utility = utilityController;
     }
 
     public void setPublicKey(String key) {
@@ -141,7 +110,7 @@ public class SampleController implements ITextDialogBoxCallback {
         }
     }
 
-    public void setRemoteIP(ObservableList<IPAddress> ips, String defaultIp, Utility utility) {
+    public void setRemoteIP(ObservableList<IPAddress> ips, String defaultIp) {
         if (remoteIP != null) {
             remoteIP.setItems(ips);
             int index = 0;
@@ -156,8 +125,8 @@ public class SampleController implements ITextDialogBoxCallback {
             remoteIP.setValue(ips.get(index));
 
             remoteIP.valueProperty().addListener((obs, oldValue, newValue) -> {
-                utility.writeFile(IP_FILE, newValue.getDisplay());
-                for (Square square : squares) {
+                utility.writeFile(Constants.IP_FILE, newValue.getDisplay());
+                for (ISquare square : squares) {
                     square.setIP(newValue.getDisplay());
                     String invite = buildInviteCode(square, determineSquarePrivacy(square));
                     ((TextField) square.getTemp()).setText(invite);
@@ -199,7 +168,7 @@ public class SampleController implements ITextDialogBoxCallback {
         }
     }
 
-    public void setTabSquare(Square square) {
+    public void setTabSquare(ISquare square) {
         if (!squares.contains(square)) {
             squares.add(square);
             squareNames.add(square.getName());
@@ -208,7 +177,7 @@ public class SampleController implements ITextDialogBoxCallback {
         }
     }
 
-    private void createTab(Square square, int index) {
+    private void createTab(ISquare square, int index) {
         VBox main = new VBox();
         Tab tab = new Tab();
         tab.setText(square.getName());
@@ -230,14 +199,14 @@ public class SampleController implements ITextDialogBoxCallback {
         tabPane.getTabs().add(0, tab);
     }
 
-    private VBox createGeneratePostControls(Square square) {
+    private VBox createGeneratePostControls(ISquare square) {
         VBox generatePostControls = createVBox(0, 10, 0, 10);
         generatePostControls.setMinHeight(281);
         generatePostControls.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;" + "-fx-border-width: 2;"
                 + "-fx-border-insets: 5;" + "-fx-border-radius: 5;" + "-fx-border-color: #333;");
 
         HBox postsLabelHBox = createHBox(0, 0, 0, 0);
-        Label postsLabel = createLabel(POSTS_LABEL, 0, 0, 0, 0);
+        Label postsLabel = createLabel(Constants.POSTS_LABEL, 0, 0, 0, 0);
         postsLabelHBox.getChildren().add(postsLabel);
 
         HBox postsHBox = createHBox(10, 0, 10, 0);
@@ -252,16 +221,17 @@ public class SampleController implements ITextDialogBoxCallback {
 
         HBox postsButtonHBox = createHBox(0, 0, 7, 0);
 
-        TextField postsTextField = createTextField(EMPTY_STRING, POST_PROMPT_TEXT, true, POSTS_TEXTFIELD_WIDTH);
+        TextField postsTextField = createTextField(Constants.EMPTY_STRING, Constants.POST_PROMPT_TEXT, true,
+                Constants.POSTS_TEXTFIELD_WIDTH);
 
-        TownSquareButton postsButton = new TownSquareButton(POST_BUTTON_TEXT, square, postsTextField);
+        TownSquareButton postsButton = Factory.createTownSquareButton(Constants.BASE_TOWN_SQUARE_BUTTON,
+                Constants.POST_BUTTON_TEXT, square, postsTextField);
         postsButton.setOnAction(event -> {
-            Utility utility = Utility.create();
-            Square newSquare = postsButton.getSquare();
+            ISquare newSquare = postsButton.getSquare();
             long currentMillis = System.currentTimeMillis();
-            String data = Long.toString(currentMillis) + FILE_DATA_SEPARATOR + postsButton.getPostMessage()
-                    + FILE_DATA_SEPARATOR + uniqueId.getText();
-            utility.appendToFile(newSquare.getSafeLowerName() + POSTS_FILE_EXT, NEWLINE + data);
+            String data = Long.toString(currentMillis) + Constants.FILE_DATA_SEPARATOR + postsButton.getPostMessage()
+                    + Constants.FILE_DATA_SEPARATOR + uniqueId.getText();
+            utility.appendToFile(newSquare.getSafeLowerName() + Constants.POSTS_FILE_EXT, Constants.NEWLINE + data);
             postsButton.clearPostMessage();
         });
 
@@ -271,7 +241,7 @@ public class SampleController implements ITextDialogBoxCallback {
             }
         });
 
-        Label spacer = createLabel(EMPTY_STRING, 0, 5, 0, 5);
+        Label spacer = createLabel(Constants.EMPTY_STRING, 0, 5, 0, 5);
 
         postsButtonHBox.getChildren().addAll(postsButton, spacer, postsTextField);
 
@@ -283,15 +253,15 @@ public class SampleController implements ITextDialogBoxCallback {
     private ScrollPane createPostPane(VBox postsList) {
         ScrollPane postsPane = new ScrollPane(postsList);
         postsPane.setMinHeight(190);
-        postsPane.setMinWidth(POSTS_PANE_WIDTH);
+        postsPane.setMinWidth(Constants.POSTS_PANE_WIDTH);
 
         return postsPane;
     }
 
-    private HBox createGenerateInviteControls(Square square, int index) {
+    private HBox createGenerateInviteControls(ISquare square, int index) {
         HBox generateInviteControls = createHBox(0, 10, 10, 10);
 
-        Label invitation = createLabel(INVITATION_LABEL_TEXT, 0, 5, 0, 10);
+        Label invitation = createLabel(Constants.INVITATION_LABEL_TEXT, 0, 5, 0, 10);
 
         TextField generateInvite = createInviteTextField(square);
 
@@ -322,9 +292,9 @@ public class SampleController implements ITextDialogBoxCallback {
         return result;
     }
 
-    private TextField createInviteTextField(Square square) {
+    private TextField createInviteTextField(ISquare square) {
         TextField generateInvite = new TextField(buildInviteCode(square, determineSquarePrivacy(square)));
-        generateInvite.setMinWidth(TEXTFIELD_WIDTH);
+        generateInvite.setMinWidth(Constants.TEXTFIELD_WIDTH);
         generateInvite.setEditable(false);
 
         return generateInvite;
@@ -340,31 +310,33 @@ public class SampleController implements ITextDialogBoxCallback {
         return result;
     }
 
-    private HBox createInviteControls(Square square) {
+    private HBox createInviteControls(ISquare square) {
         HBox inviteControls = createHBox(10, 10, 10, 10);
 
-        Label inviteLabel = createLabel(INVITE_CODE_LABEL, 5, 5, 0, 0);
+        Label inviteLabel = createLabel(Constants.INVITE_CODE_LABEL, 5, 5, 0, 0);
 
-        TextField inviteCodeLabel = createTextField(square.getInvite(), EMPTY_STRING, false, TEXTFIELD_WIDTH);
+        TextField inviteCodeLabel = createTextField(square.getInvite(), Constants.EMPTY_STRING, false,
+                Constants.TEXTFIELD_WIDTH);
 
         inviteControls.getChildren().addAll(inviteLabel, inviteCodeLabel);
 
         return inviteControls;
     }
 
-    private String buildInviteCode(Square square, String encrypt) {
-        return encrypt + TILDE + square.getIP() + TILDE + square.getPort() + TILDE + square.getInvite();
+    private String buildInviteCode(ISquare square, String encrypt) {
+        return encrypt + Constants.TILDE + square.getIP() + Constants.TILDE + square.getPort() + Constants.TILDE
+                + square.getInvite();
     }
 
-    private String determineSquarePrivacy(Square square) {
+    private String determineSquarePrivacy(ISquare square) {
         if (square != null) {
-            return ENCRYPTION_FLAG;
+            return Constants.ENCRYPTION_FLAG;
         }
 
-        return ENCRYPTION_FLAG;
+        return Constants.ENCRYPTION_FLAG;
     }
 
-    public Square getSquareByInvite(String id) {
+    public ISquare getSquareByInvite(String id) {
         if (squareInvites.contains(id)) {
             int index = squareInvites.indexOf(id);
             return squares.get(index);
@@ -374,7 +346,7 @@ public class SampleController implements ITextDialogBoxCallback {
     }
 
     private String safeString(String s) {
-        return s.replace(SPACE, UNDERSCORE).toLowerCase();
+        return s.replace(Constants.SPACE, Constants.UNDERSCORE).toLowerCase();
     }
 
     public String getDefaultName() {
@@ -388,59 +360,60 @@ public class SampleController implements ITextDialogBoxCallback {
         // 2 == port of remote host
         // 3 == id of the square being invited to
         // u~207.244.84.59~44123~a7075b5b-b91d-4448-a0f9-d9b0bec1a726
-        String[] split = invite.split(TILDE);
+        String[] split = invite.split(Constants.TILDE);
         Client client = new Client(split[1], Integer.valueOf(split[2]), split[3]);
         boolean encrypt = false;
         SquareKeyPair tempKeys = new SquareKeyPair();
 
-        if (split[0].equals(ENCRYPTION_FLAG)) {
+        if (split[0].equals(Constants.ENCRYPTION_FLAG)) {
             encrypt = true;
         }
 
-        String data = JOIN_COMMAND + DATA_SEPARATOR + defaultName.getText() + DATA_SEPARATOR + publicKey
-                + DATA_SEPARATOR + remoteIP.getValue().getDisplay() + DATA_SEPARATOR + port.getText() + DATA_SEPARATOR
-                + uniqueId.getText();
+        String data = Constants.JOIN_COMMAND + Constants.DATA_SEPARATOR + defaultName.getText()
+                + Constants.DATA_SEPARATOR + publicKey + Constants.DATA_SEPARATOR + remoteIP.getValue().getDisplay()
+                + Constants.DATA_SEPARATOR + port.getText() + Constants.DATA_SEPARATOR + uniqueId.getText();
 
         if (encrypt) {
-            String remotePublicKey = client.sendMessage(REQUEST_PUBLIC_KEY_COMMAND, false);
+            String remotePublicKey = client.sendMessage(Constants.REQUEST_PUBLIC_KEY_COMMAND, false);
             SquareResponse response = processTCPReturn(remotePublicKey);
-            if (!response.getCode().equals(OK_RESULT)) {
+            if (!response.getCode().equals(Constants.OK_RESULT)) {
                 return;
             }
 
             tempKeys.setPublicKeyFromBase64(response.getMessage());
 
-            Utility utility = Utility.create();
             String password = utility.generateRandomString(16);
             StringBuilder temp = new StringBuilder();
             temp.append(utility.encrypt(data, password));
-            data = tempKeys.encryptToBase64(password) + DATA_SEPARATOR + temp.toString();
+            data = tempKeys.encryptToBase64(password) + Constants.DATA_SEPARATOR + temp.toString();
         }
 
         SquareResponse response = processTCPReturn(client.sendMessage(data, encrypt));
 
-        if (response.getCode().equals(OK_RESULT) || response.getCode().equals(ALREADY_REGISTERED_RESULT)) {
+        if (response.getCode().equals(Constants.OK_RESULT)
+                || response.getCode().equals(Constants.ALREADY_REGISTERED_RESULT)) {
             String[] responseData = response.getResponseSplit();
-            String temp = MEMBER_COMMAND + DATA_SEPARATOR + uniqueId.getText();
-            Utility utility = Utility.create();
+            String temp = Constants.MEMBER_COMMAND + Constants.DATA_SEPARATOR + uniqueId.getText();
             String password = utility.generateRandomString(16);
-            data = tempKeys.encryptToBase64(password) + DATA_SEPARATOR + utility.encrypt(temp, password);
+            data = tempKeys.encryptToBase64(password) + Constants.DATA_SEPARATOR + utility.encrypt(temp, password);
             response = processTCPReturn(client.sendMessage(data, encrypt));
             String squareSafeName = safeString(responseData[3]);
-            utility.writeFile(squareSafeName + MEMBER_FILE_EXT, response.getMessage().replace(DATA_SEPARATOR, NEWLINE));
-            String info = responseData[3] + COMMA + client.getSquareId() + COMMA + TAB_PREFIX + squareSafeName + COMMA
-                    + ZERO + NO_PASSWORD_VALUE;
+            utility.writeFile(squareSafeName + Constants.MEMBERS_FILE_EXT,
+                    response.getMessage().replace(Constants.DATA_SEPARATOR, Constants.NEWLINE));
+            String info = responseData[3] + Constants.COMMA + client.getSquareId() + Constants.COMMA
+                    + Constants.TAB_PREFIX + squareSafeName + Constants.COMMA + Constants.ZERO
+                    + Constants.NO_PASSWORD_VALUE;
             Square square = new Square(info, port.getText(), remoteIP.getValue().getDisplay(),
                     new SquareController(utility, this), utility, this, uniqueId.getText());
-            utility.writeFile(squareSafeName + SQUARE_FILE_EXT, info);
+            utility.writeFile(squareSafeName + Constants.SQUARE_FILE_EXT, info);
             setTabSquare(square);
         }
     }
 
-    public void buildSquares(Utility utility) {
-        String[] files = utility.getFiles(SQUARE_FILE_EXT);
+    public void buildSquares() {
+        String[] files = utility.getFiles(Constants.SQUARE_FILE_EXT);
         for (String file : files) {
-            if (file.equals(MY_SQUARE_DEFAULT + SQUARE_FILE_EXT)) {
+            if (file.equals(Constants.MY_SQUARE_DEFAULT + Constants.SQUARE_FILE_EXT)) {
                 continue;
             }
             String contents = utility.readFile(file);

@@ -8,10 +8,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-public class Client {
-    private static final String EMPTY_STRING = "";
-    private static final String COMMAND_DATA_SEPARATOR = "%%%";
-
+public class Client implements IClient {
     private int port;
     private String hostName;
     private String squareId;
@@ -29,7 +26,7 @@ public class Client {
     }
 
     public String sendMessage(String text, boolean encrypt) {
-        LogIt.LogInfo(text);
+        LogIt.logInfo(text);
         try (Socket socket = new Socket(hostName, port)) {
             OutputStream output = socket.getOutputStream();
             PrintWriter writer = new PrintWriter(output, true);
@@ -40,18 +37,22 @@ public class Client {
             }
 
             return communicateWithServer(
-                    encryptFlag + COMMAND_DATA_SEPARATOR + squareId + COMMAND_DATA_SEPARATOR + text, writer, socket);
+                    encryptFlag + Constants.COMMAND_DATA_SEPARATOR + squareId + Constants.COMMAND_DATA_SEPARATOR + text, writer, socket);
         } catch (SocketException se) {
-            se.printStackTrace();
+            if (se.getMessage().equals("Connection refused: connect")) {
+                LogIt.logInfo("Client '" + squareId + "'' not available");
+            } else {
+                se.printStackTrace();
+            }
         } catch (UnknownHostException ex) {
-            LogIt.LogInfo("Server not found: " + ex.getMessage());
+            LogIt.logInfo("Server not found: " + ex.getMessage());
         } catch (IOException ex) {
-            LogIt.LogInfo("I/O error: " + ex.getMessage());
+            LogIt.logInfo("I/O error: " + ex.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return EMPTY_STRING;
+        return Constants.EMPTY_STRING;
     }
 
     public String getPort() {
@@ -75,7 +76,7 @@ public class Client {
             e.printStackTrace();
         }
 
-        return EMPTY_STRING;
+        return Constants.EMPTY_STRING;
     }
 
     private String readServerReply(InputStream input) {
@@ -85,6 +86,6 @@ public class Client {
             ioe.printStackTrace();
         }
 
-        return EMPTY_STRING;
+        return Constants.EMPTY_STRING;
     }
 }

@@ -3,7 +3,7 @@ public class SquareResponse {
     private String[] responseSplit;
 
     private void setResponseValues() {
-        responseSplit = response.split(":");
+        responseSplit = response.split(Constants.COLON);
     }
 
     public String toString() {
@@ -11,8 +11,8 @@ public class SquareResponse {
     }
 
     public SquareResponse() {
-        setResponse("400:unknown request");
-        
+        setResponse(Constants.UNKNOWN_REQUEST + Constants.COLON + Constants.UNKNOWN_REQUEST_MESSAGE);
+
     }
 
     public SquareResponse(String value) {

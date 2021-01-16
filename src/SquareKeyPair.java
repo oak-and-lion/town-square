@@ -15,12 +15,9 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-public class SquareKeyPair {
+public class SquareKeyPair implements ISquareKeyPair {
     private PublicKey publicKey;
     private PrivateKey privateKey;
-
-    private static final String ENCRYPTION_SCHEME = "RSA/ECB/PKCS1Padding";
-    private static final String EMPTY_STRING = "";
 
     public SquareKeyPair() {
 
@@ -34,7 +31,7 @@ public class SquareKeyPair {
     public void setPublicKeyFromBase64(String b64Key) {
         try {
             byte[] key = Base64.getDecoder().decode(b64Key.getBytes());
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            KeyFactory keyFactory = KeyFactory.getInstance(Constants.RSA);
             EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(key);
             publicKey = keyFactory.generatePublic(publicKeySpec);
         } catch (NoSuchAlgorithmException e) {
@@ -48,7 +45,7 @@ public class SquareKeyPair {
     public void setPrivateKeyFromBase64(String b64Key) {
         try {
             byte[] key = Base64.getDecoder().decode(b64Key.getBytes());
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            KeyFactory keyFactory = KeyFactory.getInstance(Constants.RSA);
             EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(key);
             privateKey = keyFactory.generatePrivate(privateKeySpec);
         } catch (NoSuchAlgorithmException e) {
@@ -90,7 +87,7 @@ public class SquareKeyPair {
 
     public byte[] encrypt(String data) {
         try {
-            Cipher cipher = Cipher.getInstance(ENCRYPTION_SCHEME);
+            Cipher cipher = Cipher.getInstance(Constants.ENCRYPTION_SCHEME);
             cipher.init(Cipher.ENCRYPT_MODE, getPublicKey());
             return cipher.doFinal(data.getBytes());
         } catch (NoSuchAlgorithmException nsae) {
@@ -114,7 +111,7 @@ public class SquareKeyPair {
 
     public String decrypt(byte[] data) {
         try {
-            Cipher cipher = Cipher.getInstance(ENCRYPTION_SCHEME);
+            Cipher cipher = Cipher.getInstance(Constants.ENCRYPTION_SCHEME);
             cipher.init(Cipher.DECRYPT_MODE, getPrivateKey());
             byte[] bytes = cipher.doFinal(data);
             return new String(bytes);
@@ -130,6 +127,6 @@ public class SquareKeyPair {
             nspe.printStackTrace();
         }
 
-        return EMPTY_STRING;
+        return Constants.EMPTY_STRING;
     }
 }

@@ -36,10 +36,10 @@ public class ServerThread extends Thread {
                 }
  
             } while (text != null && !text.equals("bye"));
-            LogIt.LogInfo("Client Disconnected");
+            LogIt.logInfo("Client Disconnected");
             socket.close();
         } catch (IOException ex) {
-            LogIt.LogInfo(ex.getMessage());
+            LogIt.logInfo(ex.getMessage());
             ex.printStackTrace();
         }
     }

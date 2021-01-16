@@ -24,15 +24,8 @@ import javax.crypto.spec.SecretKeySpec;
 import java.net.*;
 import java.io.*;
 
-public class Utility {
+public class Utility implements IUtility {
     private static Utility utility;
-    private static final String USER_DIR = "user.dir";
-    private static final String PATH_DELIMITER = "/";
-    private static final String REMOTE_IP_URL = "https://checkip.amazonaws.com/";
-    private static final int NOT_FOUND_ROW = -1;
-    private static final String EMPTY_STRING = "";
-    private static final String ALGORITHM = "AES";
-    private static final String TRANSFORMATION = "AES/ECB/PKCS5Padding";
 
     private Random random;
 
@@ -40,7 +33,7 @@ public class Utility {
         random = new Random();
     }
 
-    public static Utility create() {
+    public static IUtility create() {
         if (utility == null) {
             utility = new Utility();
         }
@@ -48,7 +41,7 @@ public class Utility {
         return utility;
     }
 
-    public static Utility forceNew() {
+    public static IUtility forceNew() {
         return new Utility();
     }
 
@@ -59,7 +52,7 @@ public class Utility {
     public String getRemoteIP() {
         String result = "";
         try {
-            URL whatismyip = new URL(REMOTE_IP_URL);
+            URL whatismyip = new URL(Constants.REMOTE_IP_URL);
 
             BufferedReader in = openReader(whatismyip);
             if (in != null) {
@@ -98,7 +91,7 @@ public class Utility {
     public String[] getFiles(String match) {
         String finalString = match.toLowerCase().trim();
         // Creating a File object for directory
-        File directoryPath = new File(System.getProperty(USER_DIR) + PATH_DELIMITER);
+        File directoryPath = new File(System.getProperty(Constants.USER_DIR) + Constants.PATH_DELIMITER);
         FilenameFilter textFilefilter = new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 String lowercaseName = name.toLowerCase();
@@ -181,7 +174,7 @@ public class Utility {
                 writeToFile(file, data);
             }
             Charset charset = StandardCharsets.UTF_8;
-            String path = System.getProperty(USER_DIR) + PATH_DELIMITER + file;
+            String path = System.getProperty(Constants.USER_DIR) + Constants.PATH_DELIMITER + file;
             List<String> s = Files.readAllLines(Paths.get(path), charset);
             result.setLineCount(s.size());
             result.setSuccessful(true);
@@ -196,7 +189,7 @@ public class Utility {
 
     public FileWriteResponse appendToFile(String file, String data) {
         FileWriteResponse result = new FileWriteResponse(false, 0);
-        String path = System.getProperty(USER_DIR) + PATH_DELIMITER + file;
+        String path = System.getProperty(Constants.USER_DIR) + Constants.PATH_DELIMITER + file;
 
         try {
             Charset charset = StandardCharsets.UTF_8;
@@ -237,7 +230,7 @@ public class Utility {
 
     public String readFile(String file, int lastKnownRow) {
         if (!checkFileExists(file)) {
-            return EMPTY_STRING;
+            return Constants.EMPTY_STRING;
         }
 
         StringBuilder result = new StringBuilder();
@@ -294,7 +287,7 @@ public class Utility {
             while ((line = bufferedReader.readLine()) != null) {
                 if (count > lastKnownRow) {
                     String s = checkMatch(startsWith, value, line);
-                    if (!s.equals(EMPTY_STRING)) {
+                    if (!s.equals(Constants.EMPTY_STRING)) {
                         temp.add(s);
                     }
                 }
@@ -319,7 +312,7 @@ public class Utility {
             }
         }
 
-        return EMPTY_STRING;
+        return Constants.EMPTY_STRING;
     }
 
     public int countLinesInFile(String file) {
@@ -344,10 +337,10 @@ public class Utility {
 
     public String readLastLineOfFile(String file) {
         if (!checkFileExists(file)) {
-            return EMPTY_STRING;
+            return Constants.EMPTY_STRING;
         }
 
-        String result = EMPTY_STRING;
+        String result = Constants.EMPTY_STRING;
 
         // using class of nio file package
         Path filePath = Paths.get(file);
@@ -369,10 +362,11 @@ public class Utility {
     }
 
     public int findFirstOccurence(String file, String value, boolean startsWith, boolean notFoundReturnZero) {
+        int result = Constants.NOT_FOUND_ROW;
+
         if (!checkFileExists(file)) {
-            return NOT_FOUND_ROW;
+            return result;
         }
-        int result = NOT_FOUND_ROW;
 
         // using class of nio file package
         Path filePath = Paths.get(file);
@@ -412,8 +406,8 @@ public class Utility {
 
     public String decrypt(String data, String password) {
         try {
-            Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-            SecretKey secretKey = new SecretKeySpec(password.getBytes(), ALGORITHM);
+            Cipher cipher = Cipher.getInstance(Constants.TRANSFORMATION);
+            SecretKey secretKey = new SecretKeySpec(password.getBytes(), Constants.ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
             byte[] clearMessage = cipher.doFinal(convertFromBase64(data));
             return new String(clearMessage);
@@ -425,8 +419,8 @@ public class Utility {
 
     public String encrypt(String data, String password) {
         try {
-            Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-            SecretKey secretKey = new SecretKeySpec(password.getBytes(), ALGORITHM);
+            Cipher cipher = Cipher.getInstance(Constants.TRANSFORMATION);
+            SecretKey secretKey = new SecretKeySpec(password.getBytes(), Constants.ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
             byte[] encryptedMessage = cipher.doFinal(data.getBytes());
             return convertToBase64(encryptedMessage);
@@ -455,6 +449,6 @@ public class Utility {
     }
 
     private String getFilePath(String file) {
-        return System.getProperty(USER_DIR) + PATH_DELIMITER + file;
+        return System.getProperty(Constants.USER_DIR) + Constants.PATH_DELIMITER + file;
     }
 }

@@ -2,16 +2,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
 public class TownSquareButton extends Button {
-    private Square square;
+    private ISquare square;
     private TextField postMessage;
 
-    public TownSquareButton(String text, Square s, TextField textField) {
+    public TownSquareButton(String text, ISquare s, TextField textField) {
         super(text);
         square = s;
         postMessage = textField;
     }
 
-    public Square getSquare() {
+    public ISquare getSquare() {
         return square;
     }
 

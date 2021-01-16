@@ -8,6 +8,6 @@ public class ClientCmdTest {
 
         String time = client.sendMessage(text, false);
 
-        LogIt.LogInfo(time);
+        LogIt.logInfo(time);
     }
 }

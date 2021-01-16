@@ -3,7 +3,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 
-public class Square {
+public class Square implements ISquare {
     private String name;
     private String invite;
     private String id;
@@ -13,20 +13,15 @@ public class Square {
     private Object temp;
     private String password;
     private ISquareController controller;
-    private Utility utility;
+    private IUtility utility;
     private int lastKnownPost;
     private ScrollPane postsScrollPane;
     private VBox postsVBox;
-    private SampleController sampleController;
+    private ISampleController sampleController;
     private String uniqueId;
 
-    private static final String COMMA = ",";
-    private static final String NO_PASSWORD_VALUE = "~~~~~~~";
-    private static final String EMPTY_STRING = "";
-    private static final String POSTS_FILE_EXT = ".posts";
-
-    public Square(String info, String port, String ip, ISquareController squareController, Utility utility,
-            SampleController sampleController, String uniqueId) {
+    public Square(String info, String port, String ip, ISquareController squareController, IUtility utility,
+            ISampleController sampleController, String uniqueId) {
         setPassword("");
         this.port = port;
         this.ip = ip;
@@ -60,8 +55,8 @@ public class Square {
     private void initializeClientThread() {
         ClientThread clientThread = new ClientThread(this, utility, uniqueId);
 
-        if (utility.checkFileExists(getSafeLowerName() + POSTS_FILE_EXT)) {
-            lastKnownPost = utility.countLinesInFile(getSafeLowerName() + POSTS_FILE_EXT);
+        if (utility.checkFileExists(getSafeLowerName() + Constants.POSTS_FILE_EXT)) {
+            lastKnownPost = utility.countLinesInFile(getSafeLowerName() + Constants.POSTS_FILE_EXT);
         }
 
         try {
@@ -82,7 +77,8 @@ public class Square {
         if (this.isPrivate()) {
             isPrivate = "1";
         }
-        return this.name + COMMA + this.invite + COMMA + this.id + COMMA + isPrivate + COMMA + password;
+        return this.name + Constants.COMMA + this.invite + Constants.COMMA + this.id + Constants.COMMA + isPrivate
+                + Constants.COMMA + password;
     }
 
     public String getName() {
@@ -134,15 +130,15 @@ public class Square {
     }
 
     public String getPassword() {
-        if (password.equals(NO_PASSWORD_VALUE)) {
-            return EMPTY_STRING;
+        if (password.equals(Constants.NO_PASSWORD_VALUE)) {
+            return Constants.EMPTY_STRING;
         }
         return password;
     }
 
     public void setPassword(String value) {
         if (value.equals("")) {
-            value = NO_PASSWORD_VALUE;
+            value = Constants.NO_PASSWORD_VALUE;
         }
         password = value;
     }
@@ -175,7 +171,7 @@ public class Square {
         return postsVBox;
     }
 
-    public SampleController getSampleController() {
+    public ISampleController getSampleController() {
         return sampleController;
     }
 }

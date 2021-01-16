@@ -9,22 +9,11 @@ public class ClientThread extends Thread {
     private String squareName;
     private int lastKnownPost;
     private Square square;
-    private Utility utility;
+    private IUtility utility;
     private boolean process;
     private String uniqueId;
 
-    private static final String EMPTY_STRING = "";
-    private static final String DATA_SEPARATOR = "~_~";
-    private static final String REQUEST_DATA_SEPARATOR = "%%%";
-    private static final String POSTS_FILE_EXT = ".posts";
-    private static final String MEMBERS_FILE_EXT = ".members";
-    private static final String READ_COMMAND = "read";
-    private static final String NEWLINE = "\n";
-    private static final String OK_RESULT = "200";
-    private static final String COLON = ":";
-    private static final String NO_POSTS = "-1";
-
-    public ClientThread(Square s, Utility utility, String uniqueId) {
+    public ClientThread(Square s, IUtility utility, String uniqueId) {
         squareName = s.getName();
         lastKnownPost = s.getLastKnownPost();
         square = s;
@@ -45,26 +34,27 @@ public class ClientThread extends Thread {
     @Override
     public void run() {
         try {
-            String file = square.getSafeLowerName() + POSTS_FILE_EXT;
+            String file = square.getSafeLowerName() + Constants.POSTS_FILE_EXT;
             String raw;
             while (process) {
                 raw = utility.readFile(file, lastKnownPost);
-                if (!raw.equals(EMPTY_STRING)) {
+                if (!raw.equals(Constants.EMPTY_STRING)) {
                     processMessages(raw);
                 }
 
                 raw = utility.readLastLineOfFile(file);
 
                 String[] msg;
-                if (raw.equals(EMPTY_STRING)) {
+                if (raw.equals(Constants.EMPTY_STRING)) {
                     msg = new String[1];
-                    msg[0] = NO_POSTS;
+                    msg[0] = Constants.NO_POSTS;
                 } else {
-                    msg = raw.split(DATA_SEPARATOR);
+                    msg = raw.split(Constants.DATA_SEPARATOR);
                 }
 
-                String memberRaw = utility.readFile(square.getSafeLowerName() + MEMBERS_FILE_EXT, -1);
-                String[] members = memberRaw.split(REQUEST_DATA_SEPARATOR);
+                String memberRaw = utility.readFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT,
+                        Constants.NOT_FOUND_ROW);
+                String[] members = memberRaw.split(Constants.COMMAND_DATA_SEPARATOR);
                 for (String info : members) {
                     getPostsFromOtherMember(info, file, msg);
                 }
@@ -78,16 +68,17 @@ public class ClientThread extends Thread {
 
     private void getPostsFromOtherMember(String info, String file, String[] msg) {
         if (!info.contains(uniqueId)) {
-            String[] member = info.split(DATA_SEPARATOR);
-            Client client = new Client(member[2], Integer.valueOf(member[3]), square.getInvite());
-            String response = client.sendMessage(
-                    READ_COMMAND + REQUEST_DATA_SEPARATOR + msg[0] + REQUEST_DATA_SEPARATOR + uniqueId,
-                    false);
-            if (!response.equals(EMPTY_STRING)) {
-                String[] responseSplit = response.split(COLON);
-                if (responseSplit.length == 2 && responseSplit[0].equals(OK_RESULT)
-                        && !responseSplit[1].equals(EMPTY_STRING)) {
-                    String posts = NEWLINE + responseSplit[1].replace(REQUEST_DATA_SEPARATOR, NEWLINE);
+            String[] member = info.split(Constants.DATA_SEPARATOR);
+            IClient client = Factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
+                    square.getInvite());
+            String response = client.sendMessage(Constants.READ_COMMAND + Constants.COMMAND_DATA_SEPARATOR + msg[0]
+                    + Constants.COMMAND_DATA_SEPARATOR + uniqueId, false);
+            if (!response.equals(Constants.EMPTY_STRING)) {
+                String[] responseSplit = response.split(Constants.COLON);
+                if (responseSplit.length == 2 && responseSplit[0].equals(Constants.OK_RESULT)
+                        && !responseSplit[1].equals(Constants.EMPTY_STRING)) {
+                    String posts = Constants.NEWLINE
+                            + responseSplit[1].replace(Constants.COMMAND_DATA_SEPARATOR, Constants.NEWLINE);
                     utility.appendToFile(file, posts);
                 }
             }
@@ -95,17 +86,18 @@ public class ClientThread extends Thread {
     }
 
     private void processMessages(String raw) {
-        String[] posts = raw.split(REQUEST_DATA_SEPARATOR);
+        String[] posts = raw.split(Constants.COMMAND_DATA_SEPARATOR);
         ScrollPane scrollPane = square.getPostsScrollPane();
         VBox vbox = square.getPostsVBox();
         if (scrollPane == null || vbox == null) {
             return;
         }
         for (String postInfo : posts) {
-            String[] post = postInfo.split(DATA_SEPARATOR);
-            String[] members = utility.searchFile(square.getSafeLowerName() + MEMBERS_FILE_EXT, post[2], false);
+            String[] post = postInfo.split(Constants.DATA_SEPARATOR);
+            String[] members = utility.searchFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT, post[2],
+                    false);
             if (members.length > 0 && members[0] != null) {
-                String[] memberName = members[0].split(DATA_SEPARATOR);
+                String[] memberName = members[0].split(Constants.DATA_SEPARATOR);
                 SimpleDateFormat sdf = new SimpleDateFormat();
                 String message = sdf.format(new Date(Long.valueOf(post[0]))) + " (" + memberName[0] + ") : " + post[1];
                 Platform.runLater(new Runnable() {
