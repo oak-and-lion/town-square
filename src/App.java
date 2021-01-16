@@ -1,4 +1,6 @@
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import java.io.IOException;
 import javafx.scene.*;
@@ -6,11 +8,13 @@ import javafx.stage.*;
 
 public class App extends Application implements IApp {
     private static final String VERSION = "0.0.1";
+    private static final String SQUARE_FILE_EXT = ".square";
     private static final String UNIQUE_ID_FILE = "unique.id";
     private static final String DEFAULT_NAME_FILE = "default.name";
     private static final String DEFAULT_SQUARE_FILE = "my_square.square";
     private static final String DEFAULT_SQUARE_ME_FILE = "my_square.members";
     private static final String PORT_FILE = "port.id";
+    private static final String IP_FILE = "ip.id";
     private static final String FXML_FILE = "sample.fxml";
     private static final String PUBLIC_KEY_FILE = "public.key";
     private static final String PRIVATE_KEY_FILE = "private.key";
@@ -24,6 +28,7 @@ public class App extends Application implements IApp {
     private static final String EMPTY_STRING = "";
     private static final String NO_PASSWORD_VALUE = "~~~~~~~";
     private static final String DATA_SEPARATOR = "~_~";
+    private static final String DEFAULT_IP = "127.0.0.1";
 
     private Utility utility;
     private Server server;
@@ -36,6 +41,7 @@ public class App extends Application implements IApp {
         String defaultSquareInfo = "";
         Square defaultSquare = null;
         String port = DEFAULT_PORT;
+        String ip = DEFAULT_IP;
         defaultName = EMPTY_STRING;
 
         SampleController controller = null;
@@ -73,6 +79,11 @@ public class App extends Application implements IApp {
             } else {
                 port = utility.readFile(PORT_FILE);
             }
+            if (!utility.checkFileExists(IP_FILE)) {
+                utility.writeFile(IP_FILE, utility.getRemoteIP());
+            } else {
+                ip = utility.readFile(IP_FILE);
+            }
             if (utility.checkFileExists(DEFAULT_NAME_FILE)) {
                 defaultName = utility.readFile(DEFAULT_NAME_FILE);
             }
@@ -101,14 +112,18 @@ public class App extends Application implements IApp {
 
             squareController = SquareFactory.create(utility, controller);
 
-            defaultSquare = new Square(defaultSquareInfo, port, utility.getRemoteIP(), squareController, utility,
+            defaultSquare = new Square(defaultSquareInfo, port, ip, squareController, utility,
                     controller, uniqueId);
+
+            ObservableList<IPAddress> ipAddresses = FXCollections.observableArrayList();
+            ipAddresses.add(new IPAddress(defaultSquare.getIP(), defaultSquare.getIP()));
+            ipAddresses.addAll(utility.getLocalIPs());
 
             controller.setParent(this);
             controller.setUniqueId(uniqueId);
             controller.setDefaultName(defaultName);
             controller.setVersion(VERSION);
-            controller.setRemoteIP(defaultSquare.getIP());
+            controller.setRemoteIP(ipAddresses, ip, utility);
             controller.setPort(port);
             controller.setTabSquare(defaultSquare);
             controller.setPublicKey(keys.getPublicKeyBase64());
@@ -158,7 +173,7 @@ public class App extends Application implements IApp {
     }
 
     public void updateSquare(Square square) {
-        String name = square.getSafeLowerName() + ".square";
+        String name = square.getSafeLowerName() + SQUARE_FILE_EXT;
         utility.deleteFile(name);
         utility.writeFile(name, square.toString());
     }

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.Base64;
+import java.util.Enumeration;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -71,17 +72,40 @@ public class Utility {
         return result;
     }
 
+    public IPAddress[] getLocalIPs() {
+        ArrayList<IPAddress> result = new ArrayList<IPAddress>();
+
+        Enumeration<NetworkInterface> n;
+        try {
+            n = NetworkInterface.getNetworkInterfaces();
+
+            while (n.hasMoreElements()) {
+                NetworkInterface e = n.nextElement();
+
+                Enumeration<InetAddress> a = e.getInetAddresses();
+                while (a.hasMoreElements()) {
+                    InetAddress addr = a.nextElement();
+                    result.add(new IPAddress(addr.getHostAddress(), addr.getHostAddress()));
+                }
+            }
+        } catch (SocketException e1) {
+            e1.printStackTrace();
+        }
+
+        return result.toArray(new IPAddress[result.size()]);
+    }
+
     public String[] getFiles(String match) {
-        String finalString  = match.toLowerCase().trim();
-        //Creating a File object for directory
+        String finalString = match.toLowerCase().trim();
+        // Creating a File object for directory
         File directoryPath = new File(System.getProperty(USER_DIR) + PATH_DELIMITER);
-        FilenameFilter textFilefilter = new FilenameFilter(){
-        public boolean accept(File dir, String name) {
+        FilenameFilter textFilefilter = new FilenameFilter() {
+            public boolean accept(File dir, String name) {
                 String lowercaseName = name.toLowerCase();
                 return (lowercaseName.contains(finalString));
             }
         };
-        //List of all the text files
+        // List of all the text files
         return directoryPath.list(textFilefilter);
     }
 
@@ -388,12 +412,12 @@ public class Utility {
 
     public String decrypt(String data, String password) {
         try {
-        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+            Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             SecretKey secretKey = new SecretKeySpec(password.getBytes(), ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
             byte[] clearMessage = cipher.doFinal(convertFromBase64(data));
             return new String(clearMessage);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "";
@@ -401,12 +425,12 @@ public class Utility {
 
     public String encrypt(String data, String password) {
         try {
-        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+            Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             SecretKey secretKey = new SecretKeySpec(password.getBytes(), ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
             byte[] encryptedMessage = cipher.doFinal(data.getBytes());
             return convertToBase64(encryptedMessage);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "";
@@ -419,7 +443,7 @@ public class Utility {
 
     public byte[] convertFromBase64(String data) {
         return Base64.getDecoder().decode(data);
-    } 
+    }
 
     public String generateRandomString(int targetStringLength) {
         int leftLimit = 48; // numeral '0'

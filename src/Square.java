@@ -109,6 +109,10 @@ public class Square {
         return ip;
     }
 
+    public void setIP(String value) {
+        ip = value;
+    }
+
     public String getPort() {
         return port;
     }

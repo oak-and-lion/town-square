@@ -6,25 +6,28 @@ public class TextDialogBox {
     private String title;
     private String headerText;
     private String content;
-    private SampleController controller;
+    private ITextDialogBoxCallback controller;
+    private double width;
+    private int type;
 
-    public TextDialogBox(String title, String headerText, String content, SampleController controller) {
+    public TextDialogBox(String title, String headerText, String content, ITextDialogBoxCallback controller, double width, int type) {
         this.title = title;
         this.headerText = headerText;
         this.content = content;
         this.controller = controller;
+        this.width = width;
+        this.type = type;
     }
 
     public void show() {
         var txtDlg = new TextInputDialog();
+        txtDlg.getDialogPane().setMinWidth(width);
         txtDlg.setTitle(title);
         txtDlg.setHeaderText(headerText);
         txtDlg.setContentText(content);
 
         Optional<String> result = txtDlg.showAndWait();
 
-        result.ifPresent(input -> {
-            controller.processInvitation(input);
-        });
+        result.ifPresent(input -> controller.callback(input, type));
     }
 }
