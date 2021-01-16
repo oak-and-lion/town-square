@@ -77,7 +77,11 @@ public class ClientThread extends Thread {
                 String[] responseSplit = response.split(Constants.COLON);
                 if (responseSplit.length == 2 && responseSplit[0].equals(Constants.OK_RESULT)
                         && !responseSplit[1].equals(Constants.EMPTY_STRING)) {
-                    String posts = Constants.NEWLINE
+                    String newLine = Constants.NEWLINE;
+                    if (!utility.checkFileExists(file)) {
+                        newLine = Constants.EMPTY_STRING;
+                    }
+                    String posts = newLine
                             + responseSplit[1].replace(Constants.COMMAND_DATA_SEPARATOR, Constants.NEWLINE);
                     utility.appendToFile(file, posts);
                 }
