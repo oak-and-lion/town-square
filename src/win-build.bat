@@ -25,6 +25,6 @@ jar -c -v -m ..\manifest.txt -f App.jar ..\*.class ..\sample.fxml
 
 mkdir package
 
-tar -a -c -f package\pkg-town-square.zip town-square-windows.bat App.jar javafx-windows.zip
+tar -a -c -f package\pkg-town-square_windows.zip town-square-windows.bat App.jar javafx-windows.zip
 
 cd package

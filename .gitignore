@@ -11,3 +11,4 @@ staging/
 output.txt
 META-INF/
 build.xml
+*.zip
