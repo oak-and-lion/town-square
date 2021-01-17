@@ -1,13 +1,11 @@
 @echo off
 
 if NOT EXIST "javafx\" (
-    mkdir javafx
-    
-    cd javafx
-
     tar -x -f ..\javafx-windows.zip
-
-    cd ..
 )
 
-java --module-path "javafx/lib" --add-modules "javafx.controls,javafx.fxml" -jar App.jar
+if NOT EXIST "jdk-11.0.9\" (
+    tar -x -f ..\jdk-11.0.9_windows-x64_bin.zip
+)
+
+jdk-11.0.9\bin\java --module-path "javafx/lib" --add-modules "javafx.controls,javafx.fxml" -jar App.jar

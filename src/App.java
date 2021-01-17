@@ -92,7 +92,7 @@ public class App extends Application implements IApp {
             defaultSquare = Factory.createSquare(Constants.BASE_SQUARE, defaultSquareInfo, port, ip, squareController, utility, controller, uniqueId);
 
             ObservableList<IPAddress> ipAddresses = FXCollections.observableArrayList();
-            ipAddresses.add(new IPAddress(defaultSquare.getIP(), defaultSquare.getIP()));
+            ipAddresses.add(new IPAddress(utility.getRemoteIP(), utility.getRemoteIP()));
             ipAddresses.addAll(utility.getLocalIPs());
 
             controller.setUtilityController(utility);
