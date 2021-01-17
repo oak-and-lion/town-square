@@ -100,4 +100,5 @@ public class Constants {
     public static final String ALREADY_REGISTERED_MESSAGE = "already registered";
     public static final String ENCRYPTION_SCHEME = "RSA/ECB/PKCS1Padding";
     public static final String RSA = "RSA";
+    public static final String DEFAULT_USER_NAME = "Anonymous User";
 }

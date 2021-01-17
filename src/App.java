@@ -19,7 +19,7 @@ public class App extends Application implements IApp {
         ISquare defaultSquare = null;
         String port = Constants.DEFAULT_PORT;
         String ip = Constants.DEFAULT_IP;
-        defaultName = Constants.EMPTY_STRING;
+        defaultName = Constants.DEFAULT_USER_NAME;
 
         IDialogController controller = null;
         ISquareController squareController = null;

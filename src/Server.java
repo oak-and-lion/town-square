@@ -14,7 +14,7 @@ public class Server extends Thread implements IServer {
         squareController = controller;
     }
 
-    public static Server create(int port, ISquareController controller) {
+    public static IServer create(int port, ISquareController controller) {
         if (server == null) {
             server = new Server(port, controller);
         }
