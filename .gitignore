@@ -13,3 +13,4 @@ META-INF/
 build.xml
 *.zip
 .vscode/launch.json
+.vscode/settings.json
