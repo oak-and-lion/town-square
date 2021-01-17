@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Created-By: me
+Class-Path: /Users/wewan/javafx-sdk-11.0.2/lib/javafx.controls.jar
+Main-Class: App
+

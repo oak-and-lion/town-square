@@ -6,3 +6,8 @@
 *.name
 *.lock
 test.txt
+*.jar
+staging/
+output.txt
+META-INF/
+build.xml
