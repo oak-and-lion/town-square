@@ -12,3 +12,4 @@ output.txt
 META-INF/
 build.xml
 *.zip
+.vscode/launch.json
