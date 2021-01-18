@@ -5,4 +5,5 @@ public interface IApp {
     void close();
     String getDefaultName();
     String getPublicKeyBase64();
+    void sendAlias(String alias);
 }

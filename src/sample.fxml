@@ -24,7 +24,6 @@
           <Menu mnemonicParsing="false" text="Town Square">
             <items>
               <MenuItem fx:id="mnuJoinSquare" mnemonicParsing="false" onAction="#joinSquare" text="Join Square" />
-              <MenuItem fx:id="mnuCreateSquare" mnemonicParsing="false" onAction="#createSquare" text="Create Square" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -51,6 +50,11 @@
                           <ComboBox fx:id="remoteIP" layoutX="107.0" layoutY="107.0" prefHeight="26.0" prefWidth="244.0" />
                           <TextField fx:id="port" layoutX="106.0" layoutY="143.0" prefHeight="26.0" prefWidth="68.0" />
                           <Label layoutX="76.0" layoutY="147.0" text="Port:" />
+                          <Label layoutX="74.0" layoutY="180.0" text="Alias:" />
+                          <TextField fx:id="alias" editable="false" layoutX="107.0" layoutY="176.0" prefHeight="26.0" prefWidth="244.0" />
+                        <Label layoutX="33.0" layoutY="213.0" text="Alias Servers:" />
+                        <TextField fx:id="aliasServers" editable="false" layoutX="107.0" layoutY="209.0" prefHeight="26.0" prefWidth="244.0" />
+                        <Button fx:id="registerAlias" layoutX="362.0" layoutY="210.0" mnemonicParsing="false" text="Register" onAction="#handleRegisterAlias" />
                       </children>
                 </AnchorPane>
               </content>

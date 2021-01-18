@@ -117,4 +117,6 @@ public class Constants {
     public static final String INVITE_FILE_EXT = ".invite";
     public static final String INVITE_FILE_PREFIX = "__pending_";
     public static final int GRACEFUL_SHUTDOWN = 0;
+    public static final String ALIAS_FILE = "alias.id";
+    public static final String SQUARE_CONTROLLER_LOG_FILE = "squareController.log";
 }

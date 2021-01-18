@@ -22,7 +22,7 @@ public class App extends Application implements IApp {
     @Override
     public void start(Stage primaryStage) {
         utility = Factory.createUtility(Constants.BASE_UTILITY);
-        
+
         if (checkCurrentState(alert)) {
             processStart(primaryStage);
         }
@@ -34,6 +34,7 @@ public class App extends Application implements IApp {
         ISquare defaultSquare = null;
         String port = Constants.DEFAULT_PORT;
         String ip = Constants.DEFAULT_IP;
+        String alias = Constants.EMPTY_STRING;
         defaultName = Constants.DEFAULT_USER_NAME;
 
         IDialogController controller = null;
@@ -46,6 +47,7 @@ public class App extends Application implements IApp {
 
         ILogIt logger = Factory.createLogger(Constants.FILE_LOGGER, Constants.MAIN_LOG_FILE, utility);
 
+        systemExit.setParent(this);
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(Constants.FXML_FILE));
 
@@ -84,11 +86,13 @@ public class App extends Application implements IApp {
             if (utility.checkFileExists(Constants.DEFAULT_SQUARE_FILE)) {
                 defaultSquareInfo = utility.readFile(Constants.DEFAULT_SQUARE_FILE);
             } else {
-                defaultSquareInfo = Constants.DEFAULT_SQUARE_NAME + Constants.COMMA + utility.createUUID() + Constants.COMMA + "tabDefaultSquare"
-                        + Constants.COMMA + Constants.NOT_PRIVATE + Constants.COMMA + Constants.NO_PASSWORD_VALUE;
+                defaultSquareInfo = Constants.DEFAULT_SQUARE_NAME + Constants.COMMA + utility.createUUID()
+                        + Constants.COMMA + "tabDefaultSquare" + Constants.COMMA + Constants.NOT_PRIVATE
+                        + Constants.COMMA + Constants.NO_PASSWORD_VALUE;
                 utility.writeFile(Constants.DEFAULT_SQUARE_FILE, defaultSquareInfo);
             }
-            if (utility.checkFileExists(Constants.PUBLIC_KEY_FILE) && utility.checkFileExists(Constants.PRIVATE_KEY_FILE)) {
+            if (utility.checkFileExists(Constants.PUBLIC_KEY_FILE)
+                    && utility.checkFileExists(Constants.PRIVATE_KEY_FILE)) {
                 keys.setPublicKeyFromBase64(utility.readFile(Constants.PUBLIC_KEY_FILE));
                 keys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
             } else {
@@ -97,43 +101,73 @@ public class App extends Application implements IApp {
                 utility.writeFile(Constants.PRIVATE_KEY_FILE, keys.getPrivateKeyBase64());
             }
             if (!utility.checkFileExists(Constants.DEFAULT_SQUARE_ME_FILE)) {
-                utility.writeFile(Constants.DEFAULT_SQUARE_ME_FILE, defaultName + Constants.DATA_SEPARATOR + keys.getPublicKeyBase64()
-                        + Constants.DATA_SEPARATOR + utility.getRemoteIP() + Constants.DATA_SEPARATOR + port + Constants.DATA_SEPARATOR + uniqueId);
+                utility.writeFile(Constants.DEFAULT_SQUARE_ME_FILE,
+                        defaultName + Constants.DATA_SEPARATOR + keys.getPublicKeyBase64() + Constants.DATA_SEPARATOR
+                                + utility.getRemoteIP() + Constants.DATA_SEPARATOR + port + Constants.DATA_SEPARATOR
+                                + uniqueId);
             }
 
             primaryStage.show();
             controller = loader.<DialogController>getController();
 
-            squareController = Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, controller, Factory.createLogger(Constants.FILE_LOGGER, "squareController.log", utility));
+            squareController = Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, controller,
+                    Factory.createLogger(Constants.FILE_LOGGER, Constants.SQUARE_CONTROLLER_LOG_FILE, utility));
 
-            defaultSquare = Factory.createSquare(Constants.BASE_SQUARE, defaultSquareInfo, port, ip, squareController, utility, controller, uniqueId);
+            defaultSquare = Factory.createSquare(Constants.BASE_SQUARE, defaultSquareInfo, port, ip, squareController,
+                    utility, controller, uniqueId);
 
             ObservableList<IPAddress> ipAddresses = FXCollections.observableArrayList();
             ipAddresses.add(new IPAddress(utility.getRemoteIP(), utility.getRemoteIP()));
             ipAddresses.addAll(utility.getLocalIPs());
 
-            controller.setUtilityController(utility);
-            controller.setParent(this);
-            controller.setUniqueId(uniqueId);
-            controller.setDefaultName(defaultName);
-            controller.setVersion(Constants.VERSION);
-            controller.setRemoteIP(ipAddresses, ip);
-            controller.setPort(port);
-            controller.setTabSquare(defaultSquare);
-            controller.setPublicKey(keys.getPublicKeyBase64());
-            controller.buildSquares();
+            alias = getAlias(ip);
+
+            initializeController(controller, uniqueId, port, ip, ipAddresses, alias, defaultSquare);
+
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            logger.logInfo(ioe.getMessage());
+            systemExit.handleExit(Constants.SYSTEM_EXIT_FAIL);
         }
 
-        if (squareController != null) {
-            server = Factory.createServer(Constants.BASE_SERVER, Integer.parseInt(port), squareController, Factory.createLogger(Constants.FILE_LOGGER, Constants.SERVER_LOG_FILE, utility));
-            server.start();
-        }
+        initializeSquareController(squareController, port);
 
         logger.logInfo("Started Town Square");
 
         controller.processPendingInvites();
+    }
+
+    private void initializeSquareController(ISquareController squareController, String port) {
+        if (squareController != null) {
+            server = Factory.createServer(Constants.BASE_SERVER, Integer.parseInt(port), squareController,
+                    Factory.createLogger(Constants.FILE_LOGGER, Constants.SERVER_LOG_FILE, utility));
+            server.start();
+        }
+    }
+
+    private void initializeController(IDialogController controller, String uniqueId, String port, String ip,
+            ObservableList<IPAddress> ipAddresses, String alias, ISquare defaultSquare) {
+        controller.setUtilityController(utility);
+        controller.setParent(this);
+        controller.setUniqueId(uniqueId);
+        controller.setDefaultName(defaultName);
+        controller.setVersion(Constants.VERSION);
+        controller.setRemoteIP(ipAddresses, ip);
+        controller.setPort(port);
+        controller.setTabSquare(defaultSquare);
+        controller.setPublicKey(keys.getPublicKeyBase64());
+        controller.buildSquares();
+        controller.setAlias(alias);
+    }
+
+    private String getAlias(String ip) {
+        String alias = ip;
+        if (!utility.checkFileExists(Constants.ALIAS_FILE)) {
+            utility.writeFile(Constants.ALIAS_FILE, ip);
+        } else {
+            alias = utility.readFile(Constants.ALIAS_FILE);
+        }
+
+        return alias;
     }
 
     private boolean checkCurrentState(IAlertBox alert) {
@@ -183,6 +217,11 @@ public class App extends Application implements IApp {
         utility.writeFile(name, square.toString());
     }
 
+    public void sendAlias(String alias) {
+        alias = alias.toLowerCase().trim().replace(Constants.SPACE, Constants.UNDERSCORE);
+        utility.writeFile(Constants.ALIAS_FILE, alias);
+    }
+
     public String getDefaultName() {
         return defaultName;
     }
@@ -192,7 +231,8 @@ public class App extends Application implements IApp {
     }
 
     public static void main(String[] args) {
-        setUpDependencies(Factory.createAlertBox(Constants.BASE_ALERT_BOX), Factory.createSystemExit(Constants.BASE_SYSTEM_EXIT));
+        setUpDependencies(Factory.createAlertBox(Constants.BASE_ALERT_BOX),
+                Factory.createSystemExit(Constants.BASE_SYSTEM_EXIT));
         launch(args);
     }
 

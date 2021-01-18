@@ -50,11 +50,27 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     private MenuItem mnuJoinSquare;
 
     @FXML
+    private TextField alias;
+
+    @FXML
+    private TextField aliasServers;
+
+    @FXML
     private void handleSettingsUpdate(ActionEvent event) {
         if (parent != null) {
             parent.sendDefaultName(defaultName.getText());
             parent.sendPort(port.getText());
+            String s = alias.getText();
+            if (s.trim().equals(Constants.EMPTY_STRING)) {
+                s = remoteIP.getSelectionModel().getSelectedItem().getDisplay();
+            }
+            parent.sendAlias(s);
         }
+    }
+
+    @FXML
+    private void handleRegisterAlias(ActionEvent event) {
+        // whole new thing
     }
 
     @FXML
@@ -145,6 +161,12 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     public void setParent(IApp p) {
         parent = p;
+    }
+
+    public void setAlias(String s) {
+        if (alias != null) {
+            alias.setText(s);
+        }
     }
 
     public void setUniqueId(String msg) {
@@ -349,7 +371,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         return parent.getDefaultName();
     }
 
-    public void processInvitation(String invite) {
+    public boolean processInvitation(String invite) {
         // sample invitation
         // 0 == encryption flag
         // 1 == ip of the remote host to process invitation
@@ -374,11 +396,11 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             String remotePublicKey = client.sendMessage(Constants.REQUEST_PUBLIC_KEY_COMMAND, false);
             if (remotePublicKey.equals(Constants.EMPTY_STRING)) {
                 utility.writeFile(Constants.INVITE_FILE_PREFIX + split[3] + Constants.INVITE_FILE_EXT, invite);
-                return;
+                return false;
             }
             SquareResponse response = processTCPReturn(remotePublicKey);
             if (!response.getCode().equals(Constants.OK_RESULT)) {
-                return;
+                return false;
             }
 
             tempKeys.setPublicKeyFromBase64(response.getMessage());
@@ -412,7 +434,11 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                     utility, this, uniqueId.getText());
             utility.writeFile(squareSafeName + Constants.SQUARE_FILE_EXT, info);
             setTabSquare(square);
+
+            return true;
         }
+
+        return false;
     }
 
     public void buildSquares() {
@@ -461,6 +487,13 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     }
 
     public void processPendingInvites() {
-        // process
+        String[] files = utility.getFiles(Constants.INVITE_FILE_EXT);
+
+        for(String file : files) {
+            String invite = utility.readFile(file);
+            if (processInvitation(invite)) {
+                utility.deleteFile(file);
+            }
+        }
     }
 }
