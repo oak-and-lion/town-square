@@ -59,15 +59,17 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     @FXML
     private void joinSquare(ActionEvent event) {
-        ITextDialogBox dialogBox = Factory.creaTextDialogBox(Constants.BASE_TEXT_DIALOG_BOX, Constants.JOIN_SQUARE_TITLE, Constants.JOIN_SQUARE_HEADER_TEXT,
-                Constants.EMPTY_STRING, this, Constants.INVITATION_DIALOG_WIDTH, Constants.JOIN_TYPE);
+        ITextDialogBox dialogBox = Factory.creaTextDialogBox(Constants.BASE_TEXT_DIALOG_BOX,
+                Constants.JOIN_SQUARE_TITLE, Constants.JOIN_SQUARE_HEADER_TEXT, Constants.EMPTY_STRING, this,
+                Constants.INVITATION_DIALOG_WIDTH, Constants.JOIN_TYPE);
         dialogBox.show();
     }
 
     @FXML
     private void createSquare(ActionEvent event) {
-        ITextDialogBox dialogBox = Factory.creaTextDialogBox(Constants.BASE_TEXT_DIALOG_BOX, Constants.CREATE_SQUARE_TITLE, Constants.CREATE_SQUARE_HEADER_TEXT,
-                Constants.EMPTY_STRING, this, Constants.INVITATION_DIALOG_WIDTH, Constants.CREATE_TYPE);
+        ITextDialogBox dialogBox = Factory.creaTextDialogBox(Constants.BASE_TEXT_DIALOG_BOX,
+                Constants.CREATE_SQUARE_TITLE, Constants.CREATE_SQUARE_HEADER_TEXT, Constants.EMPTY_STRING, this,
+                Constants.INVITATION_DIALOG_WIDTH, Constants.CREATE_TYPE);
         dialogBox.show();
     }
 
@@ -191,8 +193,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     private VBox createGeneratePostControls(ISquare square) {
         VBox generatePostControls = createVBox(0, 10, 0, 10);
         generatePostControls.setMinHeight(281);
-        generatePostControls.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;" + "-fx-border-width: 2;"
-                + "-fx-border-insets: 5;" + "-fx-border-radius: 5;" + "-fx-border-color: #333;");
+        generatePostControls.setStyle("-fx-padding: 10;-fx-border-style: solid inside;-fx-border-width: 2;"
+                + "-fx-border-insets: 5;-fx-border-radius: 5;-fx-border-color: #333;");
 
         HBox postsLabelHBox = createHBox(0, 0, 0, 0);
         Label postsLabel = createLabel(Constants.POSTS_LABEL, 0, 0, 0, 0);
@@ -399,7 +401,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             String info = responseData[3] + Constants.COMMA + client.getSquareId() + Constants.COMMA
                     + Constants.TAB_PREFIX + squareSafeName + Constants.COMMA + Constants.ZERO
                     + Constants.NO_PASSWORD_VALUE;
-            ISquare square = Factory.createSquare(Constants.BASE_SQUARE, info, port.getText(), remoteIP.getValue().getDisplay(),
+            ISquare square = Factory.createSquare(Constants.BASE_SQUARE, info, port.getText(),
+                    remoteIP.getValue().getDisplay(),
                     Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
                             Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + ".log", utility)),
                     utility, this, uniqueId.getText());
