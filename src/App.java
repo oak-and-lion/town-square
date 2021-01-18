@@ -11,9 +11,24 @@ public class App extends Application implements IApp {
     private IServer server;
     private String defaultName;
     private ISquareKeyPair keys;
+    private static IAlertBox alert;
+    private static ISystemExit systemExit;
+
+    private static void setUpDependencies(IAlertBox alertbox, ISystemExit exit) {
+        alert = alertbox;
+        systemExit = exit;
+    }
 
     @Override
     public void start(Stage primaryStage) {
+        utility = Factory.createUtility(Constants.BASE_UTILITY);
+        
+        if (checkCurrentState(alert)) {
+            processStart(primaryStage);
+        }
+    }
+
+    private void processStart(Stage primaryStage) {
         String uniqueId;
         String defaultSquareInfo = Constants.EMPTY_STRING;
         ISquare defaultSquare = null;
@@ -30,8 +45,6 @@ public class App extends Application implements IApp {
         utility = Factory.createUtility(Constants.BASE_UTILITY);
 
         ILogIt logger = Factory.createLogger(Constants.FILE_LOGGER, Constants.MAIN_LOG_FILE, utility);
-
-        checkCurrentState();
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(Constants.FXML_FILE));
@@ -117,14 +130,17 @@ public class App extends Application implements IApp {
         }
     }
 
-    private void checkCurrentState() {
+    private boolean checkCurrentState(IAlertBox alert) {
         if (isRunning()) {
-            AlertBox.createAlert("Already Running!", "An instance of Town Square is already running!",
+            alert.createAlert("Already Running!", "An instance of Town Square is already running!",
                     "Close the other instance before you start a new instance.");
-            System.exit(1);
+            systemExit.handleExit(Constants.SYSTEM_EXIT_FAIL);
+            return false;
         } else {
             utility.writeFile(Constants.LOCK_FILE, Constants.LOCK_FILE_CONTENTS);
         }
+
+        return true;
     }
 
     private boolean isRunning() {
@@ -167,5 +183,12 @@ public class App extends Application implements IApp {
 
     public static void main(String[] args) {
         launch(args);
+        setUpDependencies(Factory.createAlertBox(Constants.BASE_ALERT_BOX), Factory.createSystemExit(Constants.BASE_SYSTEM_EXIT));
+    }
+
+    public static void execute(IAlertBox alertbox, ISystemExit systemExit) {
+        setUpDependencies(alertbox, systemExit);
+        App app = new App();
+        app.start(null);
     }
 }

@@ -1,6 +1,3 @@
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public class LogItConsole implements ILogIt {
     private static LogItConsole console;
 
@@ -15,6 +12,6 @@ public class LogItConsole implements ILogIt {
     }
 
     public void logInfo(String msg) {
-        Logger.getGlobal().log(Level.INFO, msg);
+        System.out.println(msg);
     }
 }

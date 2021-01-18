@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch xxUnitTestRun",
+            "request": "launch",
+            "mainClass": "xxUnitTestRun",
+            "projectName": "myjavafxproject_a2def4ff"
+        },
+        {
+            "type": "java",
+            "name": "Launch xxUnitTestsIAlert",
+            "request": "launch",
+            "mainClass": "xxUnitTestsIAlert",
+            "projectName": "myjavafxproject_a2def4ff"
+        },
+        {
+            "type": "java",
             "name": "Launch _FactoryUnitTests",
             "request": "launch",
             "mainClass": "_FactoryUnitTests",

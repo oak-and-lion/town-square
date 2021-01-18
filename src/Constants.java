@@ -14,6 +14,10 @@ public class Constants {
     public static final int BASE_CLIENT_THREAD = 1;
     public static final int BASE_SERVER_THREAD = 1;
     public static final int BASE_TEXT_DIALOG_BOX = 1;
+    public static final int BASE_ALERT_BOX = 1;
+    public static final int BASE_SYSTEM_EXIT = 1;
+    public static final int SYSTEM_EXIT_FAIL = 1;
+    public static final int NULL_OBJECT_TYPE = Integer.MAX_VALUE;
     public static final String VERSION = "0.0.1";
     public static final String SQUARE_FILE_EXT = ".square";
     public static final String UNIQUE_ID_FILE = "unique.id";

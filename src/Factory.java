@@ -106,4 +106,20 @@ public class Factory {
 
         return null;
     }
+
+    public static IAlertBox createAlertBox(int type) {
+        if (type == Constants.BASE_ALERT_BOX) {
+            return AlertBox.create();
+        }
+
+        return null;
+    }
+
+    public static ISystemExit createSystemExit(int type) {
+        if (type == Constants.BASE_SYSTEM_EXIT) {
+            return new SystemExit();
+        }
+
+        return null;
+    }
 }
