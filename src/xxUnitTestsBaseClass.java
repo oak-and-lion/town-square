@@ -48,4 +48,10 @@ public class xxUnitTestsBaseClass {
             error(methodName);
         }
     }
+
+    void checkClass(Class<?> actual, Class<?> expected, String methodName) {
+        if (actual != expected) {
+            error(methodName);
+        }
+    }
 }
