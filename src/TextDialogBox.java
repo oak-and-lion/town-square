@@ -2,7 +2,7 @@ import java.util.Optional;
 
 import javafx.scene.control.TextInputDialog;
 
-public class TextDialogBox {
+public class TextDialogBox implements ITextDialogBox {
     private String title;
     private String headerText;
     private String content;

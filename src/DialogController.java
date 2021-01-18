@@ -59,14 +59,14 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     @FXML
     private void joinSquare(ActionEvent event) {
-        TextDialogBox dialogBox = new TextDialogBox(Constants.JOIN_SQUARE_TITLE, Constants.JOIN_SQUARE_HEADER_TEXT,
+        ITextDialogBox dialogBox = Factory.creaTextDialogBox(Constants.BASE_TEXT_DIALOG_BOX, Constants.JOIN_SQUARE_TITLE, Constants.JOIN_SQUARE_HEADER_TEXT,
                 Constants.EMPTY_STRING, this, Constants.INVITATION_DIALOG_WIDTH, Constants.JOIN_TYPE);
         dialogBox.show();
     }
 
     @FXML
     private void createSquare(ActionEvent event) {
-        TextDialogBox dialogBox = new TextDialogBox(Constants.CREATE_SQUARE_TITLE, Constants.CREATE_SQUARE_HEADER_TEXT,
+        ITextDialogBox dialogBox = Factory.creaTextDialogBox(Constants.BASE_TEXT_DIALOG_BOX, Constants.CREATE_SQUARE_TITLE, Constants.CREATE_SQUARE_HEADER_TEXT,
                 Constants.EMPTY_STRING, this, Constants.INVITATION_DIALOG_WIDTH, Constants.CREATE_TYPE);
         dialogBox.show();
     }
@@ -357,7 +357,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         String[] split = invite.split(Constants.TILDE);
         IClient client = Factory.createClient(Constants.BASE_CLIENT, split[1], Integer.valueOf(split[2]), split[3]);
         boolean encrypt = false;
-        SquareKeyPair tempKeys = new SquareKeyPair();
+        ISquareKeyPair tempKeys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR);
 
         if (split[0].equals(Constants.ENCRYPTION_FLAG)) {
             encrypt = true;
@@ -399,8 +399,10 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             String info = responseData[3] + Constants.COMMA + client.getSquareId() + Constants.COMMA
                     + Constants.TAB_PREFIX + squareSafeName + Constants.COMMA + Constants.ZERO
                     + Constants.NO_PASSWORD_VALUE;
-            Square square = new Square(info, port.getText(), remoteIP.getValue().getDisplay(),
-                    new SquareController(utility, this), utility, this, uniqueId.getText());
+            ISquare square = Factory.createSquare(Constants.BASE_SQUARE, info, port.getText(), remoteIP.getValue().getDisplay(),
+                    Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
+                            Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + ".log", utility)),
+                    utility, this, uniqueId.getText());
             utility.writeFile(squareSafeName + Constants.SQUARE_FILE_EXT, info);
             setTabSquare(square);
         }
@@ -414,7 +416,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             }
             String contents = utility.readFile(file);
             setTabSquare(new Square(contents, port.getText(), remoteIP.getValue().getDisplay(),
-                    new SquareController(utility, this), utility, this, uniqueId.getText()));
+                    Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
+                            Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + ".log", utility)),
+                    utility, this, uniqueId.getText()));
         }
     }
 
@@ -444,6 +448,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                 + Constants.COMMA + Constants.ZERO + Constants.NO_PASSWORD_VALUE;
         utility.writeFile(safeName + Constants.SQUARE_FILE_EXT, contents);
         setTabSquare(new Square(contents, port.getText(), remoteIP.getValue().getDisplay(),
-                new SquareController(utility, this), utility, this, uniqueId.getText()));
+                Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
+                        Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + ".log", utility)),
+                utility, this, uniqueId.getText()));
     }
 }

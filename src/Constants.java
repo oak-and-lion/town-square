@@ -9,6 +9,11 @@ public class Constants {
     public static final int BASE_SQUARE = 1;
     public static final int BASE_TOWN_SQUARE_BUTTON = 1;
     public static final int BASE_CLIENT = 1;
+    public static final int CONSOLE_LOGGER = 1;
+    public static final int FILE_LOGGER = 2;
+    public static final int BASE_CLIENT_THREAD = 1;
+    public static final int BASE_SERVER_THREAD = 1;
+    public static final int BASE_TEXT_DIALOG_BOX = 1;
     public static final String VERSION = "0.0.1";
     public static final String SQUARE_FILE_EXT = ".square";
     public static final String UNIQUE_ID_FILE = "unique.id";
@@ -101,4 +106,6 @@ public class Constants {
     public static final String ENCRYPTION_SCHEME = "RSA/ECB/PKCS1Padding";
     public static final String RSA = "RSA";
     public static final String DEFAULT_USER_NAME = "Anonymous User";
+    public static final String SERVER_LOG_FILE = "server.log";
+    public static final String MAIN_LOG_FILE = "main.log";
 }

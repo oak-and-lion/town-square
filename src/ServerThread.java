@@ -6,13 +6,15 @@ import java.net.*;
  *
  * @author www.codejava.net
  */
-public class ServerThread extends Thread {
+public class ServerThread extends Thread implements IServerThread {
     private Socket socket;
     private ISquareController controller;
+    private ILogIt logger;
  
-    public ServerThread(Socket socket, ISquareController squareController) {
+    public ServerThread(Socket socket, ISquareController squareController, ILogIt logger) {
         this.socket = socket;
         this.controller = squareController;
+        this.logger = logger;
     }
  
     @Override
@@ -36,10 +38,10 @@ public class ServerThread extends Thread {
                 }
  
             } while (text != null && !text.equals("bye"));
-            LogIt.logInfo("Client Disconnected");
+            logger.logInfo("Client Disconnected");
             socket.close();
         } catch (IOException ex) {
-            LogIt.logInfo(ex.getMessage());
+            logger.logInfo(ex.getMessage());
             ex.printStackTrace();
         }
     }

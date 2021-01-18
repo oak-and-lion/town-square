@@ -15,7 +15,7 @@ public class App extends Application implements IApp {
     @Override
     public void start(Stage primaryStage) {
         String uniqueId;
-        String defaultSquareInfo = "";
+        String defaultSquareInfo = Constants.EMPTY_STRING;
         ISquare defaultSquare = null;
         String port = Constants.DEFAULT_PORT;
         String ip = Constants.DEFAULT_IP;
@@ -29,6 +29,8 @@ public class App extends Application implements IApp {
 
         utility = Factory.createUtility(Constants.BASE_UTILITY);
 
+        ILogIt logger = Factory.createLogger(Constants.FILE_LOGGER, Constants.MAIN_LOG_FILE, utility);
+
         checkCurrentState();
 
         try {
@@ -41,7 +43,7 @@ public class App extends Application implements IApp {
             primaryStage.setTitle(Constants.APP_TITLE);
             primaryStage.setScene(scene);
             primaryStage.setOnCloseRequest(event -> {
-                LogIt.logInfo("Closing");
+                logger.logInfo("Closing");
                 close();
                 System.exit(0);
             });
@@ -87,7 +89,7 @@ public class App extends Application implements IApp {
             primaryStage.show();
             controller = loader.<DialogController>getController();
 
-            squareController = Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, controller);
+            squareController = Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, controller, Factory.createLogger(Constants.FILE_LOGGER, "squareController.log", utility));
 
             defaultSquare = Factory.createSquare(Constants.BASE_SQUARE, defaultSquareInfo, port, ip, squareController, utility, controller, uniqueId);
 
@@ -110,7 +112,7 @@ public class App extends Application implements IApp {
         }
 
         if (squareController != null) {
-            server = Factory.createServer(Constants.BASE_SERVER, Integer.parseInt(port), squareController);
+            server = Factory.createServer(Constants.BASE_SERVER, Integer.parseInt(port), squareController, Factory.createLogger(Constants.FILE_LOGGER, Constants.SERVER_LOG_FILE, utility));
             server.start();
         }
     }

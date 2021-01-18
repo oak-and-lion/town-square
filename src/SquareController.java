@@ -5,13 +5,15 @@ public class SquareController implements ISquareController {
     private IUtility utility;
     private IDialogController sampleController;
     private ISquareKeyPair keys;
+    private ILogIt logger;
 
-    public SquareController(IUtility mainUtility, IDialogController controller) {
+    public SquareController(IUtility mainUtility, IDialogController controller, ILogIt logger) {
         utility = mainUtility;
         sampleController = controller;
         keys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR);
         keys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
         keys.setPublicKeyFromBase64(utility.readFile(Constants.PUBLIC_KEY_FILE));
+        this.logger = logger;
     }
 
     public SquareResponse processRequest(String request) {
@@ -51,7 +53,7 @@ public class SquareController implements ISquareController {
         ISquare square = sampleController.getSquareByInvite(split[1]);
         if (square != null) {
             String temp = keys.decryptFromBase64(split[2]).trim();
-            LogIt.logInfo(split[3]);
+            logger.logInfo(split[3]);
             try {
                 String raw = utility.decrypt(split[3], temp);
 
@@ -197,7 +199,7 @@ public class SquareController implements ISquareController {
             boolean getEntireFile = Long.valueOf(start) > -1 ? Constants.NOT_FOUND_RETURN_ZERO
                     : !Constants.NOT_FOUND_RETURN_ZERO;
             if (getEntireFile != Constants.NOT_FOUND_RETURN_ZERO) {
-                LogIt.logInfo("Need whole file");
+                logger.logInfo("Need whole file");
             }
             int firstRow = utility.findFirstOccurence(file, start, Constants.SEARCH_CONTAINS, getEntireFile);
             String posts = utility.readFile(file, firstRow);

@@ -14,3 +14,4 @@ build.xml
 *.zip
 .vscode/launch.json
 .vscode/settings.json
+*.log

@@ -3,6 +3,7 @@ public class Test {
         IUtility utility = Utility.create();
 
         String[] s = utility.searchFile("my_square.members", "asdfsafasddsafdsaf", false, -1);
-        LogIt.logInfo(Integer.toString(s.length));
+        ILogIt logger = Factory.createLogger(1, "test.log", utility);
+        logger.logInfo(Integer.toString(s.length));
     }
 }

@@ -5,20 +5,16 @@ import java.net.Socket;
 public class Server extends Thread implements IServer {
     private int port;
     private boolean running;
-    private static Server server;
-    private ServerThread serverThread;
+    private static IServer iserver;
+    private IServerThread serverThread;
     private ISquareController squareController;
+    private ILogIt logger;
 
-    private Server(int port, ISquareController controller) {
-        this.port = port;
-        squareController = controller;
-    }
-
-    public static IServer create(int port, ISquareController controller) {
-        if (server == null) {
-            server = new Server(port, controller);
+    public static IServer create(int port, ISquareController controller, ILogIt logger) {
+        if (iserver == null) {
+            iserver = Factory.createServer(Constants.BASE_SERVER, port, controller, logger);
         }
-        return server;
+        return iserver;
     }
 
     public int getPort() {
@@ -30,7 +26,7 @@ public class Server extends Thread implements IServer {
     }
 
     public void teardown() {
-        LogIt.logInfo("Ending Server");
+        logger.logInfo("Ending Server");
         running = false;
 
         serverThread = null;
@@ -41,14 +37,14 @@ public class Server extends Thread implements IServer {
         running = true;
         try (ServerSocket serverSocket = new ServerSocket(port)) {
 
-            LogIt.logInfo("Listening");
+            logger.logInfo("Listening");
 
             while (running) {
                 running = startServer(serverSocket);
             }
 
         } catch (IOException ex) {
-            LogIt.logInfo(ex.getMessage());
+            logger.logInfo(ex.getMessage());
             ex.printStackTrace();
         }
     }
@@ -57,9 +53,9 @@ public class Server extends Thread implements IServer {
         boolean result = true;
         try {
             Socket socket = serverSocket.accept();
-            LogIt.logInfo("New client connected");
+            logger.logInfo("New client connected");
 
-            serverThread = new ServerThread(socket, squareController);
+            serverThread = Factory.createServerThread(Constants.BASE_SERVER_THREAD, socket, squareController, logger);
             serverThread.start();
         } catch (Exception e) {
             e.printStackTrace();

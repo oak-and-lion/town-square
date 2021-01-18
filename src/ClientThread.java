@@ -4,7 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 
-public class ClientThread extends Thread {
+public class ClientThread extends Thread implements IClientThread {
     private String squareName;
     private int lastKnownPost;
     private Square square;

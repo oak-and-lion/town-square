@@ -12,21 +12,28 @@ public class Client implements IClient {
     private int port;
     private String hostName;
     private String squareId;
+    private ILogIt logger;
 
     public Client(String hostName, int port, String squareId) {
         this.hostName = hostName;
         this.port = port;
         this.squareId = squareId;
+        createLogger();
     }
 
     public Client(Square square) {
         port = Integer.valueOf(square.getPort());
         hostName = square.getIP();
         squareId = square.getId();
+        createLogger();
+    }
+
+    private void createLogger() {
+        logger = Factory.createLogger(Constants.FILE_LOGGER, squareId + ".log", Factory.createUtility(Constants.BASE_UTILITY));
     }
 
     public String sendMessage(String text, boolean encrypt) {
-        LogIt.logInfo(text);
+        logger.logInfo(text);
         try (Socket socket = new Socket(hostName, port)) {
             OutputStream output = socket.getOutputStream();
             PrintWriter writer = new PrintWriter(output, true);
@@ -40,14 +47,14 @@ public class Client implements IClient {
                     encryptFlag + Constants.COMMAND_DATA_SEPARATOR + squareId + Constants.COMMAND_DATA_SEPARATOR + text, writer, socket);
         } catch (SocketException se) {
             if (se.getMessage().equals("Connection refused: connect")) {
-                LogIt.logInfo("Client '" + squareId + "'' not available");
+                logger.logInfo("Client '" + squareId + "'' not available");
             } else {
                 se.printStackTrace();
             }
         } catch (UnknownHostException ex) {
-            LogIt.logInfo("Server not found: " + ex.getMessage());
+            logger.logInfo("Server not found: " + ex.getMessage());
         } catch (IOException ex) {
-            LogIt.logInfo("I/O error: " + ex.getMessage());
+            logger.logInfo("I/O error: " + ex.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -53,7 +53,7 @@ public class Square implements ISquare {
     }
 
     private void initializeClientThread() {
-        ClientThread clientThread = new ClientThread(this, utility, uniqueId);
+        IClientThread clientThread = Factory.createClientThread(Constants.BASE_CLIENT_THREAD, this, utility, uniqueId);
 
         if (utility.checkFileExists(getSafeLowerName() + Constants.POSTS_FILE_EXT)) {
             lastKnownPost = utility.countLinesInFile(getSafeLowerName() + Constants.POSTS_FILE_EXT);

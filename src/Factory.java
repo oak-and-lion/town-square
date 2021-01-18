@@ -1,3 +1,5 @@
+import java.net.Socket;
+
 import javafx.scene.control.TextField;
 
 public class Factory {
@@ -21,17 +23,17 @@ public class Factory {
     }
 
     public static ISquareController createSquareController(int type, IUtility mainUtility,
-            IDialogController controller) {
+            IDialogController controller, ILogIt logger) {
         if (type == Constants.BASE_SQUARE_CONTROLLER) {
-            return new SquareController(mainUtility, controller);
+            return new SquareController(mainUtility, controller, logger);
         }
 
         return null;
     }
 
-    public static IServer createServer(int type, int port, ISquareController squareController) {
+    public static IServer createServer(int type, int port, ISquareController squareController, ILogIt logger) {
         if (type == Constants.BASE_SERVER) {
-            return Server.create(port, squareController);
+            return Server.create(port, squareController, logger);
         }
 
         return null;
@@ -65,6 +67,41 @@ public class Factory {
     public static TownSquareButton createTownSquareButton(int type, String buttonText, ISquare square, TextField postsTextField) {
         if (type == Constants.BASE_TOWN_SQUARE_BUTTON) {
             return new TownSquareButton(buttonText, square, postsTextField);
+        }
+
+        return null;
+    }
+
+    public static ILogIt createLogger(int type, String file, IUtility utility) {
+        if (type == Constants.CONSOLE_LOGGER) {
+            return LogItConsole.create();
+        } else if (type == Constants.FILE_LOGGER) {
+            return LogItFile.create(utility, file);
+        }
+
+        return null;
+    }
+
+    public static IClientThread createClientThread(int type, Square square, IUtility utility, String uniqueId) {
+        if (type == Constants.BASE_CLIENT_THREAD) {
+            return new ClientThread(square, utility, uniqueId);
+        }
+
+        return null;
+    }
+
+    public static IServerThread createServerThread(int type, Socket socket, ISquareController squareController, ILogIt logger) {
+        if (type == Constants.BASE_SERVER_THREAD) {
+            return new ServerThread(socket, squareController, logger);
+        }
+
+        return null;
+    }
+
+    public static ITextDialogBox creaTextDialogBox(int type, String title, String headerText,
+    String content, ITextDialogBoxCallback controller, double width, int createType) {
+        if (type == Constants.BASE_TEXT_DIALOG_BOX) {
+            return new TextDialogBox(title, headerText, content, controller, width, createType);
         }
 
         return null;
