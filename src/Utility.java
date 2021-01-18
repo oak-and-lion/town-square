@@ -102,8 +102,18 @@ public class Utility implements IUtility {
         return directoryPath.list(textFilefilter);
     }
 
+    public boolean deleteFiles(String match) {
+        String[] files = getFiles(match);
+
+        for(String file : files) {
+            deleteFile(file);
+        }
+
+        return true;
+    }
+
     private String bufferedReaderRead(BufferedReader in) {
-        String result = "";
+        String result = Constants.EMPTY_STRING;
         try {
             result = in.readLine(); // you get the IP as a String
         } catch (IOException ioe) {

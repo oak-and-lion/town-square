@@ -110,6 +110,11 @@ public class Constants {
     public static final String ENCRYPTION_SCHEME = "RSA/ECB/PKCS1Padding";
     public static final String RSA = "RSA";
     public static final String DEFAULT_USER_NAME = "Anonymous User";
-    public static final String SERVER_LOG_FILE = "server.log";
-    public static final String MAIN_LOG_FILE = "main.log";
+    public static final String SERVER_LOG_FILE = "_server.log";
+    public static final String MAIN_LOG_FILE = "_main.log";
+    public static final String LOG_FILE_EXT = ".log";
+    public static final String CLIENT_LOG_PREFIX = "_client_";
+    public static final String INVITE_FILE_EXT = ".invite";
+    public static final String INVITE_FILE_PREFIX = "__pending_";
+    public static final int GRACEFUL_SHUTDOWN = 0;
 }

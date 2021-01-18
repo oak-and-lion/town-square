@@ -372,6 +372,10 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
         if (encrypt) {
             String remotePublicKey = client.sendMessage(Constants.REQUEST_PUBLIC_KEY_COMMAND, false);
+            if (remotePublicKey.equals(Constants.EMPTY_STRING)) {
+                utility.writeFile(Constants.INVITE_FILE_PREFIX + split[3] + Constants.INVITE_FILE_EXT, invite);
+                return;
+            }
             SquareResponse response = processTCPReturn(remotePublicKey);
             if (!response.getCode().equals(Constants.OK_RESULT)) {
                 return;
@@ -404,7 +408,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             ISquare square = Factory.createSquare(Constants.BASE_SQUARE, info, port.getText(),
                     remoteIP.getValue().getDisplay(),
                     Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
-                            Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + ".log", utility)),
+                            Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT, utility)),
                     utility, this, uniqueId.getText());
             utility.writeFile(squareSafeName + Constants.SQUARE_FILE_EXT, info);
             setTabSquare(square);
@@ -420,7 +424,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             String contents = utility.readFile(file);
             setTabSquare(new Square(contents, port.getText(), remoteIP.getValue().getDisplay(),
                     Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
-                            Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + ".log", utility)),
+                            Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT, utility)),
                     utility, this, uniqueId.getText()));
         }
     }
@@ -452,7 +456,11 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         utility.writeFile(safeName + Constants.SQUARE_FILE_EXT, contents);
         setTabSquare(new Square(contents, port.getText(), remoteIP.getValue().getDisplay(),
                 Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
-                        Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + ".log", utility)),
+                        Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT, utility)),
                 utility, this, uniqueId.getText()));
+    }
+
+    public void processPendingInvites() {
+        // process
     }
 }

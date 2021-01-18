@@ -58,8 +58,10 @@ public class App extends Application implements IApp {
             primaryStage.setOnCloseRequest(event -> {
                 logger.logInfo("Closing");
                 close();
-                System.exit(0);
+                systemExit.handleExit(Constants.GRACEFUL_SHUTDOWN);
             });
+
+            cleanup();
 
             if (!utility.checkFileExists(Constants.UNIQUE_ID_FILE)) {
                 uniqueId = utility.createIdFile(Constants.UNIQUE_ID_FILE);
@@ -128,6 +130,10 @@ public class App extends Application implements IApp {
             server = Factory.createServer(Constants.BASE_SERVER, Integer.parseInt(port), squareController, Factory.createLogger(Constants.FILE_LOGGER, Constants.SERVER_LOG_FILE, utility));
             server.start();
         }
+
+        logger.logInfo("Started Town Square");
+
+        controller.processPendingInvites();
     }
 
     private boolean checkCurrentState(IAlertBox alert) {
@@ -157,6 +163,10 @@ public class App extends Application implements IApp {
         stop();
     }
 
+    private void cleanup() {
+        utility.deleteFiles(Constants.LOG_FILE_EXT);
+    }
+
     public void sendDefaultName(String defaultName) {
         utility.deleteFile(Constants.DEFAULT_NAME_FILE);
         utility.writeFile(Constants.DEFAULT_NAME_FILE, defaultName);
@@ -182,8 +192,8 @@ public class App extends Application implements IApp {
     }
 
     public static void main(String[] args) {
-        launch(args);
         setUpDependencies(Factory.createAlertBox(Constants.BASE_ALERT_BOX), Factory.createSystemExit(Constants.BASE_SYSTEM_EXIT));
+        launch(args);
     }
 
     public static void execute(IAlertBox alertbox, ISystemExit systemExit) {

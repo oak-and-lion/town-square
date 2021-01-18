@@ -16,4 +16,5 @@ public interface IDialogController {
     void setTabSquare(ISquare square);
     void setPublicKey(String publicKey);
     void setRemoteIP(ObservableList<IPAddress> ips, String s);
+    void processPendingInvites();
 }

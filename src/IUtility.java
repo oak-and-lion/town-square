@@ -18,4 +18,5 @@ public interface IUtility {
     String getRemoteIP();
     IPAddress[] getLocalIPs();
     boolean deleteFile(String file);
+    boolean deleteFiles(String match);
 }

@@ -12,7 +12,7 @@ public class Server extends Thread implements IServer {
 
     public static IServer create(int port, ISquareController controller, ILogIt logger) {
         if (iserver == null) {
-            iserver = Factory.createServer(Constants.BASE_SERVER, port, controller, logger);
+            iserver = new Server(port, controller, logger);
         }
         return iserver;
     }
@@ -21,8 +21,11 @@ public class Server extends Thread implements IServer {
         return port;
     }
 
-    public Server() {
+    public Server(int port, ISquareController controller, ILogIt logger) {
         running = false;
+        this.port = port;
+        this.squareController = controller;
+        this.logger = logger;
     }
 
     public void teardown() {

@@ -14,6 +14,8 @@ public class Client implements IClient {
     private String squareId;
     private ILogIt logger;
 
+    private static final String CLIENT_PREFIX = "Client '";
+
     public Client(String hostName, int port, String squareId) {
         this.hostName = hostName;
         this.port = port;
@@ -29,11 +31,11 @@ public class Client implements IClient {
     }
 
     private void createLogger() {
-        logger = Factory.createLogger(Constants.FILE_LOGGER, squareId + ".log", Factory.createUtility(Constants.BASE_UTILITY));
+        logger = Factory.createLogger(Constants.FILE_LOGGER, Constants.CLIENT_LOG_PREFIX + squareId + Constants.LOG_FILE_EXT, Factory.createUtility(Constants.BASE_UTILITY));
     }
 
-    public String sendMessage(String text, boolean encrypt) {
-        logger.logInfo(text);
+    public String sendMessage(String text, boolean encrypt) {        
+        logger.logInfo("Sending client request: " + text);
         try (Socket socket = new Socket(hostName, port)) {
             OutputStream output = socket.getOutputStream();
             PrintWriter writer = new PrintWriter(output, true);
@@ -47,16 +49,18 @@ public class Client implements IClient {
                     encryptFlag + Constants.COMMAND_DATA_SEPARATOR + squareId + Constants.COMMAND_DATA_SEPARATOR + text, writer, socket);
         } catch (SocketException se) {
             if (se.getMessage().equals("Connection refused: connect")) {
-                logger.logInfo("Client '" + squareId + "'' not available");
+                logger.logInfo(CLIENT_PREFIX + squareId + "' not available");
+            } else if (se.getMessage().equals("Connection timed out: connect")) {
+                logger.logInfo(CLIENT_PREFIX + hostName + Constants.COLON + Integer.toString(port) + "' not available");
             } else {
-                se.printStackTrace();
+                logger.logInfo(CLIENT_PREFIX + hostName + Constants.COLON + Integer.toString(port) + "' " + se.getMessage());
             }
         } catch (UnknownHostException ex) {
             logger.logInfo("Server not found: " + ex.getMessage());
         } catch (IOException ex) {
             logger.logInfo("I/O error: " + ex.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.logInfo(CLIENT_PREFIX + hostName + Constants.COLON + Integer.toString(port) + "' " + e.getMessage());
         }
 
         return Constants.EMPTY_STRING;
@@ -80,7 +84,7 @@ public class Client implements IClient {
             InputStream input = socket.getInputStream();
             return readServerReply(input);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.logInfo(CLIENT_PREFIX + hostName + Constants.COLON + Integer.toString(port) + "' " + e.getMessage());
         }
 
         return Constants.EMPTY_STRING;
@@ -90,7 +94,7 @@ public class Client implements IClient {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
             return reader.readLine();
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            logger.logInfo(CLIENT_PREFIX + hostName + Constants.COLON + Integer.toString(port) + "' " + ioe.getMessage());
         }
 
         return Constants.EMPTY_STRING;
