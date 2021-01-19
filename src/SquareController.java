@@ -201,7 +201,7 @@ public class SquareController implements ISquareController {
             if (getEntireFile != Constants.NOT_FOUND_RETURN_ZERO) {
                 logger.logInfo("Need whole file");
             }
-            int firstRow = utility.findFirstOccurence(file, start, Constants.SEARCH_CONTAINS, getEntireFile);
+            int firstRow = utility.findFirstOccurence(file, start, Constants.SEARCH_STARTS_WITH, getEntireFile);
             String posts = utility.readFile(file, firstRow);
 
             String[] members = utility.readFile(memberFile).split(Constants.COMMAND_DATA_SEPARATOR);

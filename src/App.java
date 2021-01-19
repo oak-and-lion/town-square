@@ -3,6 +3,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import java.io.IOException;
+import java.util.ArrayList;
+
 import javafx.scene.*;
 import javafx.stage.*;
 
@@ -209,6 +211,33 @@ public class App extends Application implements IApp {
     public void sendPort(String port) {
         utility.deleteFile(Constants.PORT_FILE);
         utility.writeFile(Constants.PORT_FILE, port);
+    }
+
+    public void sendIP(String ip, String oldIp, String uniqueId) {
+        utility.writeFile(Constants.IP_FILE, ip);
+        String[] files = utility.getFiles(Constants.MEMBERS_FILE_EXT);
+        
+        for (String file : files) {
+            ArrayList<String> newLines = new ArrayList<String>();
+            String[] lines = utility.readFile(file).split(Constants.READ_FILE_DATA_SEPARATOR);
+            for (String line : lines) {
+                if (line.contains(oldIp) && line.contains(uniqueId)) {
+                    line = line.replace(oldIp, ip);
+                }
+                newLines.add(line);
+            }
+            StringBuilder result = new StringBuilder();
+            boolean first = true;
+            for (String line : newLines) {
+                if (first) {
+                    first = false;
+                } else {
+                    result.append(Constants.NEWLINE);
+                }
+                result.append(line);
+            }
+            utility.writeFile(file, result.toString());
+        }
     }
 
     public void updateSquare(Square square) {

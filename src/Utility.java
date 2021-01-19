@@ -263,7 +263,7 @@ public class Utility implements IUtility {
             while ((line = bufferedReader.readLine()) != null) {
                 if (count > lastKnownRow) {
                     if (!first) {
-                        result.append("%%%");
+                        result.append(Constants.READ_FILE_DATA_SEPARATOR);
                     }
                     result.append(line);
                     first = false;

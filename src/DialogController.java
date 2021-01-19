@@ -50,6 +50,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     private MenuItem mnuJoinSquare;
 
     @FXML
+    private MenuItem mnuCreateSquare;
+
+    @FXML
     private TextField alias;
 
     @FXML
@@ -132,7 +135,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             remoteIP.setValue(ips.get(index));
 
             remoteIP.valueProperty().addListener((obs, oldValue, newValue) -> {
-                utility.writeFile(Constants.IP_FILE, newValue.getDisplay());
+                parent.sendIP(newValue.getDisplay(), oldValue.getDisplay(), uniqueId.getText());
                 for (ISquare square : squares) {
                     square.setIP(newValue.getDisplay());
                     String invite = buildInviteCode(square, determineSquarePrivacy(square));

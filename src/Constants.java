@@ -80,6 +80,7 @@ public class Constants {
     public static final String ALGORITHM = "AES";
     public static final String TRANSFORMATION = "AES/ECB/PKCS5Padding";
     public static final String COMMAND_DATA_SEPARATOR = "%%%";
+    public static final String READ_FILE_DATA_SEPARATOR = "%%%";
     public static final String COLON = ":";
     public static final String READ_COMMAND = "read";
     public static final String NO_POSTS = "-1";

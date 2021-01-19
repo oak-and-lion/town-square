@@ -6,4 +6,5 @@ public interface IApp {
     String getDefaultName();
     String getPublicKeyBase64();
     void sendAlias(String alias);
+    void sendIP(String ip, String oldIp, String uniqueId);
 }
