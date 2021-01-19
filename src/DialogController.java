@@ -1,3 +1,8 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +17,13 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 public class DialogController implements ITextDialogBoxCallback, IDialogController {
@@ -24,6 +33,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     private List<String> squareInvites;
     private String publicKey;
     private IUtility utility;
+    private Stage primaryStage;
 
     @FXML
     private TextField uniqueId;
@@ -51,6 +61,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     @FXML
     private MenuItem mnuCreateSquare;
+
+    @FXML
+    private MenuItem mnuAttachImage;
 
     @FXML
     private TextField alias;
@@ -92,6 +105,24 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         dialogBox.show();
     }
 
+    @FXML
+    private void attachImage(ActionEvent event) {
+        // attach the image
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Attach Image...");
+        File file = fc.showOpenDialog(primaryStage);
+        File target = new File(file.getName());
+        try {
+            if (!utility.checkFileExists(target.getName())) {
+                Files.copy(file.toPath(), target.toPath());
+            }
+            ISquare square = (ISquare)tabPane.getSelectionModel().getSelectedItem().getUserData();
+            postTheMessage(square, "[image]" + target.getName());
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+
     public void callback(String input, int type) {
         if (type == Constants.JOIN_TYPE) {
             processInvitation(input);
@@ -104,6 +135,10 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         squares = new ArrayList<ISquare>();
         squareNames = new ArrayList<String>();
         squareInvites = new ArrayList<String>();
+    }
+
+    public void setStage(Stage stage) {
+        primaryStage = stage;
     }
 
     public void setUtilityController(IUtility utilityController) {
@@ -198,6 +233,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         Tab tab = new Tab();
         tab.setText(square.getName());
         tab.setId(square.getId());
+        tab.setUserData(square);
 
         // invite code
         HBox inviteControls = createInviteControls(square);
@@ -244,15 +280,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                 Constants.POST_BUTTON_TEXT, square, postsTextField);
         postsButton.setOnAction(event -> {
             ISquare newSquare = postsButton.getSquare();
-            long currentMillis = System.currentTimeMillis();
-            String data = Long.toString(currentMillis) + Constants.FILE_DATA_SEPARATOR + postsButton.getPostMessage()
-                    + Constants.FILE_DATA_SEPARATOR + uniqueId.getText();
-            String postsFile = newSquare.getSafeLowerName() + Constants.POSTS_FILE_EXT;
-            if (utility.checkFileExists(postsFile)) {
-                utility.appendToFile(postsFile, Constants.NEWLINE + data);
-            } else {
-                utility.writeFile(postsFile, data);
-            }
+            postTheMessage(newSquare, postsButton.getPostMessage());
             postsButton.clearPostMessage();
         });
 
@@ -269,6 +297,18 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         generatePostControls.getChildren().addAll(postsLabelHBox, postsHBox, postsButtonHBox);
 
         return generatePostControls;
+    }
+
+    private void postTheMessage(ISquare newSquare, String msg) {
+        long currentMillis = System.currentTimeMillis();
+        String data = Long.toString(currentMillis) + Constants.FILE_DATA_SEPARATOR + msg
+                + Constants.FILE_DATA_SEPARATOR + uniqueId.getText();
+        String postsFile = newSquare.getSafeLowerName() + Constants.POSTS_FILE_EXT;
+        if (utility.checkFileExists(postsFile)) {
+            utility.appendToFile(postsFile, Constants.NEWLINE + data);
+        } else {
+            utility.writeFile(postsFile, data);
+        }
     }
 
     private ScrollPane createPostPane(VBox postsList) {
@@ -463,9 +503,33 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     }
 
     public void addPostMessages(VBox messageList, ScrollPane scrollPane, String message) {
-        Label label = new Label();
-        label.setText(message);
-        messageList.getChildren().addAll(label);
+        if (message.contains("[image]")){
+            HBox hbox = new HBox();
+            hbox.setPadding(new Insets(10, 0 , 0 ,0));
+            int index = message.indexOf("]") + 1;
+            String file = message.substring(index, message.length());
+            try {
+                InputStream stream = new FileInputStream(file);
+                Image image = new Image(stream);
+                ImageView imageView = new ImageView();
+                imageView.setFitHeight(100);
+                imageView.setFitWidth(100);
+                imageView.setPreserveRatio(true);
+                imageView.setImage(image);
+                index = message.indexOf(": ");
+                Label label = new Label();
+                label.setPadding(new Insets(25, 0 ,0 , 0));
+                label.setText(message.substring(0, index));
+                hbox.getChildren().addAll(label, imageView);
+                messageList.getChildren().addAll(hbox);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            Label label = new Label();
+            label.setText(message);
+            messageList.getChildren().addAll(label);
+        }
         scrollPane.setVvalue(Double.MIN_VALUE);
         scrollPane.setVvalue(Double.MAX_VALUE);
     }

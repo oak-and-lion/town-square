@@ -1,6 +1,7 @@
 import javafx.collections.ObservableList;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class xxMockIDialogController implements IDialogController {
     public ISquare getSquareByInvite(String id){
@@ -47,5 +48,9 @@ public class xxMockIDialogController implements IDialogController {
     }
     public void processPendingInvites(){
         // not needed 
+    }
+
+    public void setStage(Stage stage) {
+        // not neededed
     }
 }

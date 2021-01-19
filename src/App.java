@@ -50,6 +50,7 @@ public class App extends Application implements IApp {
         ILogIt logger = Factory.createLogger(Constants.FILE_LOGGER, Constants.MAIN_LOG_FILE, utility);
 
         systemExit.setParent(this);
+        
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(Constants.FXML_FILE));
 

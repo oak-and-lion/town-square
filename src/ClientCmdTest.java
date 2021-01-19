@@ -20,7 +20,7 @@ public class ClientCmdTest {
 
         ISquareController squareController = Factory.createSquareController(1, utility, dController, logger);
 
-        ISquare square = Factory.createSquare(1, defaultSquareInfo, Integer.toString(port), ip, squareController, utility, dController, uniqueId);
+        Factory.createSquare(1, defaultSquareInfo, Integer.toString(port), ip, squareController, utility, dController, uniqueId);
 
         // ===============================================================
 

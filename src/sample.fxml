@@ -27,6 +27,11 @@
               <MenuItem fx:id="mnuCreateSquare" mnemonicParsing="false" onAction="#createSquare" text="Create Square" />
             </items>
           </Menu>
+          <Menu mnemonicParsing="false" text="Message">
+            <items>
+              <MenuItem fx:id="mnuAttachImage" mnemonicParsing="false" onAction="#attachImage" text="Attach Image" />
+            </items>
+          </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
               <MenuItem mnemonicParsing="false" text="About" />

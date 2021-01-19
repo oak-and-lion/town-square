@@ -1,6 +1,7 @@
 import javafx.collections.ObservableList;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public interface IDialogController {
     ISquare getSquareByInvite(String id);
@@ -18,4 +19,5 @@ public interface IDialogController {
     void setPublicKey(String publicKey);
     void setRemoteIP(ObservableList<IPAddress> ips, String s);
     void processPendingInvites();
+    void setStage(Stage stage);
 }
