@@ -1,4 +1,5 @@
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import javafx.application.Platform;
 import javafx.scene.control.ScrollPane;
@@ -7,12 +8,12 @@ import javafx.scene.layout.VBox;
 public class ClientThread extends Thread implements IClientThread {
     private String squareName;
     private int lastKnownPost;
-    private Square square;
+    private ISquare square;
     private IUtility utility;
     private boolean process;
     private String uniqueId;
 
-    public ClientThread(Square s, IUtility utility, String uniqueId) {
+    public ClientThread(ISquare s, IUtility utility, String uniqueId) {
         squareName = s.getName();
         lastKnownPost = s.getLastKnownPost();
         square = s;
@@ -62,15 +63,40 @@ public class ClientThread extends Thread implements IClientThread {
                 memberRaw = utility.readFile(memberFile,
                         Constants.NOT_FOUND_ROW);
                 members = memberRaw.split(Constants.COMMAND_DATA_SEPARATOR);
+                ArrayList<IMemberPostsThread> memberThreads = new ArrayList<IMemberPostsThread>();
+                boolean threadsDone = false;
                 for (String info : members) {
-                    getPostsFromOtherMembers(info, file, msg);
+                    // spin up new thread for each member and process ASAP
+                    IMemberPostsThread thread = new MemberPostsThread(info, file, uniqueId, msg, square, utility);                    
+                    memberThreads.add(thread);
+                    thread.start();
                 }
+
+                checkForDoneThreads(threadsDone, memberThreads);
 
                 Thread.sleep(1000);
             }
         } catch (InterruptedException ie) {
             ie.printStackTrace();
             Thread.currentThread().interrupt();
+        }
+    }
+
+    private void checkForDoneThreads(boolean threadsDone, ArrayList<IMemberPostsThread> memberThreads) {
+        while (!threadsDone) {
+            threadsDone = true;
+            for (int x = 0; x < memberThreads.size(); x++) {
+                if (!memberThreads.get(x).isWorkDone()) {
+                    threadsDone = false;
+                    break;
+                }
+            }
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+                Thread.currentThread().interrupt();
+            }
         }
     }
 
@@ -103,32 +129,6 @@ public class ClientThread extends Thread implements IClientThread {
                         }
                     }
                 }
-    }
-
-    private void getPostsFromOtherMembers(String info, String file, String[] msg) {
-        if (!info.contains(uniqueId)) {
-            String[] member = info.split(Constants.DATA_SEPARATOR);
-            IClient client = Factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
-                    square.getInvite());
-            String response = client.sendMessage(Constants.READ_COMMAND + Constants.COMMAND_DATA_SEPARATOR + msg[0]
-                    + Constants.COMMAND_DATA_SEPARATOR + uniqueId, false);
-            if (!response.equals(Constants.EMPTY_STRING)) {
-                String[] responseSplit = response.split(Constants.COLON);
-                if (responseSplit.length == 2 && responseSplit[0].equals(Constants.OK_RESULT)
-                        && !responseSplit[1].equals(Constants.EMPTY_STRING)) {
-                    String newLine = Constants.NEWLINE;
-                    if (!utility.checkFileExists(file)) {
-                        newLine = Constants.EMPTY_STRING;
-                    }
-                    String posts = newLine
-                            + responseSplit[1].replace(Constants.COMMAND_DATA_SEPARATOR, Constants.NEWLINE);
-                    utility.appendToFile(file, posts);
-                    String[] msgs = responseSplit[1].split(Constants.COMMAND_DATA_SEPARATOR);
-                    String[] lastMsg = msgs[msgs.length - 1].split(Constants.DATA_SEPARATOR);
-                    msg[0] = lastMsg[0];
-                }
-            }
-        }
     }
 
     private void processMessages(String raw) {

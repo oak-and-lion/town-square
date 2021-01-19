@@ -172,7 +172,7 @@ public class SquareController implements ISquareController {
             String[] sameNames = utility.searchFile(memberFile, args[4], Constants.SEARCH_CONTAINS);
             if (sameNames.length > 0) {
                 return processCommand(Long.toString(currentMillis) + Constants.DATA_SEPARATOR + args[3], args[4], file,
-                        square);
+                        square);                
             } else {
                 return buildResult(Constants.FORBIDDEN_RESULT, Constants.FORBIDDEN_MESSAGE);
             }
@@ -211,11 +211,23 @@ public class SquareController implements ISquareController {
 
             for (int x = 0; x < members.length; x++) {
                 String[] data = members[x].split(Constants.DATA_SEPARATOR);
-                memberNames.add(data[0]);
-                memberIds.add(data[1]);
+                if (data[4].equals(split[4])) {
+                    memberNames.add(data[0]);
+                    memberIds.add(data[1]);
+                }
             }
 
-            return posts;
+            if (!memberNames.isEmpty()) {
+                ISquareKeyPair tempKeys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR);
+                tempKeys.setPublicKeyFromBase64(memberIds.get(0));
+                String password = utility.generateRandomString(16);
+                StringBuilder temp = new StringBuilder();
+                temp.append(utility.encrypt(posts, password));
+                posts = tempKeys.encryptToBase64(password) + Constants.COMMAND_DATA_SEPARATOR + temp.toString();
+                return posts;
+            }
+
+            return Constants.EMPTY_STRING;
         }
 
         return Constants.EMPTY_STRING;

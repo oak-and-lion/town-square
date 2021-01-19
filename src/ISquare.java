@@ -13,4 +13,9 @@ public interface ISquare {
     void setPostsVBox(VBox vbox);
     void setTemp(Object object);
     String getSafeLowerName();
+    VBox getPostsVBox();
+    ScrollPane getPostsScrollPane();
+    IDialogController getSampleController();
+    void setLastKnownPost(int lastKnownPost);
+    int getLastKnownPost(); 
 }

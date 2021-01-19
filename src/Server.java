@@ -40,7 +40,7 @@ public class Server extends Thread implements IServer {
         running = true;
         try (ServerSocket serverSocket = new ServerSocket(port)) {
 
-            logger.logInfo("Listening");
+            logger.logInfo("Listening: " + Integer.toString(port));
 
             while (running) {
                 running = startServer(serverSocket);

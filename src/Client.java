@@ -36,7 +36,7 @@ public class Client implements IClient {
     }
 
     public String sendMessage(String text, boolean encrypt) {        
-        logger.logInfo("Sending client request: [" + hostName + Constants.COLON + "] " + text);
+        logger.logInfo("Sending client request: [" + hostName + Constants.COLON + Integer.toString(port) + "] " + text);
         try (Socket socket = new Socket()) {
             socket.connect(new InetSocketAddress(hostName, port), 1000);
             OutputStream output = socket.getOutputStream();

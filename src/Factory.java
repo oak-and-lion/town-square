@@ -82,7 +82,7 @@ public class Factory {
         return null;
     }
 
-    public static IClientThread createClientThread(int type, Square square, IUtility utility, String uniqueId) {
+    public static IClientThread createClientThread(int type, ISquare square, IUtility utility, String uniqueId) {
         if (type == Constants.BASE_CLIENT_THREAD) {
             return new ClientThread(square, utility, uniqueId);
         }
