@@ -1,6 +1,7 @@
 public interface IUtility {
     String createUUID();
     FileWriteResponse writeFile(String file, String data);
+    FileWriteResponse writeBinaryFile(String file, byte[] data);
     FileWriteResponse appendToFile(String file, String data);
     String readFile(String file);
     String readFile(String file, int afterLine);
@@ -10,6 +11,7 @@ public interface IUtility {
     String generateRandomString(int length);
     String encrypt(String data, String password);
     String decrypt(String data, String password);
+    byte[] decryptToBinary(String data, String password);
     String[] getFiles(String match);
     boolean checkFileExists(String file);
     int countLinesInFile(String file);
@@ -19,4 +21,6 @@ public interface IUtility {
     IPAddress[] getLocalIPs();
     boolean deleteFile(String file);
     boolean deleteFiles(String match);
+    String convertToBase64(byte[] bytes);
+    byte[] convertFromBase64(String data);
 }

@@ -43,7 +43,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
                 String[] responseSplit = response.split(Constants.COLON);
                 if (responseSplit.length == 2 && responseSplit[0].equals(Constants.OK_RESULT)
                         && !responseSplit[1].equals(Constants.EMPTY_STRING)) {
-                    processPostData(responseSplit);
+                    processPostData(responseSplit, member);
                 }
             }
         }
@@ -51,7 +51,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
         workDone = true;
     }
 
-    private void processPostData(String[] responseSplit) {
+    public void processPostData(String[] responseSplit, String[] member) {
         ISquareKeyPair tempKeys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR);
         tempKeys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
         String[] decryptData = responseSplit[1].split(Constants.COMMAND_DATA_SEPARATOR);
@@ -69,7 +69,33 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
                 String[] msgs = decrypted.split(Constants.COMMAND_DATA_SEPARATOR);
                 String[] lastMsg = msgs[msgs.length - 1].split(Constants.DATA_SEPARATOR);
                 msg[0] = lastMsg[0];
+                for (String m : msgs) {
+                    if (m.indexOf(Constants.IMAGE_MARKER) > Constants.NOT_FOUND_IN_STRING) {
+                        processGetImageFile(m, member);
+                    }
+                }
             }
         }
+    }
+
+    private void processGetImageFile(String data, String[] member) {
+        String[] message = data.split(Constants.DATA_SEPARATOR);
+
+        IClient client = Factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
+            square.getInvite());
+        String response = client.sendMessage(Constants.READ_COMMAND + Constants.COMMAND_DATA_SEPARATOR + msg[0]
+            + Constants.COMMAND_DATA_SEPARATOR + uniqueId, false);
+
+
+        ISquareKeyPair keys = Factory.createSquareKeyPair(1);
+        keys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
+
+        String key = keys.decryptFromBase64(message[0]);
+
+        String f = utility.decrypt(msg[1], key);
+
+        byte[] imageFile = utility.convertFromBase64(f);
+
+        FileWriteResponse result = utility.writeBinaryFile(message[0], imageFile);
     }
 }

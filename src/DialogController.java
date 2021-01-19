@@ -508,8 +508,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             hbox.setPadding(new Insets(10, 0 , 0 ,0));
             int index = message.indexOf("]") + 1;
             String file = message.substring(index, message.length());
-            try {
-                InputStream stream = new FileInputStream(file);
+            try (InputStream stream = new FileInputStream(file)) {                
                 Image image = new Image(stream);
                 ImageView imageView = new ImageView();
                 imageView.setFitHeight(100);

@@ -67,6 +67,7 @@ public class Constants {
     public static final String JOIN_COMMAND = "join";
     public static final String MEMBER_COMMAND = "members";
     public static final String REQUEST_PUBLIC_KEY_COMMAND = "pkey";
+    public static final String REQUEST_FILE_COMMAND = "file";
     public static final String OK_RESULT = "200";
     public static final String ALREADY_REGISTERED_RESULT = "460";
     public static final String MEMBERS_FILE_EXT = ".members";
@@ -120,4 +121,6 @@ public class Constants {
     public static final int GRACEFUL_SHUTDOWN = 0;
     public static final String ALIAS_FILE = "alias.id";
     public static final String SQUARE_CONTROLLER_LOG_FILE = "squareController.log";
+    public static final String IMAGE_MARKER = "[image]";
+    public static final int NOT_FOUND_IN_STRING = -1;
 }

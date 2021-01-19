@@ -1,3 +1,6 @@
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -90,6 +93,8 @@ public class SquareController implements ISquareController {
             result.setResponse(buildResult(Constants.OK_RESULT, getMembers(square, split)));
         } else if (split[2].trim().equals(Constants.REQUEST_PUBLIC_KEY_COMMAND)) {
             result.setResponse(processPublicKeyMessage());
+        } else if (split[2].trim().equals(Constants.REQUEST_FILE_COMMAND)) {
+            result.setResponse(buildResult(Constants.OK_RESULT, processFileGetMessage(square, split)));
         } else if (split[2].trim().equals(Constants.ACK_COMMAND)) {
             result.setResponse(buildResult(Constants.OK_RESULT, Constants.ACK_BACK));
         } else if (split[2].equals(Constants.FAILURE_COMMAND)) {
@@ -236,6 +241,49 @@ public class SquareController implements ISquareController {
     private String processPublicKeyMessage() {
         String key = utility.readFile(Constants.PUBLIC_KEY_FILE);
         return buildResult(Constants.OK_RESULT, key);
+    }
+
+    private String processFileGetMessage(ISquare square, String[] split) {
+        // command arguments
+        // 3 == file name
+        // 4 == requesting member id
+
+        if (split.length != 5) {
+            return Constants.EMPTY_STRING;
+        }
+
+        String result = Constants.EMPTY_STRING;
+        String memberFile = square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT;
+
+        try (InputStream stream = new FileInputStream(split[3])) {
+            result = utility.convertToBase64(stream.readAllBytes());
+
+            String[] members = utility.readFile(memberFile).split(Constants.COMMAND_DATA_SEPARATOR);
+
+            ArrayList<String> memberIds = new ArrayList<String>();
+            ArrayList<String> memberNames = new ArrayList<String>();
+
+            for (int x = 0; x < members.length; x++) {
+                String[] data = members[x].split(Constants.DATA_SEPARATOR);
+                if (data[4].equals(split[4])) {
+                    memberNames.add(data[0]);
+                    memberIds.add(data[1]);
+                }
+            }
+
+            ISquareKeyPair tempKeys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR);
+            tempKeys.setPublicKeyFromBase64(memberIds.get(0));
+            String password = utility.generateRandomString(16);
+            StringBuilder temp = new StringBuilder();
+            temp.append(utility.encrypt(result, password));
+            result = tempKeys.encryptToBase64(password) + Constants.COMMAND_DATA_SEPARATOR + temp.toString();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
     private String getMembers(ISquare square, String[] split) {

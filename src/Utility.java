@@ -169,6 +169,24 @@ public class Utility implements IUtility {
         return result;
     }
 
+    public FileWriteResponse writeBinaryFile(String file, byte[] data) {
+        FileWriteResponse result = new FileWriteResponse(false, 0);
+        try (OutputStream outputStream = new FileOutputStream(file)) {
+            int byteRead = 0;
+ 
+            for (int x = 0; x < data.length; x++) {
+                outputStream.write(data[x]);
+                byteRead++;
+            }
+            result.setLineCount(byteRead);
+            result.setSuccessful(true);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+        return result;
+    }
+
     public FileWriteResponse writeFile(String file, String data) {
         FileWriteResponse result = new FileWriteResponse(false, 0);
         File f = new File(getFilePath(file));
@@ -419,16 +437,19 @@ public class Utility implements IUtility {
     }
 
     public String decrypt(String data, String password) {
+        return new String(decryptToBinary(data, password));
+    }
+
+    public byte[] decryptToBinary(String data, String password) {
         try {
             Cipher cipher = Cipher.getInstance(Constants.TRANSFORMATION);
             SecretKey secretKey = new SecretKeySpec(password.getBytes(), Constants.ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
-            byte[] clearMessage = cipher.doFinal(convertFromBase64(data));
-            return new String(clearMessage);
+            return cipher.doFinal(convertFromBase64(data));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "";
+        return new byte[0];
     }
 
     public String encrypt(String data, String password) {
@@ -441,7 +462,7 @@ public class Utility implements IUtility {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "";
+        return Constants.EMPTY_STRING;
     }
 
     public String convertToBase64(byte[] bytes) {
