@@ -31,9 +31,13 @@ public class ClientCmdTest {
         String time = "200:" + response.getMessage();
         String[] msg = time.split(Constants.COLON);
 
+        String[] memberData = new String[4];
+        memberData[2] = "192.168.1.153";
+        memberData[3] = "44123";
+
         ISquare square = new xxMockSquare();
         IMemberPostsThread mt = new MemberPostsThread("john law~_~MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApsRCab4SDmN1FjBdy11rlIUJg5GbczLnj4dMrqzdVZ7zSYThihSdRHx1HcU+gejwwP/q28vuoClFIOj4kOr73By3UUBWdZLRhOH7NcpLCpiIRINU0poHIHwkmM6L4PdvmUTP099VCmyNlndI/AesCD/ZzSZJDsIyuY36MMJNnjbsHd26tFBDCKqIDRixWUPOR+FX+539YQqGgU3RIBF9uNc6T0aWqijNIlMbMxAOMiUFWbDt+wqQWY6sBgPDVWBZqvXEg+CwzdlUYB5LGbGjwb/xyMiUcCkef14faYsCLu6lXQaRQbKgcmWseQPllhyGwwoyylFdx9GFhT2i1VYWSwIDAQAB~_~192.168.105.48~_~44423~_~d1de5968-814d-4a40-8693-542008c80e1c", "my_square.posts", "123", new String[1], square, utility);
-        mt.processPostData(msg);
+        mt.processPostData(msg, memberData);
 
         ISquareKeyPair keys = Factory.createSquareKeyPair(1);
         keys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
