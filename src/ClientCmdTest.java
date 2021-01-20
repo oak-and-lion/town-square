@@ -7,10 +7,10 @@ public class ClientCmdTest {
         IUtility utility = Factory.createUtility(1);
 
         //String hostname = "192.168.1.159";
-        int port = 44123;
-        String ip = "127.0.0.1";
-        String uniqueId = utility.readFile(Constants.UNIQUE_ID_FILE);
-        String defaultSquareInfo = utility.readFile(Constants.DEFAULT_SQUARE_FILE);
+        //int port = 44123;
+        //String ip = "127.0.0.1";
+        //String uniqueId = utility.readFile(Constants.UNIQUE_ID_FILE);
+        //String defaultSquareInfo = utility.readFile(Constants.DEFAULT_SQUARE_FILE);
         
         ILogIt logger = Factory.createLogger(1, "clientCmdTest.log", utility);       
         

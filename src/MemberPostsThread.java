@@ -101,6 +101,6 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
 
         byte[] imageFile = utility.convertFromBase64(f);
 
-        FileWriteResponse result = utility.writeBinaryFile(fileName, imageFile);
+        utility.writeBinaryFile(fileName, imageFile);
     }
 }
