@@ -430,31 +430,31 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             encrypt = true;
         }
 
+        String remotePublicKey = client.sendMessage(Constants.REQUEST_PUBLIC_KEY_COMMAND, false);
+        if (remotePublicKey.equals(Constants.EMPTY_STRING)) {
+            utility.writeFile(Constants.INVITE_FILE_PREFIX + split[3] + Constants.INVITE_FILE_EXT, invite);
+            return false;
+        }
+        SquareResponse response = processTCPReturn(remotePublicKey);
+        if (!response.getCode().equals(Constants.OK_RESULT)) {
+            return false;
+        }
+
+        tempKeys.setPublicKeyFromBase64(response.getMessage());
+
         String data = Constants.JOIN_COMMAND + Constants.COMMAND_DATA_SEPARATOR + defaultName.getText()
                 + Constants.COMMAND_DATA_SEPARATOR + publicKey + Constants.COMMAND_DATA_SEPARATOR
                 + remoteIP.getValue().getDisplay() + Constants.COMMAND_DATA_SEPARATOR + port.getText()
                 + Constants.COMMAND_DATA_SEPARATOR + uniqueId.getText();
 
         if (encrypt) {
-            String remotePublicKey = client.sendMessage(Constants.REQUEST_PUBLIC_KEY_COMMAND, false);
-            if (remotePublicKey.equals(Constants.EMPTY_STRING)) {
-                utility.writeFile(Constants.INVITE_FILE_PREFIX + split[3] + Constants.INVITE_FILE_EXT, invite);
-                return false;
-            }
-            SquareResponse response = processTCPReturn(remotePublicKey);
-            if (!response.getCode().equals(Constants.OK_RESULT)) {
-                return false;
-            }
-
-            tempKeys.setPublicKeyFromBase64(response.getMessage());
-
             String password = utility.generateRandomString(16);
             StringBuilder temp = new StringBuilder();
             temp.append(utility.encrypt(data, password));
             data = tempKeys.encryptToBase64(password) + Constants.COMMAND_DATA_SEPARATOR + temp.toString();
         }
 
-        SquareResponse response = processTCPReturn(client.sendMessage(data, encrypt));
+        response = processTCPReturn(client.sendMessage(data, encrypt));
 
         if (response.getCode().equals(Constants.OK_RESULT)
                 || response.getCode().equals(Constants.ALREADY_REGISTERED_RESULT)) {

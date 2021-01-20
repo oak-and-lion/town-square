@@ -14,7 +14,7 @@ public class ClientCmdTest {
         
         ILogIt logger = Factory.createLogger(1, "clientCmdTest.log", utility);       
         
-        String text = "u%%%a7075b5b-b91d-4448-a0f9-d9b0bec1a726%%%read%%%1611075933936%%%51f7070e-9ebb-429c-a3a6-f847b821451e";
+        String text = "u%%%ccaef8c4-d043-4f73-bf75-2688bff1905f%%%read%%%1611075933936%%%51f7070e-9ebb-429c-a3a6-f847b821451e";
 
         IDialogController dController = new xxMockIDialogController();
 
@@ -28,7 +28,7 @@ public class ClientCmdTest {
 
         SquareResponse response = squareController.processRequest(text);
 
-        String time = "200:" + response.getMessage();
+        String time = "200:"+response.getMessage();
         String[] msg = time.split(Constants.COLON);
 
         String[] memberData = new String[4];

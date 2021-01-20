@@ -83,19 +83,24 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
 
         IClient client = Factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
             square.getInvite());
-        String response = client.sendMessage(Constants.READ_COMMAND + Constants.COMMAND_DATA_SEPARATOR + msg[0]
+
+        String fileName = message[1].substring(message[1].indexOf("]") + 1);
+        String response = client.sendMessage(Constants.REQUEST_FILE_COMMAND + Constants.COMMAND_DATA_SEPARATOR + fileName
             + Constants.COMMAND_DATA_SEPARATOR + uniqueId, false);
 
+        SquareResponse responseData = new SquareResponse(response);
 
-        ISquareKeyPair keys = Factory.createSquareKeyPair(1);
+        ISquareKeyPair keys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR);
         keys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
 
-        String key = keys.decryptFromBase64(message[0]);
+        String[] fileData = responseData.getMessage().split(Constants.COMMAND_DATA_SEPARATOR);
 
-        String f = utility.decrypt(msg[1], key);
+        String key = keys.decryptFromBase64(fileData[0]);
+
+        String f = utility.decrypt(fileData[1], key);
 
         byte[] imageFile = utility.convertFromBase64(f);
 
-        FileWriteResponse result = utility.writeBinaryFile(message[0], imageFile);
+        FileWriteResponse result = utility.writeBinaryFile(fileName, imageFile);
     }
 }
