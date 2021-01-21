@@ -15,16 +15,21 @@ public class xxUnitTestsIAlert extends xxUnitTestsBaseClass {
     }
 
     private void testIAlertPass() {
+        final String METHOD_NAME = "testIAlertPass";
         IUtility utility = Utility.create();
         utility.writeFile(TOWN_SQUARE_LOCK_FILE, "lock");
         App.execute(new xxMockIAlertBox(), new xxMockISystemExit());
         utility.deleteFile(TOWN_SQUARE_LOCK_FILE);
 
-        checkEquals(utility.checkFileExists(ALERT_FILE), true, "testIAlertPass");
-        checkEquals(utility.checkFileExists(SYSTEM_EXIT_FILE), true, "testIAlertPass");
+        // these files are written by the mock alert box object from the above line
+        checkEquals(utility.checkFileExists(ALERT_FILE), true, METHOD_NAME);
+        checkEquals(utility.checkFileExists(SYSTEM_EXIT_FILE), true, METHOD_NAME);
 
-        utility.deleteFile(ALERT_FILE);
+        boolean result = utility.deleteFile(ALERT_FILE);
+        checkEquals(result, true, METHOD_NAME);
         utility.deleteFile(TOWN_SQUARE_LOCK_FILE);
+        checkEquals(result, true, METHOD_NAME);
         utility.deleteFile(SYSTEM_EXIT_FILE);
+        checkEquals(result, true, METHOD_NAME);
     }
 }
