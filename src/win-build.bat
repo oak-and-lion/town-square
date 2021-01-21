@@ -29,3 +29,5 @@ mkdir package
 tar -a -c -f package\pkg-town-square_windows.zip town-square-windows.bat App.jar javafx-windows.zip jdk-11.0.9_windows-x64_bin.zip
 
 cd package
+
+dir
