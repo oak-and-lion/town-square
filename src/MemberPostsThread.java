@@ -52,7 +52,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
     }
 
     public void processPostData(String[] responseSplit, String[] member) {
-        ISquareKeyPair tempKeys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR);
+        ISquareKeyPair tempKeys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR, utility);
         tempKeys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
         String[] decryptData = responseSplit[1].split(Constants.COMMAND_DATA_SEPARATOR);
         if (decryptData.length > 1){
@@ -90,7 +90,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
 
         SquareResponse responseData = new SquareResponse(response);
 
-        ISquareKeyPair keys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR);
+        ISquareKeyPair keys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR, utility);
         keys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
 
         String[] fileData = responseData.getMessage().split(Constants.COMMAND_DATA_SEPARATOR);

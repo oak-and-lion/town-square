@@ -276,7 +276,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         TextField postsTextField = createTextField(Constants.EMPTY_STRING, Constants.POST_PROMPT_TEXT, true,
                 Constants.POSTS_TEXTFIELD_WIDTH);
 
-        TownSquareButton postsButton = Factory.createTownSquareButton(Constants.BASE_TOWN_SQUARE_BUTTON,
+        ITownSquareButton postsButton = Factory.createTownSquareButton(Constants.BASE_TOWN_SQUARE_BUTTON,
                 Constants.POST_BUTTON_TEXT, square, postsTextField);
         postsButton.setOnAction(event -> {
             ISquare newSquare = postsButton.getSquare();
@@ -292,7 +292,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
         Label spacer = createLabel(Constants.EMPTY_STRING, 0, 5, 0, 5);
 
-        postsButtonHBox.getChildren().addAll(postsButton, spacer, postsTextField);
+        postsButtonHBox.getChildren().addAll((TownSquareButton)postsButton, spacer, postsTextField);
 
         generatePostControls.getChildren().addAll(postsLabelHBox, postsHBox, postsButtonHBox);
 
@@ -424,7 +424,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         String[] split = invite.split(Constants.TILDE);
         IClient client = Factory.createClient(Constants.BASE_CLIENT, split[1], Integer.valueOf(split[2]), split[3]);
         boolean encrypt = false;
-        ISquareKeyPair tempKeys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR);
+        ISquareKeyPair tempKeys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR, utility);
 
         if (split[0].equals(Constants.ENCRYPTION_FLAG)) {
             encrypt = true;
@@ -473,7 +473,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             ISquare square = Factory.createSquare(Constants.BASE_SQUARE, info, port.getText(),
                     remoteIP.getValue().getDisplay(),
                     Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
-                            Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT, utility)),
+                            Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT, utility),
+                            Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR, utility)),
                     utility, this, uniqueId.getText());
             utility.writeFile(squareSafeName + Constants.SQUARE_FILE_EXT, info);
             setTabSquare(square);
@@ -493,7 +494,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             String contents = utility.readFile(file);
             setTabSquare(new Square(contents, port.getText(), remoteIP.getValue().getDisplay(),
                     Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
-                            Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT, utility)),
+                            Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT, utility),
+                            Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR, utility)),
                     utility, this, uniqueId.getText()));
         }
     }
@@ -548,7 +550,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         utility.writeFile(safeName + Constants.SQUARE_FILE_EXT, contents);
         setTabSquare(new Square(contents, port.getText(), remoteIP.getValue().getDisplay(),
                 Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
-                        Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT, utility)),
+                        Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT, utility),
+                        Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR, utility)),
                 utility, this, uniqueId.getText()));
     }
 

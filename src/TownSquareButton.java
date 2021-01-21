@@ -1,12 +1,12 @@
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
-public class TownSquareButton extends Button {
+public class TownSquareButton extends Button implements ITownSquareButton {
     private ISquare square;
     private TextField postMessage;
 
-    public TownSquareButton(String text, ISquare s, TextField textField) {
-        super(text);
+    public TownSquareButton(String buttonText, ISquare s, TextField textField) {
+        super(buttonText);
         square = s;
         postMessage = textField;
     }
@@ -20,6 +20,6 @@ public class TownSquareButton extends Button {
     }
 
     public void clearPostMessage() {
-        postMessage.setText("");
+        postMessage.setText(Constants.EMPTY_STRING);
     }
 }

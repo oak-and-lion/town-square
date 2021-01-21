@@ -10,12 +10,10 @@ public class SquareController implements ISquareController {
     private ISquareKeyPair keys;
     private ILogIt logger;
 
-    public SquareController(IUtility mainUtility, IDialogController controller, ILogIt logger) {
+    public SquareController(IUtility mainUtility, IDialogController controller, ILogIt logger, ISquareKeyPair keyPair) {
         utility = mainUtility;
         sampleController = controller;
-        keys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR);
-        keys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
-        keys.setPublicKeyFromBase64(utility.readFile(Constants.PUBLIC_KEY_FILE));
+        keys = keyPair;
         this.logger = logger;
     }
 
@@ -223,7 +221,7 @@ public class SquareController implements ISquareController {
             }
 
             if (!memberNames.isEmpty()) {
-                ISquareKeyPair tempKeys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR);
+                ISquareKeyPair tempKeys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR, utility);
                 tempKeys.setPublicKeyFromBase64(memberIds.get(0));
                 String password = utility.generateRandomString(16);
                 StringBuilder temp = new StringBuilder();
@@ -271,7 +269,7 @@ public class SquareController implements ISquareController {
                 }
             }
 
-            ISquareKeyPair tempKeys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR);
+            ISquareKeyPair tempKeys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR, utility);
             tempKeys.setPublicKeyFromBase64(memberIds.get(0));
             String password = utility.generateRandomString(16);
             StringBuilder temp = new StringBuilder();

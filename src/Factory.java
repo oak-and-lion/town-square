@@ -1,4 +1,6 @@
 import java.net.Socket;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 import javafx.scene.control.TextField;
 
@@ -6,9 +8,25 @@ public class Factory {
     private Factory() {
     }
 
+    public static ISquareKeyPair createSquareKeyPair(int type, PublicKey publicKey, PrivateKey privateKey) {
+        if (type == Constants.KEYS_SQUARE_KEY_PAIR) {
+            return new SquareKeyPair(publicKey, privateKey);
+        }
+
+        return null;
+    }
+
     public static ISquareKeyPair createSquareKeyPair(int type) {
         if (type == Constants.BASE_SQUARE_KEY_PAIR) {
             return new SquareKeyPair();
+        }
+
+        return null;
+    }
+
+    public static ISquareKeyPair createSquareKeyPair(int type, IUtility utility) {
+        if (type == Constants.UTILITY_SQUARE_KEY_PAIR) {
+            return new SquareKeyPair(utility);
         }
 
         return null;
@@ -23,9 +41,9 @@ public class Factory {
     }
 
     public static ISquareController createSquareController(int type, IUtility mainUtility,
-            IDialogController controller, ILogIt logger) {
+            IDialogController controller, ILogIt logger, ISquareKeyPair keyPair) {
         if (type == Constants.BASE_SQUARE_CONTROLLER) {
-            return new SquareController(mainUtility, controller, logger);
+            return new SquareController(mainUtility, controller, logger, keyPair);
         }
 
         return null;
@@ -64,7 +82,7 @@ public class Factory {
         return null;
     }
 
-    public static TownSquareButton createTownSquareButton(int type, String buttonText, ISquare square, TextField postsTextField) {
+    public static ITownSquareButton createTownSquareButton(int type, String buttonText, ISquare square, TextField postsTextField) {
         if (type == Constants.BASE_TOWN_SQUARE_BUTTON) {
             return new TownSquareButton(buttonText, square, postsTextField);
         }

@@ -43,7 +43,7 @@ public class App extends Application implements IApp {
         ISquareController squareController = null;
         ICryptoUtils cryptoUtils = Factory.createCryptoUtils(Constants.BASE_CRYPTO_UTILS);
 
-        keys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR);
+        keys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR, utility);
 
         utility = Factory.createUtility(Constants.BASE_UTILITY);
 
@@ -114,7 +114,8 @@ public class App extends Application implements IApp {
             controller = loader.<DialogController>getController();
 
             squareController = Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, controller,
-                    Factory.createLogger(Constants.FILE_LOGGER, Constants.SQUARE_CONTROLLER_LOG_FILE, utility));
+                    Factory.createLogger(Constants.FILE_LOGGER, Constants.SQUARE_CONTROLLER_LOG_FILE, utility),
+                    Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR, utility));
 
             defaultSquare = Factory.createSquare(Constants.BASE_SQUARE, defaultSquareInfo, port, ip, squareController,
                     utility, controller, uniqueId);

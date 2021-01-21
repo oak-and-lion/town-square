@@ -3,6 +3,8 @@ public class Constants {
 
     public static final int BASE_CRYPTO_UTILS = 1;
     public static final int BASE_SQUARE_KEY_PAIR = 1;
+    public static final int UTILITY_SQUARE_KEY_PAIR = 2;
+    public static final int KEYS_SQUARE_KEY_PAIR = 3;
     public static final int BASE_SQUARE_CONTROLLER = 1;
     public static final int BASE_SERVER = 1;
     public static final int BASE_UTILITY = 1;

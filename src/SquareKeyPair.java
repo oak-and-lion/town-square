@@ -20,7 +20,11 @@ public class SquareKeyPair implements ISquareKeyPair {
     private PrivateKey privateKey;
 
     public SquareKeyPair() {
+    }
 
+    public SquareKeyPair(IUtility utility) {
+        setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
+        setPublicKeyFromBase64(utility.readFile(Constants.PUBLIC_KEY_FILE));
     }
 
     public SquareKeyPair(PublicKey publicKey, PrivateKey privateKey) {
@@ -29,6 +33,9 @@ public class SquareKeyPair implements ISquareKeyPair {
     }
 
     public void setPublicKeyFromBase64(String b64Key) {
+        if (b64Key.equals(Constants.EMPTY_STRING)) {
+            return;
+        }
         try {
             byte[] key = Base64.getDecoder().decode(b64Key.getBytes());
             KeyFactory keyFactory = KeyFactory.getInstance(Constants.RSA);
@@ -43,6 +50,9 @@ public class SquareKeyPair implements ISquareKeyPair {
     }
 
     public void setPrivateKeyFromBase64(String b64Key) {
+        if (b64Key.equals(Constants.EMPTY_STRING)) {
+            return;
+        }
         try {
             byte[] key = Base64.getDecoder().decode(b64Key.getBytes());
             KeyFactory keyFactory = KeyFactory.getInstance(Constants.RSA);

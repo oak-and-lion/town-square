@@ -18,7 +18,9 @@ public class ClientCmdTest {
 
         IDialogController dController = new xxMockIDialogController();
 
-        ISquareController squareController = Factory.createSquareController(1, utility, dController, logger);
+        ISquareKeyPair keyPair = new xxMockISquareKeyPair(utility);
+
+        ISquareController squareController = Factory.createSquareController(1, utility, dController, logger, keyPair);
 
         //Factory.createSquare(1, defaultSquareInfo, Integer.toString(port), ip, squareController, utility, dController, uniqueId);
 
@@ -39,7 +41,7 @@ public class ClientCmdTest {
         IMemberPostsThread mt = new MemberPostsThread("john law~_~MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApsRCab4SDmN1FjBdy11rlIUJg5GbczLnj4dMrqzdVZ7zSYThihSdRHx1HcU+gejwwP/q28vuoClFIOj4kOr73By3UUBWdZLRhOH7NcpLCpiIRINU0poHIHwkmM6L4PdvmUTP099VCmyNlndI/AesCD/ZzSZJDsIyuY36MMJNnjbsHd26tFBDCKqIDRixWUPOR+FX+539YQqGgU3RIBF9uNc6T0aWqijNIlMbMxAOMiUFWbDt+wqQWY6sBgPDVWBZqvXEg+CwzdlUYB5LGbGjwb/xyMiUcCkef14faYsCLu6lXQaRQbKgcmWseQPllhyGwwoyylFdx9GFhT2i1VYWSwIDAQAB~_~192.168.105.48~_~44423~_~d1de5968-814d-4a40-8693-542008c80e1c", "my_square.posts", "123", new String[1], square, utility);
         mt.processPostData(msg, memberData);
 
-        ISquareKeyPair keys = Factory.createSquareKeyPair(1);
+        ISquareKeyPair keys = Factory.createSquareKeyPair(1, utility);
         keys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
 
         String key = keys.decryptFromBase64(msg[0]);

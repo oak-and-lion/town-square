@@ -24,6 +24,10 @@ public class xxUnitTestsBaseClass {
         errorTests.add(methodName);
     }
 
+    void forceError(String methodName) {
+        error(methodName);
+    }
+
     void finish() {
         ILogIt logger = LogItConsole.create();
         logger.logInfo("[" + suiteName + "] Results");

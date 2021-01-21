@@ -69,17 +69,17 @@ public class CryptoUtils implements ICryptoUtils {
 
     }
 
-    public SquareKeyPair generateKeyPair() {
+    public ISquareKeyPair generateKeyPair() {
         KeyPairGenerator kpg = null;
         try {
-            kpg = KeyPairGenerator.getInstance("RSA");
+            kpg = KeyPairGenerator.getInstance(Constants.RSA);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         if (kpg != null) {
             kpg.initialize(2048);
             KeyPair kp = kpg.generateKeyPair();
-            return new SquareKeyPair(kp.getPublic(), kp.getPrivate());
+            return Factory.createSquareKeyPair(Constants.KEYS_SQUARE_KEY_PAIR, kp.getPublic(), kp.getPrivate());
         }
 
         return null;
