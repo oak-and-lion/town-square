@@ -271,7 +271,7 @@ public class SquareController implements ISquareController {
                 }
             }
 
-            ISquareKeyPair tempKeys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR, utility);
+            ISquareKeyPair tempKeys = Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
             tempKeys.setPublicKeyFromBase64(memberIds.get(0));
             String password = utility.generateRandomString(16);
             StringBuilder temp = new StringBuilder();
