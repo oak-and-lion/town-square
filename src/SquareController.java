@@ -81,26 +81,28 @@ public class SquareController implements ISquareController {
             return result;
         }
 
-        if (split[2].trim().equals(Constants.JOIN_COMMAND)) {
+        String command = split[2].trim();
+
+        if (command.equals(Constants.JOIN_COMMAND)) {
             result.setResponse(processJoinRequest(split, square));
-        } else if (split[2].trim().equals(Constants.POST_COMMAND)) {
+        } else if (command.equals(Constants.POST_COMMAND)) {
             result.setResponse(processPostMessage(split, square));
-        } else if (split[2].trim().equals(Constants.READ_COMMAND)) {
+        } else if (command.equals(Constants.READ_COMMAND)) {
             result.setResponse(buildResult(Constants.OK_RESULT, getPosts(square, split)));
-        } else if (split[2].trim().equals(Constants.READ_MEMBERS_COMMAND)) {
+        } else if (command.equals(Constants.READ_MEMBERS_COMMAND)) {
             result.setResponse(buildResult(Constants.OK_RESULT, getMembers(square, split)));
-        } else if (split[2].trim().equals(Constants.REQUEST_PUBLIC_KEY_COMMAND)) {
+        } else if (command.equals(Constants.REQUEST_PUBLIC_KEY_COMMAND)) {
             result.setResponse(processPublicKeyMessage());
-        } else if (split[2].trim().equals(Constants.REQUEST_FILE_COMMAND)) {
+        } else if (command.equals(Constants.REQUEST_FILE_COMMAND)) {
             result.setResponse(buildResult(Constants.OK_RESULT, processFileGetMessage(square, split)));
-        } else if (split[2].trim().equals(Constants.CHECK_VERSION_COMMAND)) {
+        } else if (command.equals(Constants.CHECK_VERSION_COMMAND)) {
             result.setResponse(buildResult(Constants.OK_RESULT, Constants.VERSION));
-        } else if (split[2].trim().equals(Constants.ACK_COMMAND)) {
+        } else if (command.equals(Constants.ACK_COMMAND)) {
             result.setResponse(buildResult(Constants.OK_RESULT, Constants.ACK_BACK));
-        } else if (split[2].equals(Constants.FAILURE_COMMAND)) {
+        } else if (command.equals(Constants.FAILURE_COMMAND)) {
             result.setResponse(buildResult(Constants.DECRYPTION_FAILURE_RESULT, Constants.DECRYPTION_FAILURE_MESSAGE));
         } else {
-            result.setResponse(buildResult(Constants.UNKNOWN_COMMAND_RESULT, split[2]));
+            result.setResponse(buildResult(Constants.UNKNOWN_COMMAND_RESULT, command));
         }
 
         return result;
