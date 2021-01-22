@@ -53,7 +53,7 @@ public class Constants {
     public static final String DASH = "-";
     public static final String SPACE = " ";
     public static final String PERCENT = "%";
-    public static final String PERIOD = ".";
+    public static final String PERIOD_SPLIT = "\\.";
     public static final int JOIN_TYPE = 1;
     public static final int CREATE_TYPE = 2;
     public static final String INVITATION_LABEL_TEXT = "Invitation:";

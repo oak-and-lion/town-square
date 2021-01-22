@@ -90,7 +90,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
 
         SquareResponse responseData = new SquareResponse(response);
 
-        ISquareKeyPair keys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR, utility);
+        ISquareKeyPair keys = Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
         keys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
 
         String[] fileData = responseData.getMessage().split(Constants.COMMAND_DATA_SEPARATOR);

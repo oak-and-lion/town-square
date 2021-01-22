@@ -86,7 +86,7 @@ public class Square implements ISquare {
     }
 
     public String getSafeName() {
-        return name.replace(' ', '_');
+        return name.replace(Constants.SPACE, Constants.UNDERSCORE);
     }
 
     public String getSafeLowerName() {
@@ -137,7 +137,7 @@ public class Square implements ISquare {
     }
 
     public void setPassword(String value) {
-        if (value.equals("")) {
+        if (value.equals(Constants.EMPTY_STRING)) {
             value = Constants.NO_PASSWORD_VALUE;
         }
         password = value;
