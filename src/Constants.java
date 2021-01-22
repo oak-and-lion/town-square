@@ -18,7 +18,8 @@ public class Constants {
     public static final int BASE_TEXT_DIALOG_BOX = 1;
     public static final int BASE_ALERT_BOX = 1;
     public static final int BASE_SYSTEM_EXIT = 1;
-    public static final int SYSTEM_EXIT_FAIL = 1;
+    public static final int BASE_VERSION_CHECKER = 1;
+    public static final int SYSTEM_EXIT_FAIL = 1;    
     public static final int NULL_OBJECT_TYPE = Integer.MAX_VALUE;
     public static final String VERSION = "0.0.1";
     public static final String SQUARE_FILE_EXT = ".square";
@@ -52,6 +53,7 @@ public class Constants {
     public static final String DASH = "-";
     public static final String SPACE = " ";
     public static final String PERCENT = "%";
+    public static final String PERIOD = ".";
     public static final int JOIN_TYPE = 1;
     public static final int CREATE_TYPE = 2;
     public static final String INVITATION_LABEL_TEXT = "Invitation:";
@@ -70,6 +72,7 @@ public class Constants {
     public static final String MEMBER_COMMAND = "members";
     public static final String REQUEST_PUBLIC_KEY_COMMAND = "pkey";
     public static final String REQUEST_FILE_COMMAND = "file";
+    public static final String CHECK_VERSION_COMMAND = "ver";
     public static final String OK_RESULT = "200";
     public static final String ALREADY_REGISTERED_RESULT = "460";
     public static final String MEMBERS_FILE_EXT = ".members";
@@ -116,6 +119,7 @@ public class Constants {
     public static final String DEFAULT_USER_NAME = "Anonymous User";
     public static final String SERVER_LOG_FILE = "_server.log";
     public static final String MAIN_LOG_FILE = "_main.log";
+    public static final String MAIN = "_main";
     public static final String LOG_FILE_EXT = ".log";
     public static final String CLIENT_LOG_PREFIX = "_client_";
     public static final String INVITE_FILE_EXT = ".invite";
@@ -125,4 +129,6 @@ public class Constants {
     public static final String SQUARE_CONTROLLER_LOG_FILE = "squareController.log";
     public static final String IMAGE_MARKER = "[image]";
     public static final int NOT_FOUND_IN_STRING = -1;
+    public static final String JAR_FILE = "App.jar";
+    public static final String TEMP_JAR_FILE = "_new_App.jar";
 }

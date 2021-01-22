@@ -140,4 +140,12 @@ public class Factory {
 
         return null;
     }
+
+    public static IVersionChecker createVersionChecker(int type, IUtility utility, String uniqueId) {
+        if (type == Constants.BASE_VERSION_CHECKER) {
+            return new VersionChecker(utility, uniqueId);
+        }
+
+        return null;
+    }
 }

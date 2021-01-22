@@ -31,7 +31,7 @@ public class App extends Application implements IApp {
     }
 
     private void processStart(Stage primaryStage) {
-        String uniqueId;
+        String uniqueId = Constants.EMPTY_STRING;
         String defaultSquareInfo = Constants.EMPTY_STRING;
         ISquare defaultSquare = null;
         String port = Constants.DEFAULT_PORT;
@@ -41,9 +41,11 @@ public class App extends Application implements IApp {
 
         IDialogController controller = null;
         ISquareController squareController = null;
+        IVersionChecker versionChecker;
+
         ICryptoUtils cryptoUtils = Factory.createCryptoUtils(Constants.BASE_CRYPTO_UTILS);
 
-        keys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR, utility);
+        keys = Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
 
         utility = Factory.createUtility(Constants.BASE_UTILITY);
 
@@ -138,6 +140,9 @@ public class App extends Application implements IApp {
         logger.logInfo("Started Town Square");
 
         controller.processPendingInvites();
+
+        versionChecker = Factory.createVersionChecker(Constants.BASE_VERSION_CHECKER, utility, uniqueId);
+        versionChecker.run();
     }
 
     private void initializeSquareController(ISquareController squareController, String port) {

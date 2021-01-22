@@ -29,7 +29,7 @@ public class SquareController implements ISquareController {
         String[] split = request.split(Constants.COMMAND_DATA_SEPARATOR);
         if (split.length > 2) {
             String[] newSplit;
-            if (split[0].equals("e")) {
+            if (split[0].equals(Constants.ENCRYPTION_FLAG)) {
                 newSplit = decryptArray(split);
                 if (newSplit.length == 0) {
                     result.setResponse(
@@ -93,6 +93,8 @@ public class SquareController implements ISquareController {
             result.setResponse(processPublicKeyMessage());
         } else if (split[2].trim().equals(Constants.REQUEST_FILE_COMMAND)) {
             result.setResponse(buildResult(Constants.OK_RESULT, processFileGetMessage(square, split)));
+        } else if (split[2].trim().equals(Constants.CHECK_VERSION_COMMAND)) {
+            result.setResponse(buildResult(Constants.OK_RESULT, Constants.VERSION));
         } else if (split[2].trim().equals(Constants.ACK_COMMAND)) {
             result.setResponse(buildResult(Constants.OK_RESULT, Constants.ACK_BACK));
         } else if (split[2].equals(Constants.FAILURE_COMMAND)) {
