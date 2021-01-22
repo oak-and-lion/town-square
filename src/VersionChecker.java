@@ -16,25 +16,32 @@ public class VersionChecker extends Thread implements IVersionChecker {
     }
 
     public void checkVersion() {
-        String[] allMembers = getAllMembers();
-        for (String member : allMembers) {
-            String[] info = member.split(Constants.FILE_DATA_SEPARATOR);
+        DoubleString[] allMembers = getAllMembers();
+        for (DoubleString member : allMembers) {
+            String[] info = member.getStringTwo().split(Constants.FILE_DATA_SEPARATOR);
             if (!info[4].equals(uniqueId)) {
-                checkVersionAgainstMember(member);
+                checkVersionAgainstMember(member.getStringTwo(), member.getStringOne());
             }
         }
     }
 
-    private String[] getAllMembers() {
-        ArrayList<String> members = new ArrayList<String>();
+    private DoubleString[] getAllMembers() {
+        ArrayList<DoubleString> members = new ArrayList<DoubleString>();
 
-        String[] memberFiles = utility.getFiles(Constants.MEMBERS_FILE_EXT);
+        String[] squareFiles = utility.getFiles(Constants.SQUARE_FILE_EXT);
 
-        for (String file : memberFiles) {
-            members.addAll(getMembersFromFile(file));
+        for (String file : squareFiles) {
+
+            String[] squareInfo = utility.readFile(file).split(Constants.COMMA);
+            String invite = squareInfo[1];
+            ArrayList<String> smembers = getMembersFromFile(
+                    file.replace(Constants.SQUARE_FILE_EXT, Constants.MEMBERS_FILE_EXT));
+            for (String member : smembers) {
+                members.add(new DoubleString(invite, member));
+            }
         }
 
-        return members.toArray(new String[members.size()]);
+        return members.toArray(new DoubleString[members.size()]);
     }
 
     private ArrayList<String> getMembersFromFile(String file) {
@@ -47,17 +54,19 @@ public class VersionChecker extends Thread implements IVersionChecker {
         return result;
     }
 
-    private void checkVersionAgainstMember(String member) {
+    private void checkVersionAgainstMember(String member, String squareInvite) {
         String[] memberInfo = member.split(Constants.DATA_SEPARATOR);
 
         IClient client = Factory.createClient(Constants.BASE_CLIENT, memberInfo[2], Integer.valueOf(memberInfo[3]),
-                Constants.MAIN);
+                squareInvite);
 
-        String result = client.sendMessage(Constants.VERSION, false);
+        String result = client.sendMessage(Constants.CHECK_VERSION_COMMAND, false);
 
-        String[] resultVersion = result.split(Constants.PERIOD);
+        SquareResponse versionResponse = new SquareResponse(result);
 
-        String[] currentVersion = Constants.VERSION.split(Constants.PERIOD);
+        String[] resultVersion = versionResponse.getMessage().split(Constants.PERIOD_SPLIT);
+
+        String[] currentVersion = Constants.VERSION.split(Constants.PERIOD_SPLIT);
 
         if (resultVersion.length == currentVersion.length && resultVersion.length == 3
                 && !isVersionEqual(resultVersion, currentVersion)) {
@@ -66,7 +75,11 @@ public class VersionChecker extends Thread implements IVersionChecker {
 
             SquareResponse responseData = new SquareResponse(response);
 
-            ISquareKeyPair keys = Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR, utility);
+            if (responseData.getMessage().equals(Constants.EMPTY_STRING)) {
+                return;
+            }
+
+            ISquareKeyPair keys = Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
             keys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
 
             String[] fileData = responseData.getMessage().split(Constants.COMMAND_DATA_SEPARATOR);
