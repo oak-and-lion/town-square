@@ -16,6 +16,7 @@ build.xml
 .vscode/settings.json
 *.log
 *.invite
+*.alias
 sample2.fxml
 iron-maiden.jpg
 iron-maiden-2.jpg

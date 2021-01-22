@@ -97,6 +97,8 @@ public class SquareController implements ISquareController {
             result.setResponse(buildResult(Constants.OK_RESULT, processFileGetMessage(square, split)));
         } else if (command.equals(Constants.CHECK_VERSION_COMMAND)) {
             result.setResponse(buildResult(Constants.OK_RESULT, Constants.VERSION));
+        } else if (command.equals(Constants.REGISTER_ALIAS_COMMAND)) {
+            result.setResponse(buildResult(Constants.OK_RESULT, registerAlias(square, split)));
         } else if (command.equals(Constants.ACK_COMMAND)) {
             result.setResponse(buildResult(Constants.OK_RESULT, Constants.ACK_BACK));
         } else if (command.equals(Constants.FAILURE_COMMAND)) {
@@ -311,8 +313,52 @@ public class SquareController implements ISquareController {
 
     private boolean checkSquareAccess(ISquare square, String memberId) {
         String file = square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT;
-        int first = utility.findFirstOccurence(file, memberId, Constants.SEARCH_CONTAINS, false);
+        int first = utility.findFirstOccurence(file, memberId, Constants.SEARCH_CONTAINS, Constants.NOT_FOUND_RETURN_NEG_ONE);
 
         return (first > -1);
+    }
+
+    private String registerAlias(ISquare square, String[] split) {
+        String[] info = split[3].split(Constants.FILE_DATA_SEPARATOR);
+        if (!checkSquareAccess(square, info[3])) {
+            return Constants.MALFORMED_REQUEST_MESSAGE;
+        }
+        String file = square.getSafeLowerName() + Constants.ALIAS_FILE_EXT;
+        ArrayList<String> memberAliases = new ArrayList<String>();
+        if (utility.checkFileExists(file)) {
+            String[] members = utility.readFile(file).split(Constants.READ_FILE_DATA_SEPARATOR);
+            memberAliases.addAll(Arrays.asList(members));
+        }
+
+        String alias = info[0] + Constants.COLON + info[3] + Constants.FORWARD_SLASH + info[1] + Constants.COLON + info[2];
+
+        boolean found = false;
+        int count = 0;
+        for(String memberAlias : memberAliases) {
+            if (memberAlias.startsWith(info[0] + Constants.COLON + info[3])) {
+                memberAlias += Constants.FORWARD_SLASH + info[1] + Constants.COLON + info[2];
+                memberAliases.set(count, memberAlias);
+                found = true;
+                break;
+            }
+            count++;
+        }
+
+        if (found) {
+            utility.deleteFile(file);
+            boolean first = true;
+            String newLine = Constants.EMPTY_STRING;
+            for (String memberAlias : memberAliases) {
+                utility.appendToFile(file, newLine + memberAlias);
+                if (first) {
+                    newLine = Constants.NEWLINE;
+                    first = false;
+                }
+            }
+        } else {
+            utility.appendToFile(file, Constants.NEWLINE + alias);
+        }
+        
+        return "registered";
     }
 }

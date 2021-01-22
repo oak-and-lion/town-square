@@ -93,8 +93,10 @@ public class Constants {
     public static final String NO_ROWS = "-1";
     public static final String POST_COMMAND = "post";
     public static final String READ_MEMBERS_COMMAND = "members";
+    public static final String REGISTER_ALIAS_COMMAND = "regalias";
     public static final String ACK_COMMAND = "ack";
     public static final boolean NOT_FOUND_RETURN_ZERO = false;
+    public static final boolean NOT_FOUND_RETURN_NEG_ONE = true;
     public static final String ACK_BACK = "ack back";
     public static final boolean SEARCH_STARTS_WITH = true;
     public static final boolean SEARCH_CONTAINS = false;
@@ -131,4 +133,6 @@ public class Constants {
     public static final int NOT_FOUND_IN_STRING = -1;
     public static final String JAR_FILE = "App.jar";
     public static final String TEMP_JAR_FILE = "_new_App.jar";
+    public static final String ALIAS_FILE_EXT = ".alias";
+    public static final String FORWARD_SLASH = "/";
 }
