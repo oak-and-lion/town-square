@@ -327,10 +327,18 @@ public class SquareController implements ISquareController {
         ArrayList<String> memberAliases = new ArrayList<String>();
         if (utility.checkFileExists(file)) {
             String[] members = utility.readFile(file).split(Constants.READ_FILE_DATA_SEPARATOR);
-            memberAliases.addAll(Arrays.asList(members));
+            for (String member : members) {
+                if (!member.equals(Constants.EMPTY_STRING)) {
+                    memberAliases.add(member);
+                }
+            }
         }
 
-        String alias = info[0] + Constants.COLON + info[3] + Constants.FORWARD_SLASH + info[1] + Constants.COLON + info[2];
+        return processAlias(info, memberAliases, file);
+    }
+
+    private String processAlias(String[] info, ArrayList<String> memberAliases, String file) {
+        String alias = info[0] + Constants.COLON + info[3] + Constants.QUESTION_MARK + info[1] + Constants.COLON + info[2];
 
         boolean found = false;
         int count = 0;

@@ -1,5 +1,6 @@
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import javafx.application.Platform;
 import javafx.scene.control.ScrollPane;
@@ -36,6 +37,7 @@ public class ClientThread extends Thread implements IClientThread {
         try {
             String file = square.getSafeLowerName() + Constants.POSTS_FILE_EXT;
             String memberFile = square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT;
+            String memberAliasFile = square.getSafeLowerName() + Constants.ALIAS_FILE_EXT;
             String raw;
             while (process) {
                 raw = utility.readFile(file, lastKnownPost);
@@ -53,21 +55,17 @@ public class ClientThread extends Thread implements IClientThread {
                     msg = raw.split(Constants.DATA_SEPARATOR);
                 }
 
-                String memberRaw = utility.readFile(memberFile,
-                        Constants.NOT_FOUND_ROW);
-                String[] members = memberRaw.split(Constants.COMMAND_DATA_SEPARATOR);
+                String[] members = getAllMembers(memberFile, memberAliasFile);
+
                 for (String info : members) {
                     getMembersFromOtherMembers(info, memberFile);
                 }
 
-                memberRaw = utility.readFile(memberFile,
-                        Constants.NOT_FOUND_ROW);
-                members = memberRaw.split(Constants.COMMAND_DATA_SEPARATOR);
                 ArrayList<IMemberPostsThread> memberThreads = new ArrayList<IMemberPostsThread>();
                 boolean threadsDone = false;
                 for (String info : members) {
                     // spin up new thread for each member and process ASAP
-                    IMemberPostsThread thread = new MemberPostsThread(info, file, uniqueId, msg, square, utility);                    
+                    IMemberPostsThread thread = new MemberPostsThread(info, file, uniqueId, msg, square, utility);
                     memberThreads.add(thread);
                     thread.start();
                 }
@@ -100,11 +98,40 @@ public class ClientThread extends Thread implements IClientThread {
         }
     }
 
+    private String[] getAllMembers(String memberFile, String memberAliasFile) {
+        String memberRaw = utility.readFile(memberFile, Constants.NOT_FOUND_ROW);
+
+        String[] memberAliases = utility.readFile(memberAliasFile, Constants.NOT_FOUND_ROW)
+                .split(Constants.READ_FILE_DATA_SEPARATOR);
+
+        String[] members = memberRaw.split(Constants.COMMAND_DATA_SEPARATOR);
+        ArrayList<String> memberWork = new ArrayList<String>();
+        memberWork.addAll(Arrays.asList(members));
+        for (String info : members) {
+            String[] member = info.split(Constants.DATA_SEPARATOR);
+            for (String alias : memberAliases) {
+                String[] aliasSplit = alias.split(Constants.QUESTION_MARK_SPLIT);
+                String[] aliasInfo = aliasSplit[0].split(Constants.COLON);
+                if (info.contains(aliasInfo[1])) {
+                    String[] aliases = aliasSplit[1].split(Constants.FORWARD_SLASH);
+                    for (String a : aliases) {
+                        String[] a1 = a.split(Constants.COLON);
+                        memberWork.add(member[0] + Constants.DATA_SEPARATOR + member[1] + Constants.DATA_SEPARATOR
+                                + a1[0] + Constants.DATA_SEPARATOR + a1[1] + Constants.DATA_SEPARATOR + aliasInfo[1]);
+                    }
+                }
+            }
+        }
+        return memberWork.toArray(new String[memberWork.size()]);
+    }
+
     private void getMembersFromOtherMembers(String info, String file) {
         if (!info.contains(uniqueId)) {
             String[] member = info.split(Constants.DATA_SEPARATOR);
-            IClient client = Factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]), square.getInvite());
-            String response = client.sendMessage(Constants.MEMBER_COMMAND + Constants.COMMAND_DATA_SEPARATOR + uniqueId, false);
+            IClient client = Factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
+                    square.getInvite());
+            String response = client.sendMessage(Constants.MEMBER_COMMAND + Constants.COMMAND_DATA_SEPARATOR + uniqueId,
+                    false);
             if (!response.equals(Constants.EMPTY_STRING)) {
                 findNewMembers(response, file);
             }
@@ -113,22 +140,22 @@ public class ClientThread extends Thread implements IClientThread {
 
     private void findNewMembers(String response, String file) {
         String[] responseSplit = response.split(Constants.COLON);
-                if (responseSplit.length == 2 && responseSplit[0].equals(Constants.OK_RESULT)
-                        && !responseSplit[1].equals(Constants.EMPTY_STRING)) {
-                    String newLine = Constants.NEWLINE;
-                    if (!utility.checkFileExists(file)) {
-                        newLine = Constants.EMPTY_STRING;
-                    }
-                    String[] members = responseSplit[1].split(Constants.COMMAND_DATA_SEPARATOR);
-                    for (String memberLoop : members) {
-                        String[] memberInfo = memberLoop.split(Constants.DATA_SEPARATOR);
-                        String[] memberSearch = utility.searchFile(file, memberInfo[4], Constants.SEARCH_CONTAINS);
-                        if (memberSearch.length == 0) {
-                            utility.appendToFile(file, newLine + memberLoop);
-                            newLine = Constants.NEWLINE;
-                        }
-                    }
+        if (responseSplit.length == 2 && responseSplit[0].equals(Constants.OK_RESULT)
+                && !responseSplit[1].equals(Constants.EMPTY_STRING)) {
+            String newLine = Constants.NEWLINE;
+            if (!utility.checkFileExists(file)) {
+                newLine = Constants.EMPTY_STRING;
+            }
+            String[] members = responseSplit[1].split(Constants.COMMAND_DATA_SEPARATOR);
+            for (String memberLoop : members) {
+                String[] memberInfo = memberLoop.split(Constants.DATA_SEPARATOR);
+                String[] memberSearch = utility.searchFile(file, memberInfo[4], Constants.SEARCH_CONTAINS);
+                if (memberSearch.length == 0) {
+                    utility.appendToFile(file, newLine + memberLoop);
+                    newLine = Constants.NEWLINE;
                 }
+            }
+        }
     }
 
     private void processMessages(String raw) {

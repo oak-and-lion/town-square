@@ -88,6 +88,8 @@ public class Constants {
     public static final String COMMAND_DATA_SEPARATOR = "%%%";
     public static final String READ_FILE_DATA_SEPARATOR = "%%%";
     public static final String COLON = ":";
+    public static final String QUESTION_MARK = "?";
+    public static final String QUESTION_MARK_SPLIT = "\\?";
     public static final String READ_COMMAND = "read";
     public static final String NO_POSTS = "-1";
     public static final String NO_ROWS = "-1";
