@@ -70,6 +70,7 @@ public class Constants {
     public static final String POST_PROMPT_TEXT = "Type your message";
     public static final String JOIN_COMMAND = "join";
     public static final String MEMBER_COMMAND = "members";
+    public static final String READ_ALIAS_COMMAND = "aliases";
     public static final String REQUEST_PUBLIC_KEY_COMMAND = "pkey";
     public static final String REQUEST_FILE_COMMAND = "file";
     public static final String CHECK_VERSION_COMMAND = "ver";
@@ -94,7 +95,6 @@ public class Constants {
     public static final String NO_POSTS = "-1";
     public static final String NO_ROWS = "-1";
     public static final String POST_COMMAND = "post";
-    public static final String READ_MEMBERS_COMMAND = "members";
     public static final String REGISTER_ALIAS_COMMAND = "regalias";
     public static final String ACK_COMMAND = "ack";
     public static final boolean NOT_FOUND_RETURN_ZERO = false;
