@@ -110,6 +110,9 @@ public class ClientThread extends Thread implements IClientThread {
         for (String info : members) {
             String[] member = info.split(Constants.DATA_SEPARATOR);
             for (String alias : memberAliases) {
+                if (alias.equals(Constants.EMPTY_STRING)) {
+                    continue;
+                }
                 String[] aliasSplit = alias.split(Constants.QUESTION_MARK_SPLIT);
                 String[] aliasInfo = aliasSplit[0].split(Constants.COLON);
                 if (info.contains(aliasInfo[1])) {

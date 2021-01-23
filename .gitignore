@@ -21,3 +21,10 @@ sample2.fxml
 iron-maiden.jpg
 iron-maiden-2.jpg
 test.jpg
+.DS_Store
+javafx-sdk-11.0.2/
+javafx/
+jdk-11.0.9/
+test/
+openjdk-11.0.2_osx-x64_bin.tar.gz
+jdk-11.0.2.jdk/
