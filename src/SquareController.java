@@ -89,8 +89,10 @@ public class SquareController implements ISquareController {
             result.setResponse(processPostMessage(split, square));
         } else if (command.equals(Constants.READ_COMMAND)) {
             result.setResponse(buildResult(Constants.OK_RESULT, getPosts(square, split)));
-        } else if (command.equals(Constants.READ_MEMBERS_COMMAND)) {
+        } else if (command.equals(Constants.MEMBER_COMMAND)) {
             result.setResponse(buildResult(Constants.OK_RESULT, getMembers(square, split)));
+        } else if (command.equals(Constants.READ_ALIAS_COMMAND)) {
+            result.setResponse(buildResult(Constants.OK_RESULT, getAliases(square, split)));
         } else if (command.equals(Constants.REQUEST_PUBLIC_KEY_COMMAND)) {
             result.setResponse(processPublicKeyMessage());
         } else if (command.equals(Constants.REQUEST_FILE_COMMAND)) {
@@ -300,8 +302,23 @@ public class SquareController implements ISquareController {
         String memberId = split[3];
 
         if (checkSquareAccess(square, memberId)) {
-            return utility.readFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT).replace(Constants.NEWLINE,
-                    Constants.COMMAND_DATA_SEPARATOR);
+            return utility.readFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT);
+        }
+
+        return Constants.EMPTY_STRING;
+    }
+
+    private String getAliases(ISquare square, String[] split) {
+        // command arguments
+        // 3 == member id
+        if (split.length != 4) {
+            return Constants.EMPTY_STRING;
+        }
+
+        String memberId = split[3];
+
+        if (checkSquareAccess(square, memberId)) {
+            return utility.readFile(square.getSafeLowerName() + Constants.ALIAS_FILE_EXT);
         }
 
         return Constants.EMPTY_STRING;
