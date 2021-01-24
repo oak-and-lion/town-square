@@ -117,7 +117,7 @@ public class App extends Application implements IApp {
 
             squareController = Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, controller,
                     Factory.createLogger(Constants.FILE_LOGGER, Constants.SQUARE_CONTROLLER_LOG_FILE, utility),
-                    Factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR, utility));
+                    Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility));
 
             defaultSquare = Factory.createSquare(Constants.BASE_SQUARE, defaultSquareInfo, port, ip, squareController,
                     utility, controller, uniqueId);
