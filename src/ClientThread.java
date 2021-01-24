@@ -169,6 +169,9 @@ public class ClientThread extends Thread implements IClientThread {
             return;
         }
         for (String postInfo : posts) {
+            if (postInfo.equals(Constants.EMPTY_STRING)) {
+                continue;
+            }
             String[] post = postInfo.split(Constants.DATA_SEPARATOR);
             String[] members = utility.searchFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT, post[2],
                     false);
