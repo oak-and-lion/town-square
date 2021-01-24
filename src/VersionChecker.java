@@ -62,7 +62,15 @@ public class VersionChecker extends Thread implements IVersionChecker {
 
         String result = client.sendMessage(Constants.CHECK_VERSION_COMMAND, false);
 
+        if (result.equals(Constants.EMPTY_STRING)) {
+            return;
+        }
+
         SquareResponse versionResponse = new SquareResponse(result);
+
+        if (versionResponse.getMessage().equals(Constants.EMPTY_STRING)) {
+            return;
+        }
 
         String[] resultVersion = versionResponse.getMessage().split(Constants.PERIOD_SPLIT);
 
