@@ -5,11 +5,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -147,44 +142,13 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         squareInvites = new ArrayList<String>();
     }
 
-    private void setResizeListeners() {
-        // create a listener
-        final ChangeListener<Number> listener = new ChangeListener<Number>() {
-            final Timer timer = new Timer(); // uses a timer to call your resize method
-            TimerTask task = null; // task to execute after defined delay
-            static final long DELAY_TIME = 200; // delay that has to pass in order to consider an operation done
-
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, final Number newValue) {
-                if (task != null) { // there was already a task scheduled from the previous operation ...
-                    task.cancel(); // cancel it, we have a new size to consider
-                }
-
-                task = new TimerTask() // create new task that calls your resize operation
-                {
-                    @Override
-                    public void run() {
-                        // here you can place your resize code
-                        System.out.println("resize to " + primaryStage.getWidth() + " " + primaryStage.getHeight());
-                    }
-                };
-                // schedule new task
-                timer.schedule(task, DELAY_TIME);
-            }
-        };
-
-        // finally we have to register the listener
-        primaryStage.widthProperty().addListener(listener);
-        primaryStage.heightProperty().addListener(listener);
-    }
-
     public void setStage(Stage stage) {
         primaryStage = stage;
         initializeStage();
     }
 
     public void initializeStage() {
-        setResizeListeners();
+        // not used right now
     }
 
     public void setUtilityController(IUtility utilityController) {
