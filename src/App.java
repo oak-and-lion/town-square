@@ -98,7 +98,7 @@ public class App extends Application implements IApp {
                 defaultSquareInfo = utility.readFile(Constants.DEFAULT_SQUARE_FILE);
             } else {
                 defaultSquareInfo = Constants.DEFAULT_SQUARE_NAME + Constants.COMMA + utility.createUUID()
-                        + Constants.COMMA + "tabDefaultSquare" + Constants.COMMA + Constants.NOT_PRIVATE
+                        + Constants.COMMA + Constants.DEFAULT_SQUARE_TAB_NAME + Constants.COMMA + Constants.NOT_PRIVATE
                         + Constants.COMMA + Constants.NO_PASSWORD_VALUE;
                 utility.writeFile(Constants.DEFAULT_SQUARE_FILE, defaultSquareInfo);
             }
@@ -168,7 +168,7 @@ public class App extends Application implements IApp {
         final ChangeListener<Number> listener = new ChangeListener<Number>() {
             final Timer timer = new Timer(); // uses a timer to call your resize method
             TimerTask task = null; // task to execute after defined delay
-            static final long DELAY_TIME = 250; // delay that has to pass in order to consider an operation done
+            static final long DELAY_TIME = 500; // delay that has to pass in order to consider an operation done
 
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, final Number newValue) {

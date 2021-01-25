@@ -145,4 +145,5 @@ public class Constants {
     public static final double TAB_PANE_WIDTH_DIFF = 14.4000244140625;
     public static final double POSTS_BOX_WIDTH_DIFF = 50;
     public static final double POSTS_TEXT_FIELD_WIDTH_DIFF = 99;
+    public static final String DEFAULT_SQUARE_TAB_NAME = "tabDefaultSquare";
 }

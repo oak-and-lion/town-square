@@ -8,6 +8,8 @@ import java.util.List;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.ComboBox;
@@ -87,6 +89,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             }
             parent.sendAlias(s);
             updateDefaultNameInMemberFiles(defaultName.getText());
+            updatePortInMemberFiles(port.getText(), uniqueId.getText());
         }
     }
 
@@ -199,6 +202,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                     String invite = buildInviteCode(square, determineSquarePrivacy(square));
                     ((TextField) square.getTemp()).setText(invite);
                 }
+                updateIPAddressInMemberFiles(newValue.getDisplay(), uniqueId.getText());
             });
             remoteIP.setConverter(new StringConverter<IPAddress>() {
                 @Override
@@ -559,6 +563,15 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                 imageView.setFitWidth(100);
                 imageView.setPreserveRatio(true);
                 imageView.setImage(image);
+                imageView.setStyle("-fx-cursor: hand;");
+                imageView.setOnMouseClicked(new EventHandler<Event>() {
+                    @Override
+                    public void handle(Event event) {
+                        IAlertBox a = Factory.createAlertBox(Constants.BASE_ALERT_BOX);
+                        a.createAlert("title", "headerText", "content");
+
+                    }
+                });
                 index = message.indexOf(Constants.COLON + Constants.SPACE);
                 Label label = createLabel(message.substring(0, index), 25, 0, 0, 0);
                 hbox.getChildren().addAll(label, imageView);
@@ -647,7 +660,6 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         }
     }
 
-    @Override
     public void updateDefaultNameInMemberFiles(String name) {
         String[] files = utility.getFiles(Constants.MEMBERS_FILE_EXT);
 
@@ -667,6 +679,50 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                 }
                 i++;
             }
+        }
+    }
+
+    private void updatePortInMemberFiles(String port, String uniqueId) {
+        String[] files = utility.getFiles(Constants.MEMBERS_FILE_EXT);
+
+        for (String file : files) {
+            String memberInfo = utility.readFile(file);
+            String[] lines = memberInfo.split(Constants.READ_FILE_DATA_SEPARATOR);
+            int i = 0;
+            for (String line : lines) {
+                if (line.contains(uniqueId)) {
+                    String[] lineData = line.split(Constants.FILE_DATA_SEPARATOR);
+                    lines[i] = lineData[0] + Constants.FILE_DATA_SEPARATOR + lineData[1] + Constants.FILE_DATA_SEPARATOR
+                            + lineData[2] + Constants.FILE_DATA_SEPARATOR + port + Constants.FILE_DATA_SEPARATOR
+                            + lineData[4];
+                    break;
+                }
+            }
+            String newMemberInfo = String.join(Constants.NEWLINE, lines);
+            utility.deleteFile(file);
+            utility.writeFile(file, newMemberInfo);
+        }
+    }
+
+    private void updateIPAddressInMemberFiles(String ip, String uniqueId) {
+        String[] files = utility.getFiles(Constants.MEMBERS_FILE_EXT);
+
+        for (String file : files) {
+            String memberInfo = utility.readFile(file);
+            String[] lines = memberInfo.split(Constants.READ_FILE_DATA_SEPARATOR);
+            int i = 0;
+            for (String line : lines) {
+                if (line.contains(uniqueId)) {
+                    String[] lineData = line.split(Constants.FILE_DATA_SEPARATOR);
+                    lines[i] = lineData[0] + Constants.FILE_DATA_SEPARATOR + lineData[1] + Constants.FILE_DATA_SEPARATOR
+                            + ip + Constants.FILE_DATA_SEPARATOR + lineData[3] + Constants.FILE_DATA_SEPARATOR
+                            + lineData[4];
+                    break;
+                }
+            }
+            String newMemberInfo = String.join(Constants.NEWLINE, lines);
+            utility.deleteFile(file);
+            utility.writeFile(file, newMemberInfo);
         }
     }
 }
