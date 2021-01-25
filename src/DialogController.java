@@ -34,6 +34,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     private String publicKey;
     private IUtility utility;
     private Stage primaryStage;
+    private ArrayList<VBox> postControls;
+    private ArrayList<ScrollPane> postScrollPanes;
+    private ArrayList<TextField> postTextFields;
 
     @FXML
     private TextField uniqueId;
@@ -70,11 +73,6 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     @FXML
     private TextField aliasServers;
-
-    @FXML
-    private void handleShown(ActionEvent event) {
-        System.out.println("shown");
-    }
 
     @FXML
     private void handleSettingsUpdate(ActionEvent event) {
@@ -115,7 +113,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     private void attachImage(ActionEvent event) {
         // attach the image
         FileChooser fc = new FileChooser();
-        fc.setTitle("Attach Image...");
+        fc.setTitle(Constants.IMAGE_DIALOG_TITLE);
         File file = fc.showOpenDialog(primaryStage);
         File target = new File(file.getName());
         try {
@@ -123,7 +121,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                 Files.copy(file.toPath(), target.toPath());
             }
             ISquare square = (ISquare) tabPane.getSelectionModel().getSelectedItem().getUserData();
-            postTheMessage(square, "[image]" + target.getName());
+            postTheMessage(square, Constants.IMAGE_MARKER + target.getName());
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
@@ -145,11 +143,20 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     public void setStage(Stage stage) {
         primaryStage = stage;
-        initializeStage();
     }
 
-    public void initializeStage() {
-        // not used right now
+    public void resizeControls(double width, double height) {
+        tabPane.setMinWidth(width - Constants.TAB_PANE_WIDTH_DIFF);
+        tabPane.setMinHeight(height - Constants.TAB_PANE_HEIGHT_DIFF);
+        for(VBox box : postControls) {
+            box.setMinWidth(width - Constants.POSTS_BOX_WIDTH_DIFF);
+        }
+        for(ScrollPane pane : postScrollPanes) {
+            pane.setMinWidth(width - Constants.POSTS_BOX_WIDTH_DIFF);
+        }
+        for (TextField field : postTextFields) {
+            field.setMinWidth(width - Constants.POSTS_TEXT_FIELD_WIDTH_DIFF);
+        }
     }
 
     public void setUtilityController(IUtility utilityController) {
@@ -268,6 +275,12 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         generatePostControls.setStyle("-fx-padding: 10;-fx-border-style: solid inside;-fx-border-width: 2;"
                 + "-fx-border-insets: 5;-fx-border-radius: 5;-fx-border-color: #333;");
 
+        if (postControls == null) {
+            postControls = new ArrayList<VBox>();
+        }
+
+        postControls.add(generatePostControls);
+
         HBox postsLabelHBox = createHBox(0, 0, 0, 0);
         Label postsLabel = createLabel(Constants.POSTS_LABEL, 0, 0, 0, 0);
         postsLabelHBox.getChildren().add(postsLabel);
@@ -276,6 +289,12 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
         VBox postsList = createVBox(5, 5, 5, 5);
         ScrollPane postsPane = createPostPane(postsList);
+
+        if (postScrollPanes == null) {
+            postScrollPanes = new ArrayList<ScrollPane>();
+        }
+
+        postScrollPanes.add(postsPane);
 
         postsHBox.getChildren().add(postsPane);
 
@@ -300,6 +319,12 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                 postsButton.fire();
             }
         });
+
+        if (postTextFields == null) {
+            postTextFields = new ArrayList<TextField>();
+        }
+
+        postTextFields.add(postsTextField);
 
         Label spacer = createLabel(Constants.EMPTY_STRING, 0, 5, 0, 5);
 
