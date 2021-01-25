@@ -9,6 +9,8 @@ SET JAVAFX_PATH="C:/Users/wewan/javafx-sdk-11.0.2/lib"
 javac --module-path %JAVAFX_PATH% --add-modules "javafx.controls,javafx.fxml" -d staging *.java
 
 del staging\xx*
+del staging\test.class
+del staging\clientcmdtest.class
 
 echo copying sample.xml
 copy sample.fxml staging\sample.fxml

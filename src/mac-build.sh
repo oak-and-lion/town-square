@@ -8,6 +8,8 @@ JAVAFX_PATH="javafx/lib"
 $JAVA_PATH/javac --module-path $JAVAFX_PATH --add-modules "javafx.controls,javafx.fxml" -d staging *.java
 
 rm staging/xx*
+rm staging/Test.class
+rm staging/ClientCmdTest.class
 
 
 echo copying sample.xml
