@@ -118,30 +118,12 @@ public class App extends Application implements IApp {
                                 + uniqueId);
             }
 
-            root.sceneProperty().addListener(new ChangeListener<Scene>() {
-                @Override
-                public void changed(ObservableValue<? extends Scene> observable, Scene oldValue, Scene newValue) {
-                    newValue.windowProperty().addListener(new ChangeListener<Window>() {
-                        @Override
-                        public void changed(ObservableValue<? extends Window> observable, Window oldValue,
-                                Window newValue) {
-                            newValue.addEventHandler(WindowEvent.WINDOW_SHOWN, new EventHandler<WindowEvent>() {
-                                @Override
-                                public void handle(WindowEvent event) {
-                                    controller.initializeStage();
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-
             primaryStage.addEventHandler(WindowEvent.WINDOW_SHOWN, new EventHandler<WindowEvent>() {
                 @Override
                 public void handle(WindowEvent window) {
                     Stage stage = (Stage)window.getSource();
-                    System.out.println("window size: " + stage.getWidth() + " " + stage.getHeight());                   
-                    setResizeListeners(stage);                    
+                    System.out.println(stage.getWidth() + " " + stage.getHeight());
+                    setResizeListeners(stage, controller);                    
                 }
             });
 
@@ -181,7 +163,7 @@ public class App extends Application implements IApp {
         return null;
     }
 
-    private void setResizeListeners(Stage primaryStage) {
+    private void setResizeListeners(Stage primaryStage, IDialogController controller) {
         // create a listener
         final ChangeListener<Number> listener = new ChangeListener<Number>() {
             final Timer timer = new Timer(); // uses a timer to call your resize method
@@ -199,7 +181,14 @@ public class App extends Application implements IApp {
                     @Override
                     public void run() {
                         // here you can place your resize code
-                        System.out.println("resize to " + primaryStage.getWidth() + " " + primaryStage.getHeight());
+                        if (primaryStage.getWidth() < Constants.MIN_WINDOW_WIDTH) {
+                            primaryStage.setWidth(Constants.MIN_WINDOW_WIDTH);
+                        }
+
+                        if (primaryStage.getHeight() < Constants.MIN_WINDOW_HEIGHT) {
+                            primaryStage.setHeight(Constants.MIN_WINDOW_HEIGHT);
+                        }
+                        controller.resizeControls(primaryStage.getWidth(), primaryStage.getHeight());
                     }
                 };
                 // schedule new task

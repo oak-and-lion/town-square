@@ -19,6 +19,6 @@ public interface IDialogController {
     void setPublicKey(String publicKey);
     void setRemoteIP(ObservableList<IPAddress> ips, String s);
     void processPendingInvites();
-    void initializeStage();
+    void resizeControls(double width, double height);
     void setStage(Stage stage);
 }

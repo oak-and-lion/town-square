@@ -132,6 +132,7 @@ public class Constants {
     public static final String ALIAS_FILE = "alias.id";
     public static final String SQUARE_CONTROLLER_LOG_FILE = "squareController.log";
     public static final String IMAGE_MARKER = "[image]";
+    public static final String IMAGE_DIALOG_TITLE = "Attach Image...";
     public static final int NOT_FOUND_IN_STRING = -1;
     public static final String JAR_FILE = "App.jar";
     public static final String TEMP_JAR_FILE = "_new_App.jar";
@@ -139,4 +140,8 @@ public class Constants {
     public static final String FORWARD_SLASH = "/";
     public static final double MIN_WINDOW_WIDTH = 614.4000244140625;
     public static final double MIN_WINDOW_HEIGHT = 463.20001220703125;
+    public static final double TAB_PANE_HEIGHT_DIFF = 63.20001220703125;
+    public static final double TAB_PANE_WIDTH_DIFF = 14.4000244140625;
+    public static final double POSTS_BOX_WIDTH_DIFF = 50;
+    public static final double POSTS_TEXT_FIELD_WIDTH_DIFF = 99;
 }

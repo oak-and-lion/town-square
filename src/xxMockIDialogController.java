@@ -54,7 +54,7 @@ public class xxMockIDialogController implements IDialogController {
         // not neededed
     }
 
-    public void initializeStage() {
+    public void resizeControls(double width, double height) {
         // not needed
     }
 }
