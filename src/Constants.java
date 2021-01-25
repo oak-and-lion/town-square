@@ -137,4 +137,6 @@ public class Constants {
     public static final String TEMP_JAR_FILE = "_new_App.jar";
     public static final String ALIAS_FILE_EXT = ".alias";
     public static final String FORWARD_SLASH = "/";
+    public static final double MIN_WINDOW_WIDTH = 614.4000244140625;
+    public static final double MIN_WINDOW_HEIGHT = 463.20001220703125;
 }

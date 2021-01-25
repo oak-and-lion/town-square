@@ -140,7 +140,8 @@ public class App extends Application implements IApp {
                 @Override
                 public void handle(WindowEvent window) {
                     Stage stage = (Stage)window.getSource();
-                    setResizeListeners(stage);
+                    System.out.println("window size: " + stage.getWidth() + " " + stage.getHeight());                   
+                    setResizeListeners(stage);                    
                 }
             });
 
