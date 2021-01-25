@@ -168,7 +168,7 @@ public class App extends Application implements IApp {
         final ChangeListener<Number> listener = new ChangeListener<Number>() {
             final Timer timer = new Timer(); // uses a timer to call your resize method
             TimerTask task = null; // task to execute after defined delay
-            static final long DELAY_TIME = 200; // delay that has to pass in order to consider an operation done
+            static final long DELAY_TIME = 250; // delay that has to pass in order to consider an operation done
 
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, final Number newValue) {

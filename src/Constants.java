@@ -132,6 +132,7 @@ public class Constants {
     public static final String ALIAS_FILE = "alias.id";
     public static final String SQUARE_CONTROLLER_LOG_FILE = "squareController.log";
     public static final String IMAGE_MARKER = "[image]";
+    public static final String END_SQUARE_BRACKET = "]";
     public static final String IMAGE_DIALOG_TITLE = "Attach Image...";
     public static final int NOT_FOUND_IN_STRING = -1;
     public static final String JAR_FILE = "App.jar";

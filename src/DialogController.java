@@ -22,6 +22,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -37,6 +38,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     private ArrayList<VBox> postControls;
     private ArrayList<ScrollPane> postScrollPanes;
     private ArrayList<TextField> postTextFields;
+    private ArrayList<MessageWorker> postMessageWorkers;
 
     @FXML
     private TextField uniqueId;
@@ -148,14 +150,17 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     public void resizeControls(double width, double height) {
         tabPane.setMinWidth(width - Constants.TAB_PANE_WIDTH_DIFF);
         tabPane.setMinHeight(height - Constants.TAB_PANE_HEIGHT_DIFF);
-        for(VBox box : postControls) {
+        for (VBox box : postControls) {
             box.setMinWidth(width - Constants.POSTS_BOX_WIDTH_DIFF);
         }
-        for(ScrollPane pane : postScrollPanes) {
+        for (ScrollPane pane : postScrollPanes) {
             pane.setMinWidth(width - Constants.POSTS_BOX_WIDTH_DIFF);
         }
         for (TextField field : postTextFields) {
             field.setMinWidth(width - Constants.POSTS_TEXT_FIELD_WIDTH_DIFF);
+        }
+        for (MessageWorker worker : postMessageWorkers) {
+            worker.recalculateWidth();
         }
     }
 
@@ -543,10 +548,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     }
 
     public void addPostMessages(VBox messageList, ScrollPane scrollPane, String message) {
-        if (message.contains("[image]")) {
-            HBox hbox = new HBox();
-            hbox.setPadding(new Insets(10, 0, 0, 0));
-            int index = message.indexOf("]") + 1;
+        if (message.contains(Constants.IMAGE_MARKER)) {
+            HBox hbox = createHBox(10, 0, 0, 0);
+            int index = message.indexOf(Constants.END_SQUARE_BRACKET) + Constants.END_SQUARE_BRACKET.length();
             String file = message.substring(index, message.length());
             try (InputStream stream = new FileInputStream(file)) {
                 Image image = new Image(stream);
@@ -555,19 +559,30 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                 imageView.setFitWidth(100);
                 imageView.setPreserveRatio(true);
                 imageView.setImage(image);
-                index = message.indexOf(": ");
-                Label label = new Label();
-                label.setPadding(new Insets(25, 0, 0, 0));
-                label.setText(message.substring(0, index));
+                index = message.indexOf(Constants.COLON + Constants.SPACE);
+                Label label = createLabel(message.substring(0, index), 25, 0, 0, 0);
                 hbox.getChildren().addAll(label, imageView);
                 messageList.getChildren().addAll(hbox);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
-            Label label = new Label();
-            label.setText(message);
-            messageList.getChildren().addAll(label);
+            HBox hbox = createHBox(0, 0, 0, 0);
+            int index = message.indexOf(Constants.COLON + Constants.SPACE) + Constants.COLON.length()
+                    + Constants.SPACE.length();
+            Label labelInfo = createLabel(message.substring(0, index), 0, 0, 0, 0);
+            hbox.getChildren().add(labelInfo);
+            Label label = createLabel(message.substring(index), 0, 0, 0, 0);
+            label.setWrapText(true);
+            setLabelMaxWidth(label, scrollPane, getLabelWidth(labelInfo));
+            hbox.getChildren().addAll(label);
+            messageList.getChildren().add(hbox);
+
+            if (postMessageWorkers == null) {
+                postMessageWorkers = new ArrayList<MessageWorker>();
+            }
+
+            postMessageWorkers.add(new MessageWorker(label, scrollPane, labelInfo));
         }
 
         // create a future task to scroll the message pane
@@ -587,6 +602,17 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             }
         };
         new Thread(task).start();
+    }
+
+    private void setLabelMaxWidth(Label label, ScrollPane scrollPane, double other) {
+        label.setMaxWidth(scrollPane.getWidth() - 25 - other);
+        label.setMinWidth(scrollPane.getWidth() - 25 - other);
+    }
+
+    private double getLabelWidth(Label theLabel) {
+        Text theText = new Text(theLabel.getText());
+        theText.setFont(theLabel.getFont());
+        return theText.getBoundsInLocal().getWidth();
     }
 
     private void processCreateSquare(String input) {
@@ -625,9 +651,6 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     public void updateDefaultNameInMemberFiles(String name) {
         String[] files = utility.getFiles(Constants.MEMBERS_FILE_EXT);
 
-        String memberIpData = publicKey + Constants.FILE_DATA_SEPARATOR + remoteIP.getValue().getDisplay() + Constants.FILE_DATA_SEPARATOR
-                + port.getText() + Constants.FILE_DATA_SEPARATOR + uniqueId.getText();
-
         for (String file : files) {
             String memberInfo = utility.readFile(file);
             String[] lines = memberInfo.split(Constants.READ_FILE_DATA_SEPARATOR);
@@ -635,8 +658,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             for (String line : lines) {
                 String[] lineData = line.split(Constants.FILE_DATA_SEPARATOR, 2);
                 String ipData = lineData[1];
-                if (ipData.equals(memberIpData)) {
-                    lines[i] = name + Constants.FILE_DATA_SEPARATOR + memberIpData;
+                if (ipData.contains(uniqueId.getText())) {
+                    lines[i] = name + Constants.FILE_DATA_SEPARATOR + ipData;
                     String newMemberInfo = String.join(Constants.NEWLINE, lines);
                     utility.deleteFile(file);
                     utility.writeFile(file, newMemberInfo);
