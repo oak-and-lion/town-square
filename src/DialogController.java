@@ -86,6 +86,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                 s = remoteIP.getSelectionModel().getSelectedItem().getDisplay();
             }
             parent.sendAlias(s);
+            updateDefaultNameInMemberFiles(defaultName.getText());
         }
     }
 
@@ -591,6 +592,32 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             String invite = utility.readFile(file);
             if (processInvitation(invite)) {
                 utility.deleteFile(file);
+            }
+        }
+    }
+
+    @Override
+    public void updateDefaultNameInMemberFiles(String name) {
+        String[] files = utility.getFiles(Constants.MEMBERS_FILE_EXT);
+
+        String memberIpData = publicKey + Constants.FILE_DATA_SEPARATOR + remoteIP.getValue().getDisplay() + Constants.FILE_DATA_SEPARATOR
+                + port.getText() + Constants.FILE_DATA_SEPARATOR + uniqueId.getText();
+
+        for (String file : files) {
+            String memberInfo = utility.readFile(file);
+            String[] lines = memberInfo.split(Constants.READ_FILE_DATA_SEPARATOR);
+            int i = 0;
+            for (String line : lines) {
+                String[] lineData = line.split(Constants.FILE_DATA_SEPARATOR, 2);
+                String ipData = lineData[1];
+                if (ipData.equals(memberIpData)) {
+                    lines[i] = name + Constants.FILE_DATA_SEPARATOR + memberIpData;
+                    String newMemberInfo = String.join(Constants.NEWLINE, lines);
+                    utility.deleteFile(file);
+                    utility.writeFile(file, newMemberInfo);
+                    break;
+                }
+                i++;
             }
         }
     }

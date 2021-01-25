@@ -57,4 +57,10 @@ public class xxMockIDialogController implements IDialogController {
     public void initializeStage() {
         // not needed
     }
+
+    @Override
+    public void updateDefaultNameInMemberFiles(String name) {
+        // not needed
+
+    }
 }

@@ -21,4 +21,5 @@ public interface IDialogController {
     void processPendingInvites();
     void initializeStage();
     void setStage(Stage stage);
+    void updateDefaultNameInMemberFiles(String name);
 }
