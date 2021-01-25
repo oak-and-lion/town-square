@@ -5,8 +5,13 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -72,6 +77,11 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     private TextField aliasServers;
 
     @FXML
+    private void handleShown(ActionEvent event) {
+        System.out.println("shown");
+    }
+
+    @FXML
     private void handleSettingsUpdate(ActionEvent event) {
         if (parent != null) {
             parent.sendDefaultName(defaultName.getText());
@@ -116,7 +126,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             if (!utility.checkFileExists(target.getName())) {
                 Files.copy(file.toPath(), target.toPath());
             }
-            ISquare square = (ISquare)tabPane.getSelectionModel().getSelectedItem().getUserData();
+            ISquare square = (ISquare) tabPane.getSelectionModel().getSelectedItem().getUserData();
             postTheMessage(square, "[image]" + target.getName());
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -137,8 +147,44 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         squareInvites = new ArrayList<String>();
     }
 
+    private void setResizeListeners() {
+        // create a listener
+        final ChangeListener<Number> listener = new ChangeListener<Number>() {
+            final Timer timer = new Timer(); // uses a timer to call your resize method
+            TimerTask task = null; // task to execute after defined delay
+            static final long DELAY_TIME = 200; // delay that has to pass in order to consider an operation done
+
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, final Number newValue) {
+                if (task != null) { // there was already a task scheduled from the previous operation ...
+                    task.cancel(); // cancel it, we have a new size to consider
+                }
+
+                task = new TimerTask() // create new task that calls your resize operation
+                {
+                    @Override
+                    public void run() {
+                        // here you can place your resize code
+                        System.out.println("resize to " + primaryStage.getWidth() + " " + primaryStage.getHeight());
+                    }
+                };
+                // schedule new task
+                timer.schedule(task, DELAY_TIME);
+            }
+        };
+
+        // finally we have to register the listener
+        primaryStage.widthProperty().addListener(listener);
+        primaryStage.heightProperty().addListener(listener);
+    }
+
     public void setStage(Stage stage) {
         primaryStage = stage;
+        initializeStage();
+    }
+
+    public void initializeStage() {
+        setResizeListeners();
     }
 
     public void setUtilityController(IUtility utilityController) {
@@ -292,7 +338,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
         Label spacer = createLabel(Constants.EMPTY_STRING, 0, 5, 0, 5);
 
-        postsButtonHBox.getChildren().addAll((TownSquareButton)postsButton, spacer, postsTextField);
+        postsButtonHBox.getChildren().addAll((TownSquareButton) postsButton, spacer, postsTextField);
 
         generatePostControls.getChildren().addAll(postsLabelHBox, postsHBox, postsButtonHBox);
 
@@ -301,8 +347,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     private void postTheMessage(ISquare newSquare, String msg) {
         long currentMillis = System.currentTimeMillis();
-        String data = Long.toString(currentMillis) + Constants.FILE_DATA_SEPARATOR + msg
-                + Constants.FILE_DATA_SEPARATOR + uniqueId.getText();
+        String data = Long.toString(currentMillis) + Constants.FILE_DATA_SEPARATOR + msg + Constants.FILE_DATA_SEPARATOR
+                + uniqueId.getText();
         String postsFile = newSquare.getSafeLowerName() + Constants.POSTS_FILE_EXT;
         if (utility.checkFileExists(postsFile)) {
             utility.appendToFile(postsFile, Constants.NEWLINE + data);
@@ -473,7 +519,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             ISquare square = Factory.createSquare(Constants.BASE_SQUARE, info, port.getText(),
                     remoteIP.getValue().getDisplay(),
                     Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
-                            Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT, utility),
+                            Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT,
+                                    utility),
                             Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
                     utility, this, uniqueId.getText());
             utility.writeFile(squareSafeName + Constants.SQUARE_FILE_EXT, info);
@@ -494,7 +541,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             String contents = utility.readFile(file);
             setTabSquare(new Square(contents, port.getText(), remoteIP.getValue().getDisplay(),
                     Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
-                            Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT, utility),
+                            Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT,
+                                    utility),
                             Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
                     utility, this, uniqueId.getText()));
         }
@@ -505,12 +553,12 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     }
 
     public void addPostMessages(VBox messageList, ScrollPane scrollPane, String message) {
-        if (message.contains("[image]")){
+        if (message.contains("[image]")) {
             HBox hbox = new HBox();
-            hbox.setPadding(new Insets(10, 0 , 0 ,0));
+            hbox.setPadding(new Insets(10, 0, 0, 0));
             int index = message.indexOf("]") + 1;
             String file = message.substring(index, message.length());
-            try (InputStream stream = new FileInputStream(file)) {                
+            try (InputStream stream = new FileInputStream(file)) {
                 Image image = new Image(stream);
                 ImageView imageView = new ImageView();
                 imageView.setFitHeight(100);
@@ -519,7 +567,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                 imageView.setImage(image);
                 index = message.indexOf(": ");
                 Label label = new Label();
-                label.setPadding(new Insets(25, 0 ,0 , 0));
+                label.setPadding(new Insets(25, 0, 0, 0));
                 label.setText(message.substring(0, index));
                 hbox.getChildren().addAll(label, imageView);
                 messageList.getChildren().addAll(hbox);
@@ -531,8 +579,24 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             label.setText(message);
             messageList.getChildren().addAll(label);
         }
-        scrollPane.setVvalue(Double.MIN_VALUE);
-        scrollPane.setVvalue(Double.MAX_VALUE);
+
+        // create a future task to scroll the message pane
+        // give the UI time to redraw and re calcuate
+        // otherwise it "scrolls" to the same place
+        // thinking it is the bottom
+        Task<Void> task = new Task<Void>() {
+            @Override
+            public Void call() {
+                try {
+                    Thread.sleep(210);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+                scrollPane.setVvalue(Double.MAX_VALUE);
+                return null;
+            }
+        };
+        new Thread(task).start();
     }
 
     private void processCreateSquare(String input) {
@@ -550,7 +614,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         utility.writeFile(safeName + Constants.SQUARE_FILE_EXT, contents);
         setTabSquare(new Square(contents, port.getText(), remoteIP.getValue().getDisplay(),
                 Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
-                        Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT, utility),
+                        Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT,
+                                utility),
                         Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
                 utility, this, uniqueId.getText()));
     }
@@ -558,7 +623,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     public void processPendingInvites() {
         String[] files = utility.getFiles(Constants.INVITE_FILE_EXT);
 
-        for(String file : files) {
+        for (String file : files) {
             String invite = utility.readFile(file);
             if (processInvitation(invite)) {
                 utility.deleteFile(file);

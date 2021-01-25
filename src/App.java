@@ -1,6 +1,9 @@
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,7 +33,7 @@ public class App extends Application implements IApp {
         }
     }
 
-    private void processStart(Stage primaryStage) {
+    private IDialogController processStart(Stage primaryStage) {
         String uniqueId = Constants.EMPTY_STRING;
         String defaultSquareInfo = Constants.EMPTY_STRING;
         ISquare defaultSquare = null;
@@ -39,7 +42,6 @@ public class App extends Application implements IApp {
         String alias = Constants.EMPTY_STRING;
         defaultName = Constants.DEFAULT_USER_NAME;
 
-        IDialogController controller = null;
         ISquareController squareController = null;
         IVersionChecker versionChecker;
 
@@ -52,13 +54,15 @@ public class App extends Application implements IApp {
         ILogIt logger = Factory.createLogger(Constants.FILE_LOGGER, Constants.MAIN_LOG_FILE, utility);
 
         systemExit.setParent(this);
-        
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(Constants.FXML_FILE));
 
             Parent root = loader.load();
 
             Scene scene = new Scene(root);
+
+            final IDialogController controller = loader.<DialogController>getController();
 
             primaryStage.setTitle(Constants.APP_TITLE);
             primaryStage.setScene(scene);
@@ -112,8 +116,32 @@ public class App extends Application implements IApp {
                                 + uniqueId);
             }
 
+            root.sceneProperty().addListener(new ChangeListener<Scene>() {
+                @Override
+                public void changed(ObservableValue<? extends Scene> observable, Scene oldValue, Scene newValue) {
+                    newValue.windowProperty().addListener(new ChangeListener<Window>() {
+                        @Override
+                        public void changed(ObservableValue<? extends Window> observable, Window oldValue,
+                                Window newValue) {
+                            newValue.addEventHandler(WindowEvent.WINDOW_SHOWN, new EventHandler<WindowEvent>() {
+                                @Override
+                                public void handle(WindowEvent event) {
+                                    controller.initializeStage();
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+
+            primaryStage.addEventHandler(WindowEvent.WINDOW_SHOWN, new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent window) {
+                    controller.initializeStage();
+                }
+            });
+
             primaryStage.show();
-            controller = loader.<DialogController>getController();
 
             squareController = Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, controller,
                     Factory.createLogger(Constants.FILE_LOGGER, Constants.SQUARE_CONTROLLER_LOG_FILE, utility),
@@ -130,19 +158,23 @@ public class App extends Application implements IApp {
 
             initializeController(controller, uniqueId, port, ip, ipAddresses, alias, defaultSquare);
 
+            initializeSquareController(squareController, port);
+
+            logger.logInfo("Started Town Square");
+
+            controller.processPendingInvites();
+
+            versionChecker = Factory.createVersionChecker(Constants.BASE_VERSION_CHECKER, utility, uniqueId);
+            versionChecker.run();
+
+            return controller;
+
         } catch (IOException ioe) {
             logger.logInfo(ioe.getMessage());
             systemExit.handleExit(Constants.SYSTEM_EXIT_FAIL);
         }
 
-        initializeSquareController(squareController, port);
-
-        logger.logInfo("Started Town Square");
-
-        controller.processPendingInvites();
-
-        versionChecker = Factory.createVersionChecker(Constants.BASE_VERSION_CHECKER, utility, uniqueId);
-        versionChecker.run();
+        return null;
     }
 
     private void initializeSquareController(ISquareController squareController, String port) {
@@ -223,7 +255,7 @@ public class App extends Application implements IApp {
     public void sendIP(String ip, String oldIp, String uniqueId) {
         utility.writeFile(Constants.IP_FILE, ip);
         String[] files = utility.getFiles(Constants.MEMBERS_FILE_EXT);
-        
+
         for (String file : files) {
             ArrayList<String> newLines = new ArrayList<String>();
             String[] lines = utility.readFile(file).split(Constants.READ_FILE_DATA_SEPARATOR);

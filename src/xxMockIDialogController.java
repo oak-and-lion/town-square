@@ -53,4 +53,8 @@ public class xxMockIDialogController implements IDialogController {
     public void setStage(Stage stage) {
         // not neededed
     }
+
+    public void initializeStage() {
+        // not needed
+    }
 }
