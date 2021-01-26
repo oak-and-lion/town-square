@@ -38,7 +38,7 @@ public class ServerThread extends Thread implements IServerThread {
                 }
  
             } while (text != null && !text.equals("bye"));
-            logger.logInfo("Client Disconnected");
+            logger.logInfo("Client Disconnected: " + socket.getInetAddress().getHostAddress());
             socket.close();
         } catch (IOException ex) {
             logger.logInfo(ex.getMessage());

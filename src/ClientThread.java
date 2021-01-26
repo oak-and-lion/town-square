@@ -72,12 +72,11 @@ public class ClientThread extends Thread implements IClientThread {
 
                 checkForDoneThreads(threadsDone, memberThreads);
 
-                for(IMemberPostsThread mt : memberThreads) {
+                for (IMemberPostsThread mt : memberThreads) {
                     posts.addAll(mt.getAllPosts());
                 }
 
-                utility.deleteFile(file);
-                utility.writeFile(file, String.join(Constants.NEWLINE, posts.getAllMessages()));
+                updatePosts(file);
 
                 Thread.sleep(1000);
             }
@@ -180,6 +179,7 @@ public class ClientThread extends Thread implements IClientThread {
                 continue;
             }
             String[] post = postInfo.split(Constants.DATA_SEPARATOR);
+            posts.add(new PostMessage(Long.parseLong(post[0]), postInfo));
             String[] members = utility.searchFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT, post[2],
                     false);
             if (members.length > 0 && members[0] != null) {
@@ -189,10 +189,24 @@ public class ClientThread extends Thread implements IClientThread {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        square.getSampleController().addPostMessages(vbox, scrollPane, message, Long.parseLong(post[0]));
+                        square.getSampleController().addPostMessages(vbox, scrollPane, message,
+                                Long.parseLong(post[0]));
                     }
                 });
             }
         }
+    }
+
+    private void updatePosts(String file) {
+        writePostFile(file);        
+    }
+
+    private void writePostFile(String file) {
+        utility.deleteFile(file);
+        utility.writeFile(file, String.join(Constants.NEWLINE, posts.getAllMessages()));
+    }
+
+    public void addPostMessage(PostMessage message) {
+        posts.add(message);
     }
 }

@@ -19,6 +19,7 @@ public class Square implements ISquare {
     private VBox postsVBox;
     private IDialogController sampleController;
     private String uniqueId;
+    private IClientThread clientThread;
 
     public Square(String info, String port, String ip, ISquareController squareController, IUtility utility,
             IDialogController sampleController, String uniqueId) {
@@ -53,7 +54,7 @@ public class Square implements ISquare {
     }
 
     private void initializeClientThread() {
-        IClientThread clientThread = Factory.createClientThread(Constants.BASE_CLIENT_THREAD, this, utility, uniqueId);
+        clientThread = Factory.createClientThread(Constants.BASE_CLIENT_THREAD, this, utility, uniqueId);
 
         if (utility.checkFileExists(getSafeLowerName() + Constants.POSTS_FILE_EXT)) {
             lastKnownPost = utility.countLinesInFile(getSafeLowerName() + Constants.POSTS_FILE_EXT);
@@ -173,5 +174,9 @@ public class Square implements ISquare {
 
     public IDialogController getSampleController() {
         return sampleController;
+    }
+
+    public void addPostMessage(PostMessage message) {
+        clientThread.addPostMessage(message);
     }
 }

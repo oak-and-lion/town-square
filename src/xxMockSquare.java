@@ -50,4 +50,7 @@ public class xxMockSquare implements ISquare {
     public void setLastKnownPost(int lastKnownPost) {
         // not needed
     }
+    public void addPostMessage(PostMessage message) {
+        // not needed
+    }
 }

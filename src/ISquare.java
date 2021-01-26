@@ -17,5 +17,6 @@ public interface ISquare {
     ScrollPane getPostsScrollPane();
     IDialogController getSampleController();
     void setLastKnownPost(int lastKnownPost);
-    int getLastKnownPost(); 
+    int getLastKnownPost();
+    void addPostMessage(PostMessage message);
 }

@@ -349,12 +349,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         long currentMillis = System.currentTimeMillis();
         String data = Long.toString(currentMillis) + Constants.FILE_DATA_SEPARATOR + msg + Constants.FILE_DATA_SEPARATOR
                 + uniqueId.getText();
-        String postsFile = newSquare.getSafeLowerName() + Constants.POSTS_FILE_EXT;
-        if (utility.checkFileExists(postsFile)) {
-            utility.appendToFile(postsFile, Constants.NEWLINE + data);
-        } else {
-            utility.writeFile(postsFile, data);
-        }
+        newSquare.addPostMessage(new PostMessage(currentMillis, data));
     }
 
     private ScrollPane createPostPane(VBox postsList) {
