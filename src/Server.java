@@ -56,7 +56,8 @@ public class Server extends Thread implements IServer {
         boolean result = true;
         try {
             Socket socket = serverSocket.accept();
-            logger.logInfo("New client connected");
+            String clientIP = socket.getInetAddress().getHostAddress();
+            logger.logInfo("New client connected: " + clientIP);
 
             serverThread = Factory.createServerThread(Constants.BASE_SERVER_THREAD, socket, squareController, logger);
             serverThread.start();
