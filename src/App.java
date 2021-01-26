@@ -42,6 +42,7 @@ public class App extends Application implements IApp {
         String port = Constants.DEFAULT_PORT;
         String ip = Constants.DEFAULT_IP;
         String alias = Constants.EMPTY_STRING;
+        String remoteIP = utility.getRemoteIP();
         defaultName = Constants.DEFAULT_USER_NAME;
 
         ISquareController squareController = null;
@@ -87,7 +88,7 @@ public class App extends Application implements IApp {
                 port = utility.readFile(Constants.PORT_FILE);
             }
             if (!utility.checkFileExists(Constants.IP_FILE)) {
-                utility.writeFile(Constants.IP_FILE, utility.getRemoteIP());
+                utility.writeFile(Constants.IP_FILE, remoteIP);
             } else {
                 ip = utility.readFile(Constants.IP_FILE);
             }
@@ -114,7 +115,7 @@ public class App extends Application implements IApp {
             if (!utility.checkFileExists(Constants.DEFAULT_SQUARE_ME_FILE)) {
                 utility.writeFile(Constants.DEFAULT_SQUARE_ME_FILE,
                         defaultName + Constants.DATA_SEPARATOR + keys.getPublicKeyBase64() + Constants.DATA_SEPARATOR
-                                + utility.getRemoteIP() + Constants.DATA_SEPARATOR + port + Constants.DATA_SEPARATOR
+                                + remoteIP + Constants.DATA_SEPARATOR + port + Constants.DATA_SEPARATOR
                                 + uniqueId);
             }
 
@@ -137,7 +138,7 @@ public class App extends Application implements IApp {
                     utility, controller, uniqueId);
 
             ObservableList<IPAddress> ipAddresses = FXCollections.observableArrayList();
-            ipAddresses.add(new IPAddress(utility.getRemoteIP(), utility.getRemoteIP()));
+            ipAddresses.add(new IPAddress(remoteIP, remoteIP));
             ipAddresses.addAll(utility.getLocalIPs());
 
             alias = getAlias(ip);
@@ -151,7 +152,7 @@ public class App extends Application implements IApp {
             controller.processPendingInvites();
 
             versionChecker = Factory.createVersionChecker(Constants.BASE_VERSION_CHECKER, utility, uniqueId);
-            versionChecker.run();
+            //versionChecker.run();
 
             return controller;
 

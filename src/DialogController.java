@@ -41,6 +41,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     private ArrayList<ScrollPane> postScrollPanes;
     private ArrayList<TextField> postTextFields;
     private ArrayList<MessageWorker> postMessageWorkers;
+    private ArrayList<Long> knownPostMessages;
 
     @FXML
     private TextField uniqueId;
@@ -551,7 +552,17 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         return new SquareResponse(result);
     }
 
-    public void addPostMessages(VBox messageList, ScrollPane scrollPane, String message) {
+    public void addPostMessages(VBox messageList, ScrollPane scrollPane, String message, long millis) {
+        if (knownPostMessages == null) {
+            knownPostMessages = new ArrayList<Long>();
+        }
+
+        if (knownPostMessages.contains(millis)) {
+            return;
+        }
+
+        knownPostMessages.add(millis);
+
         if (message.contains(Constants.IMAGE_MARKER)) {
             HBox hbox = createHBox(10, 0, 0, 0);
             int index = message.indexOf(Constants.END_SQUARE_BRACKET) + Constants.END_SQUARE_BRACKET.length();
@@ -697,6 +708,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                             + lineData[4];
                     break;
                 }
+                i++;
             }
             String newMemberInfo = String.join(Constants.NEWLINE, lines);
             utility.deleteFile(file);
@@ -719,6 +731,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                             + lineData[4];
                     break;
                 }
+                i++;
             }
             String newMemberInfo = String.join(Constants.NEWLINE, lines);
             utility.deleteFile(file);

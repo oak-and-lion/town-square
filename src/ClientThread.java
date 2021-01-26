@@ -13,6 +13,7 @@ public class ClientThread extends Thread implements IClientThread {
     private IUtility utility;
     private boolean process;
     private String uniqueId;
+    private PostMessageList posts;
 
     public ClientThread(ISquare s, IUtility utility, String uniqueId) {
         squareName = s.getName();
@@ -22,6 +23,7 @@ public class ClientThread extends Thread implements IClientThread {
         process = true;
         squareName = square.getName();
         this.uniqueId = uniqueId;
+        posts = new PostMessageList();
     }
 
     public void setLastKnownPost(int index) {
@@ -40,6 +42,9 @@ public class ClientThread extends Thread implements IClientThread {
             String memberAliasFile = square.getSafeLowerName() + Constants.ALIAS_FILE_EXT;
             String raw;
             while (process) {
+                if (utility.checkFileExists(square.getSafeLowerName() + Constants.PAUSE_FILE_EXT)) {
+                    continue;
+                }
                 raw = utility.readFile(file, lastKnownPost);
                 if (!raw.equals(Constants.EMPTY_STRING)) {
                     processMessages(raw);
@@ -47,13 +52,8 @@ public class ClientThread extends Thread implements IClientThread {
 
                 raw = utility.readLastLineOfFile(file);
 
-                String[] msg;
-                if (raw.equals(Constants.EMPTY_STRING)) {
-                    msg = new String[1];
-                    msg[0] = Constants.NO_POSTS;
-                } else {
-                    msg = raw.split(Constants.DATA_SEPARATOR);
-                }
+                String[] msg = new String[1];
+                msg[0] = Constants.NO_POSTS;
 
                 String[] members = getAllMembers(memberFile, memberAliasFile);
 
@@ -65,12 +65,19 @@ public class ClientThread extends Thread implements IClientThread {
                 boolean threadsDone = false;
                 for (String info : members) {
                     // spin up new thread for each member and process ASAP
-                    IMemberPostsThread thread = new MemberPostsThread(info, file, uniqueId, msg, square, utility);
+                    IMemberPostsThread thread = new MemberPostsThread(info, uniqueId, msg, square, utility);
                     memberThreads.add(thread);
                     thread.start();
                 }
 
                 checkForDoneThreads(threadsDone, memberThreads);
+
+                for(IMemberPostsThread mt : memberThreads) {
+                    posts.addAll(mt.getAllPosts());
+                }
+
+                utility.deleteFile(file);
+                utility.writeFile(file, String.join(Constants.NEWLINE, posts.getAllMessages()));
 
                 Thread.sleep(1000);
             }
@@ -162,13 +169,13 @@ public class ClientThread extends Thread implements IClientThread {
     }
 
     private void processMessages(String raw) {
-        String[] posts = raw.split(Constants.COMMAND_DATA_SEPARATOR);
+        String[] clientPosts = raw.split(Constants.COMMAND_DATA_SEPARATOR);
         ScrollPane scrollPane = square.getPostsScrollPane();
         VBox vbox = square.getPostsVBox();
         if (scrollPane == null || vbox == null) {
             return;
         }
-        for (String postInfo : posts) {
+        for (String postInfo : clientPosts) {
             if (postInfo.equals(Constants.EMPTY_STRING)) {
                 continue;
             }
@@ -182,13 +189,10 @@ public class ClientThread extends Thread implements IClientThread {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        square.getSampleController().addPostMessages(vbox, scrollPane, message);
+                        square.getSampleController().addPostMessages(vbox, scrollPane, message, Long.parseLong(post[0]));
                     }
                 });
             }
         }
-        int temp = lastKnownPost + posts.length;
-        setLastKnownPost(temp);
-        square.setLastKnownPost(temp);
     }
 }

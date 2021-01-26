@@ -62,7 +62,7 @@ public class Utility implements IUtility {
             mue.printStackTrace();
         }
 
-        return result;
+        return result.replace("hello world", Constants.EMPTY_STRING);
     }
 
     public IPAddress[] getLocalIPs() {

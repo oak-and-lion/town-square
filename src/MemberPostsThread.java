@@ -1,28 +1,29 @@
+import java.util.ArrayList;
+
 public class MemberPostsThread extends Thread implements IMemberPostsThread {
     private String info;
-    private String file;
     private String uniqueId;
     private String[] msg;
     private ISquare square;
     private IUtility utility;
     private boolean workDone;
+    private ArrayList<PostMessage> allPosts;
 
-    public MemberPostsThread(String info, String file, String uniqueId, String[] msg, ISquare square, IUtility utility) {
+    public MemberPostsThread(String info, String uniqueId, String[] msg, ISquare square, IUtility utility) {
         this.info = info;
-        this.file = file;
         this.uniqueId = uniqueId;
         this.msg = msg;
         this.square = square;
         this.utility = utility;
         workDone = false;
+        allPosts = new ArrayList<PostMessage>();
     }
 
     @Override
     public void run() {
         try {
             getPostsFromOtherMembers();
-        }
-        catch (Exception ie) {
+        } catch (Exception ie) {
             ie.printStackTrace();
             Thread.currentThread().interrupt();
         }
@@ -51,25 +52,23 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
         workDone = true;
     }
 
+    public PostMessage[] getAllPosts() {
+        return allPosts.toArray(new PostMessage[allPosts.size()]);
+    }
+
     public void processPostData(String[] responseSplit, String[] member) {
         ISquareKeyPair tempKeys = Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
         tempKeys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
         String[] decryptData = responseSplit[1].split(Constants.COMMAND_DATA_SEPARATOR);
-        if (decryptData.length > 1){
+        if (decryptData.length > 1) {
             String pwd = tempKeys.decryptFromBase64(decryptData[0]);
             String decrypted = utility.decrypt(decryptData[1], pwd);
             if (!decrypted.equals(Constants.EMPTY_STRING)) {
-                String newLine = Constants.NEWLINE;
-                if (!utility.checkFileExists(file)) {
-                    newLine = Constants.EMPTY_STRING;
-                }
-                String posts = newLine
-                        + decrypted.replace(Constants.COMMAND_DATA_SEPARATOR, Constants.NEWLINE);
-                utility.appendToFile(file, posts);
                 String[] msgs = decrypted.split(Constants.COMMAND_DATA_SEPARATOR);
-                String[] lastMsg = msgs[msgs.length - 1].split(Constants.DATA_SEPARATOR);
-                msg[0] = lastMsg[0];
                 for (String m : msgs) {
+                    String[] m1 = m.split(Constants.FILE_DATA_SEPARATOR, 2);
+                    long millis = Long.parseLong(m1[0]);
+                    allPosts.add(new PostMessage(millis, m));
                     if (m.indexOf(Constants.IMAGE_MARKER) > Constants.NOT_FOUND_IN_STRING) {
                         processGetImageFile(m, member);
                     }
@@ -80,13 +79,18 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
 
     private void processGetImageFile(String data, String[] member) {
         String[] message = data.split(Constants.DATA_SEPARATOR);
+        String fileName = message[1]
+                .substring(message[1].indexOf(Constants.END_SQUARE_BRACKET) + Constants.END_SQUARE_BRACKET.length());
+
+        if (utility.checkFileExists(fileName)) {
+            return;
+        }
 
         IClient client = Factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
-            square.getInvite());
+                square.getInvite());
 
-        String fileName = message[1].substring(message[1].indexOf("]") + 1);
-        String response = client.sendMessage(Constants.REQUEST_FILE_COMMAND + Constants.COMMAND_DATA_SEPARATOR + fileName
-            + Constants.COMMAND_DATA_SEPARATOR + uniqueId, false);
+        String response = client.sendMessage(Constants.REQUEST_FILE_COMMAND + Constants.COMMAND_DATA_SEPARATOR
+                + fileName + Constants.COMMAND_DATA_SEPARATOR + uniqueId, false);
 
         SquareResponse responseData = new SquareResponse(response);
 

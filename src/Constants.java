@@ -33,6 +33,7 @@ public class Constants {
     public static final String PUBLIC_KEY_FILE = "public.key";
     public static final String PRIVATE_KEY_FILE = "private.key";
     public static final String LOCK_FILE = "town_square.lock";
+    public static final String PAUSE_FILE_EXT = ".pause";
     public static final String LOCK_FILE_CONTENTS = "lock";
     public static final String APP_TITLE = "Town Square";
     public static final String DEFAULT_SQUARE_NAME = "My Square";
@@ -82,7 +83,7 @@ public class Constants {
     public static final String FILE_DATA_SEPARATOR = "~_~";
     public static final String USER_DIR = "user.dir";
     public static final String PATH_DELIMITER = "/";
-    public static final String REMOTE_IP_URL = "https://checkip.amazonaws.com/";
+    public static final String REMOTE_IP_URL = "https://childsheartyoga.com/api.aspx?pf=ip"; //"https://checkip.amazonaws.com/";
     public static final int NOT_FOUND_ROW = -1;
     public static final String ALGORITHM = "AES";
     public static final String TRANSFORMATION = "AES/ECB/PKCS5Padding";

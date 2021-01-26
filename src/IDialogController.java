@@ -10,7 +10,7 @@ public interface IDialogController {
     void setVersion(String version);
     void setAlias(String alias);
     void setParent(IApp app);
-    void addPostMessages(VBox vbox, ScrollPane scrollPane, String message);
+    void addPostMessages(VBox vbox, ScrollPane scrollPane, String message, long millis);
     void setUtilityController(IUtility utility);
     void setUniqueId(String uniqueId);
     void setPort(String port);
