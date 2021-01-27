@@ -24,6 +24,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -42,7 +45,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     private ArrayList<TextField> postTextFields;
     private ArrayList<MessageWorker> postMessageWorkers;
     private ArrayList<Long> knownPostMessages;
-    private IModalImageViewer modalImageViewer;
+    private IModalViewer modalImageViewer;
+    private IModalViewer modalVideoViewer;
 
     @FXML
     private TextField uniqueId;
@@ -119,8 +123,17 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     @FXML
     private void attachImage(ActionEvent event) {
         // attach the image
+        attachAttachment(Constants.IMAGE_DIALOG_TITLE, Constants.IMAGE_MARKER);
+    }
+
+    @FXML
+    private void attachVideo(ActionEvent event) {
+        attachAttachment(Constants.VIDEO_DIALOG_TITLE, Constants.VIDEO_MARKER);
+    }
+
+    private void attachAttachment(String dialogTitle, String marker) {
         FileChooser fc = new FileChooser();
-        fc.setTitle(Constants.IMAGE_DIALOG_TITLE);
+        fc.setTitle(dialogTitle);
         File file = fc.showOpenDialog(primaryStage);
         File target = new File(file.getName());
         try {
@@ -128,7 +141,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                 Files.copy(file.toPath(), target.toPath());
             }
             ISquare square = (ISquare) tabPane.getSelectionModel().getSelectedItem().getUserData();
-            postTheMessage(square, Constants.IMAGE_MARKER + target.getName());
+            postTheMessage(square, marker + target.getName());
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
@@ -577,7 +590,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                     @Override
                     public void handle(Event event) {
                         if (modalImageViewer == null) {
-                            modalImageViewer = Factory.createModalImageViewer(Constants.BASE_MODAL_IMAGE_VIEWER);
+                            modalImageViewer = Factory.createModalViewer(Constants.BASE_MODAL_IMAGE_VIEWER);
                         }
                         modalImageViewer.show(file);
                     }
@@ -589,6 +602,32 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else if (message.contains(Constants.VIDEO_MARKER)) {
+            HBox hbox = createHBox(10, 0, 0, 0);
+            int index = message.indexOf(Constants.END_SQUARE_BRACKET) + Constants.END_SQUARE_BRACKET.length();
+            String file = message.substring(index, message.length());
+            String f = new File(file).toURI().toString();
+            Media media = new Media(f);
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(0.0);
+            mediaPlayer.setAutoPlay(true);
+            MediaView mediaView = new MediaView(mediaPlayer);
+            mediaView.setFitHeight(Constants.IMAGE_SMALL_FIT_HEIGHT);
+            mediaView.setFitWidth(Constants.IMAGE_SMALL_FIT_WIDTH);
+            mediaView.setStyle("-fx-cursor: hand;");
+            mediaView.setOnMouseClicked(new EventHandler<Event>() {
+                @Override
+                public void handle(Event event) {
+                    if (modalVideoViewer == null) {
+                        modalVideoViewer = Factory.createModalViewer(Constants.BASE_MODAL_VIDEO_VIEWER);
+                    }
+                    modalVideoViewer.show(file);
+                }
+            });
+            index = message.indexOf(Constants.COLON + Constants.SPACE);
+            Label label = createLabel(message.substring(0, index), 25, 0, 0, 0);
+            hbox.getChildren().addAll(label, mediaView);
+            messageList.getChildren().addAll(hbox);
         } else {
             HBox hbox = createHBox(0, 0, 0, 0);
             int index = message.indexOf(Constants.COLON + Constants.SPACE) + Constants.COLON.length()

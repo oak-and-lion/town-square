@@ -20,6 +20,7 @@ public class Constants {
     public static final int BASE_SYSTEM_EXIT = 1;
     public static final int BASE_VERSION_CHECKER = 1;
     public static final int BASE_MODAL_IMAGE_VIEWER = 1;
+    public static final int BASE_MODAL_VIDEO_VIEWER = 2;
     public static final int SYSTEM_EXIT_FAIL = 1;    
     public static final int NULL_OBJECT_TYPE = Integer.MAX_VALUE;
     public static final String VERSION = "0.0.1";
@@ -135,7 +136,9 @@ public class Constants {
     public static final String SQUARE_CONTROLLER_LOG_FILE = "squareController.log";
     public static final String IMAGE_MARKER = "[image]";
     public static final String END_SQUARE_BRACKET = "]";
+    public static final String VIDEO_MARKER = "[video]";
     public static final String IMAGE_DIALOG_TITLE = "Attach Image...";
+    public static final String VIDEO_DIALOG_TITLE = "Attach Video...";
     public static final int NOT_FOUND_IN_STRING = -1;
     public static final String JAR_FILE = "App.jar";
     public static final String TEMP_JAR_FILE = "_new_App.jar";
@@ -150,4 +153,7 @@ public class Constants {
     public static final String DEFAULT_SQUARE_TAB_NAME = "tabDefaultSquare";
     public static final int IMAGE_SMALL_FIT_HEIGHT = 100;
     public static final int IMAGE_SMALL_FIT_WIDTH = 100;
+    public static final int IMAGE_LARGE_FIT_HEIGHT = 500;
+    public static final int IMAGE_LARGE_FIT_WIDTH = 400;
+    public static final int MAX_MESSAGES = 100;
 }

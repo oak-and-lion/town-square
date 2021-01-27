@@ -30,6 +30,7 @@
           <Menu mnemonicParsing="false" text="Message">
             <items>
               <MenuItem fx:id="mnuAttachImage" mnemonicParsing="false" onAction="#attachImage" text="Attach Image" />
+              <MenuItem fx:id="mnuAttachVideo" mnemonicParsing="false" onAction="#attachVideo" text="Attach Video" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">

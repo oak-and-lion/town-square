@@ -7,7 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
-public class ModalImageViewer implements IModalImageViewer {
+public class ModalImageViewer implements IModalViewer {
     private Stage primaryStage;
     public ModalImageViewer() {
         primaryStage = new Stage();
