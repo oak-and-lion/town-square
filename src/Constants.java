@@ -21,7 +21,9 @@ public class Constants {
     public static final int BASE_VERSION_CHECKER = 1;
     public static final int BASE_MODAL_IMAGE_VIEWER = 1;
     public static final int BASE_MODAL_VIDEO_VIEWER = 2;
-    public static final int SYSTEM_EXIT_FAIL = 1;    
+    public static final int SYSTEM_EXIT_OK = 0;
+    public static final int SYSTEM_EXIT_FAIL = 1;
+    public static final int SYSTEM_EXIT_ALREADY_RUNNING = 2;
     public static final int NULL_OBJECT_TYPE = Integer.MAX_VALUE;
     public static final String VERSION = "0.0.1";
     public static final String SQUARE_FILE_EXT = ".square";
@@ -162,4 +164,6 @@ public class Constants {
     public static final String LEAVE_SQUARE_HEADER = "Are you sure you want to leave?";
     public static final String LEAVE_SQUARE_CONTENT = "This can't be undone";
     public static final String NULL_TEXT = "null";
+    public static final String LEAVE_FILE_EXT = ".leave";
+    public static final String LEAVE_FILE_CONTENTS = "leave";
 }

@@ -30,7 +30,7 @@ public class App extends Application implements IApp {
     @Override
     public void start(Stage primaryStage) {
         utility = Factory.createUtility(Constants.BASE_UTILITY);
-
+        systemExit.setParent(this);
         if (checkCurrentState(alert)) {
             processStart(primaryStage);
         }
@@ -72,7 +72,7 @@ public class App extends Application implements IApp {
             primaryStage.setScene(scene);
             primaryStage.setOnCloseRequest(event -> {
                 logger.logInfo("Closing");
-                close();
+                close(Constants.SYSTEM_EXIT_OK);
                 systemExit.handleExit(Constants.GRACEFUL_SHUTDOWN);
             });
 
@@ -241,7 +241,7 @@ public class App extends Application implements IApp {
         if (isRunning()) {
             alert.createAlert("Already Running!", "An instance of Town Square is already running!",
                     "Close the other instance before you start a new instance.", AlertType.INFORMATION);
-            systemExit.handleExit(Constants.SYSTEM_EXIT_FAIL);
+            systemExit.handleExit(Constants.SYSTEM_EXIT_ALREADY_RUNNING);
             return false;
         } else {
             utility.writeFile(Constants.LOCK_FILE, Constants.LOCK_FILE_CONTENTS);
@@ -256,12 +256,16 @@ public class App extends Application implements IApp {
 
     @Override
     public void stop() {
-        utility.deleteFile(Constants.LOCK_FILE);
-        server.teardown();
+        if (server != null) {
+            server.teardown();
+        }
     }
 
-    public void close() {
+    public void close(int exitCode) {
         stop();
+        if (exitCode != Constants.SYSTEM_EXIT_ALREADY_RUNNING) {
+            utility.deleteFile(Constants.LOCK_FILE);
+        }
     }
 
     private void cleanup() {

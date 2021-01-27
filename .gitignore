@@ -35,3 +35,4 @@ test/
 openjdk-11.0.2_osx-x64_bin.tar.gz
 jdk-11.0.2.jdk/
 *.mp4
+*.leave

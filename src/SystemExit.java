@@ -4,7 +4,7 @@ public class SystemExit implements ISystemExit {
         this.parent = parent;
     }
     public void handleExit(int returnCode) {
-        parent.close();
+        parent.close(returnCode);
         System.exit(returnCode);
     }
 }

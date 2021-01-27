@@ -332,6 +332,9 @@ public class SquareController implements ISquareController {
         String file = square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT;
         int first = utility.findFirstOccurence(file, memberId, Constants.SEARCH_CONTAINS, Constants.NOT_FOUND_RETURN_NEG_ONE);
 
+        if (first < 0) {
+            first = utility.findFirstOccurence(file, Constants.EXIT_SQUARE_TEXT, Constants.SEARCH_STARTS_WITH, Constants.NOT_FOUND_RETURN_NEG_ONE);
+        }
         return (first > -1);
     }
 

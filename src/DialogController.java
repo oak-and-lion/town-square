@@ -133,6 +133,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             utility.deleteFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT);
             utility.deleteFile(square.getSafeLowerName() + Constants.POSTS_FILE_EXT);
             utility.writeFile(square.getSafeLowerName() + Constants.PAUSE_FILE_EXT, Constants.PAUSE_FILE_CONTENTS);
+            utility.writeFile(square.getSafeLowerName() + Constants.LEAVE_FILE_EXT, Constants.LEAVE_FILE_CONTENTS);
             utility.writeFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT,
                     Constants.EXIT_SQUARE_TEXT + Constants.FILE_DATA_SEPARATOR + Constants.NULL_TEXT
                             + Constants.FILE_DATA_SEPARATOR + Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR
@@ -286,7 +287,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             squares.add(square);
             squareNames.add(square.getName());
             squareInvites.add(square.getInvite());
-            createTab(square, squares.size() - 1);
+            if (!utility.checkFileExists(square.getSafeLowerName() + Constants.LEAVE_FILE_EXT)) {
+                createTab(square, squares.size() - 1);
+            }
         }
     }
 
@@ -552,6 +555,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                                     utility),
                             Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
                     utility, this, uniqueId.getText());
+            utility.deleteFile(squareSafeName + Constants.PAUSE_FILE_CONTENTS);
+            utility.deleteFile(squareSafeName + Constants.LEAVE_FILE_CONTENTS);
             utility.writeFile(squareSafeName + Constants.SQUARE_FILE_EXT, info);
             setTabSquare(square);
 
