@@ -148,4 +148,12 @@ public class Factory {
 
         return null;
     }
+
+    public static IModalImageViewer createModalImageViewer(int type) {
+        if (type == Constants.BASE_MODAL_IMAGE_VIEWER) {
+            return new ModalImageViewer();
+        }
+
+        return null;
+    }
 }

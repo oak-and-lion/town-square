@@ -19,6 +19,7 @@ public class Constants {
     public static final int BASE_ALERT_BOX = 1;
     public static final int BASE_SYSTEM_EXIT = 1;
     public static final int BASE_VERSION_CHECKER = 1;
+    public static final int BASE_MODAL_IMAGE_VIEWER = 1;
     public static final int SYSTEM_EXIT_FAIL = 1;    
     public static final int NULL_OBJECT_TYPE = Integer.MAX_VALUE;
     public static final String VERSION = "0.0.1";
@@ -147,4 +148,6 @@ public class Constants {
     public static final double POSTS_BOX_WIDTH_DIFF = 50;
     public static final double POSTS_TEXT_FIELD_WIDTH_DIFF = 99;
     public static final String DEFAULT_SQUARE_TAB_NAME = "tabDefaultSquare";
+    public static final int IMAGE_SMALL_FIT_HEIGHT = 100;
+    public static final int IMAGE_SMALL_FIT_WIDTH = 100;
 }

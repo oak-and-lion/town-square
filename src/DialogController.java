@@ -42,6 +42,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     private ArrayList<TextField> postTextFields;
     private ArrayList<MessageWorker> postMessageWorkers;
     private ArrayList<Long> knownPostMessages;
+    private IModalImageViewer modalImageViewer;
 
     @FXML
     private TextField uniqueId;
@@ -552,10 +553,12 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             knownPostMessages = new ArrayList<Long>();
         }
 
+        // protect against double messges
         if (knownPostMessages.contains(millis)) {
             return;
         }
 
+        // know about the new message
         knownPostMessages.add(millis);
 
         if (message.contains(Constants.IMAGE_MARKER)) {
@@ -565,17 +568,18 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             try (InputStream stream = new FileInputStream(file)) {
                 Image image = new Image(stream);
                 ImageView imageView = new ImageView();
-                imageView.setFitHeight(100);
-                imageView.setFitWidth(100);
+                imageView.setFitHeight(Constants.IMAGE_SMALL_FIT_HEIGHT);
+                imageView.setFitWidth(Constants.IMAGE_SMALL_FIT_WIDTH);
                 imageView.setPreserveRatio(true);
                 imageView.setImage(image);
                 imageView.setStyle("-fx-cursor: hand;");
                 imageView.setOnMouseClicked(new EventHandler<Event>() {
                     @Override
                     public void handle(Event event) {
-                        IAlertBox a = Factory.createAlertBox(Constants.BASE_ALERT_BOX);
-                        a.createAlert("title", "headerText", "content");
-
+                        if (modalImageViewer == null) {
+                            modalImageViewer = Factory.createModalImageViewer(Constants.BASE_MODAL_IMAGE_VIEWER);
+                        }
+                        modalImageViewer.show(file);
                     }
                 });
                 index = message.indexOf(Constants.COLON + Constants.SPACE);
