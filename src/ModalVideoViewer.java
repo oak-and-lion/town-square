@@ -3,7 +3,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -28,7 +27,7 @@ public class ModalVideoViewer extends BaseViewer implements IModalViewer {
             //setting group and scene   
             Group root = new Group();  
             root.getChildren().add(mediaView);  
-            showStage(root);
+            showStage(root, "Video");
         } catch (Exception e) {
             e.printStackTrace();
         }

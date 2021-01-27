@@ -575,35 +575,83 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         knownPostMessages.add(millis);
 
         if (message.contains(Constants.IMAGE_MARKER)) {
-            HBox hbox = createHBox(10, 0, 0, 0);
-            int index = message.indexOf(Constants.END_SQUARE_BRACKET) + Constants.END_SQUARE_BRACKET.length();
-            String file = message.substring(index, message.length());
-            try (InputStream stream = new FileInputStream(file)) {
-                Image image = new Image(stream);
-                ImageView imageView = new ImageView();
-                imageView.setFitHeight(Constants.IMAGE_SMALL_FIT_HEIGHT);
-                imageView.setFitWidth(Constants.IMAGE_SMALL_FIT_WIDTH);
-                imageView.setPreserveRatio(true);
-                imageView.setImage(image);
-                imageView.setStyle("-fx-cursor: hand;");
-                imageView.setOnMouseClicked(new EventHandler<Event>() {
-                    @Override
-                    public void handle(Event event) {
-                        if (modalImageViewer == null) {
-                            modalImageViewer = Factory.createModalViewer(Constants.BASE_MODAL_IMAGE_VIEWER);
-                        }
-                        modalImageViewer.show(file);
-                    }
-                });
-                index = message.indexOf(Constants.COLON + Constants.SPACE);
-                Label label = createLabel(message.substring(0, index), 25, 0, 0, 0);
-                hbox.getChildren().addAll(label, imageView);
-                messageList.getChildren().addAll(hbox);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            buildImageMessage(message, messageList);
         } else if (message.contains(Constants.VIDEO_MARKER)) {
-            HBox hbox = createHBox(10, 0, 0, 0);
+            buildVideoMessage(message, messageList);
+        } else {
+            buildTextMessage(message, messageList, scrollPane);
+        }
+
+        // create a future task to scroll the message pane
+        // give the UI time to redraw and re calcuate
+        // otherwise it "scrolls" to the same place
+        // thinking it is the bottom
+        Task<Void> task = new Task<Void>() {
+            @Override
+            public Void call() {
+                try {
+                    Thread.sleep(210);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+                scrollPane.setVvalue(Double.MAX_VALUE);
+                return null;
+            }
+        };
+        new Thread(task).start();
+    }
+
+    private void buildTextMessage(String message, VBox messageList, ScrollPane scrollPane) {
+        HBox hbox = createHBox(0, 0, 0, 0);
+            int index = message.indexOf(Constants.COLON + Constants.SPACE) + Constants.COLON.length()
+                    + Constants.SPACE.length();
+            Label labelInfo = createLabel(message.substring(0, index), 0, 0, 0, 0);
+            hbox.getChildren().add(labelInfo);
+            Label label = createLabel(message.substring(index), 0, 0, 0, 0);
+            label.setWrapText(true);
+            setLabelMaxWidth(label, scrollPane, getLabelWidth(labelInfo));
+            hbox.getChildren().addAll(label);
+            messageList.getChildren().add(hbox);
+
+            if (postMessageWorkers == null) {
+                postMessageWorkers = new ArrayList<MessageWorker>();
+            }
+
+            postMessageWorkers.add(new MessageWorker(label, scrollPane, labelInfo));
+    }
+
+    private void buildImageMessage(String message, VBox messageList) {
+        HBox hbox = createHBox(10, 0, 0, 0);
+        int index = message.indexOf(Constants.END_SQUARE_BRACKET) + Constants.END_SQUARE_BRACKET.length();
+        String file = message.substring(index, message.length());
+        try (InputStream stream = new FileInputStream(file)) {
+            Image image = new Image(stream);
+            ImageView imageView = new ImageView();
+            imageView.setFitHeight(Constants.IMAGE_SMALL_FIT_HEIGHT);
+            imageView.setFitWidth(Constants.IMAGE_SMALL_FIT_WIDTH);
+            imageView.setPreserveRatio(true);
+            imageView.setImage(image);
+            imageView.setStyle("-fx-cursor: hand;");
+            imageView.setOnMouseClicked(new EventHandler<Event>() {
+                @Override
+                public void handle(Event event) {
+                    if (modalImageViewer == null) {
+                        modalImageViewer = Factory.createModalViewer(Constants.BASE_MODAL_IMAGE_VIEWER);
+                    }
+                    modalImageViewer.show(file);
+                }
+            });
+            index = message.indexOf(Constants.COLON + Constants.SPACE);
+            Label label = createLabel(message.substring(0, index), 25, 0, 0, 0);
+            hbox.getChildren().addAll(label, imageView);
+            messageList.getChildren().addAll(hbox);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void buildVideoMessage(String message, VBox messageList) {
+        HBox hbox = createHBox(10, 0, 0, 0);
             int index = message.indexOf(Constants.END_SQUARE_BRACKET) + Constants.END_SQUARE_BRACKET.length();
             String file = message.substring(index, message.length());
             String f = new File(file).toURI().toString();
@@ -628,42 +676,6 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             Label label = createLabel(message.substring(0, index), 25, 0, 0, 0);
             hbox.getChildren().addAll(label, mediaView);
             messageList.getChildren().addAll(hbox);
-        } else {
-            HBox hbox = createHBox(0, 0, 0, 0);
-            int index = message.indexOf(Constants.COLON + Constants.SPACE) + Constants.COLON.length()
-                    + Constants.SPACE.length();
-            Label labelInfo = createLabel(message.substring(0, index), 0, 0, 0, 0);
-            hbox.getChildren().add(labelInfo);
-            Label label = createLabel(message.substring(index), 0, 0, 0, 0);
-            label.setWrapText(true);
-            setLabelMaxWidth(label, scrollPane, getLabelWidth(labelInfo));
-            hbox.getChildren().addAll(label);
-            messageList.getChildren().add(hbox);
-
-            if (postMessageWorkers == null) {
-                postMessageWorkers = new ArrayList<MessageWorker>();
-            }
-
-            postMessageWorkers.add(new MessageWorker(label, scrollPane, labelInfo));
-        }
-
-        // create a future task to scroll the message pane
-        // give the UI time to redraw and re calcuate
-        // otherwise it "scrolls" to the same place
-        // thinking it is the bottom
-        Task<Void> task = new Task<Void>() {
-            @Override
-            public Void call() {
-                try {
-                    Thread.sleep(210);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-                scrollPane.setVvalue(Double.MAX_VALUE);
-                return null;
-            }
-        };
-        new Thread(task).start();
     }
 
     private void setLabelMaxWidth(Label label, ScrollPane scrollPane, double other) {

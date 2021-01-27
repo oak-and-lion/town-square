@@ -2,15 +2,12 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
 
-public class ModalImageViewer implements IModalViewer {
-    private Stage primaryStage;
+public class ModalImageViewer extends BaseViewer implements IModalViewer {
     public ModalImageViewer() {
-        primaryStage = new Stage();
+        super();
     }
 
     public void show(String imageFile) {
@@ -25,10 +22,7 @@ public class ModalImageViewer implements IModalViewer {
             //setting group and scene   
             Group root = new Group();  
             root.getChildren().add(imageView);  
-            Scene scene = new Scene(root,500,400);  
-            primaryStage.setScene(scene);  
-            primaryStage.setTitle("Image");  
-            primaryStage.show(); 
+            showStage(root, "Image");
         } catch (Exception e) {
             e.printStackTrace();
         }

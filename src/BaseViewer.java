@@ -13,10 +13,10 @@ public class BaseViewer {
         // override in inherited class
     }
 
-    void showStage(Group root) {
+    void showStage(Group root, String title) {
         Scene scene = new Scene(root, 500, 400);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Video");
+        primaryStage.setTitle(title);
         primaryStage.show();
         primaryStage.setOnCloseRequest(e -> close());
     }
