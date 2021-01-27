@@ -11,6 +11,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javafx.scene.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.*;
 
 public class App extends Application implements IApp {
@@ -239,7 +240,7 @@ public class App extends Application implements IApp {
     private boolean checkCurrentState(IAlertBox alert) {
         if (isRunning()) {
             alert.createAlert("Already Running!", "An instance of Town Square is already running!",
-                    "Close the other instance before you start a new instance.");
+                    "Close the other instance before you start a new instance.", AlertType.INFORMATION);
             systemExit.handleExit(Constants.SYSTEM_EXIT_FAIL);
             return false;
         } else {

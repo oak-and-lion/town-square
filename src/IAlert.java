@@ -7,4 +7,6 @@ public interface IAlert {
     void setHeaderText(String header);
     void setContentText(String content);
     Optional<ButtonType> showAndWait();
+    void setSelectedButton(ButtonType type);
+    ButtonType getSelectedButton();
 }

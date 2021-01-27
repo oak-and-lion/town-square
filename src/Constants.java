@@ -69,7 +69,7 @@ public class Constants {
     public static final String JOIN_SQUARE_TITLE = "Join Square";
     public static final String JOIN_SQUARE_HEADER_TEXT = "Paste the Invitation";
     public static final String CREATE_SQUARE_TITLE = "Create Square";
-    public static final String CREATE_SQUARE_HEADER_TEXT = "Name your new Square";
+    public static final String CREATE_SQUARE_HEADER_TEXT = "Name your new Square - Prefix with {readonly} if you want to prevent others from posting.\n\nExample: {private}News Updates";
     public static final String POST_PROMPT_TEXT = "Type your message";
     public static final String JOIN_COMMAND = "join";
     public static final String MEMBER_COMMAND = "members";
@@ -156,4 +156,10 @@ public class Constants {
     public static final int IMAGE_LARGE_FIT_HEIGHT = 500;
     public static final int IMAGE_LARGE_FIT_WIDTH = 400;
     public static final int MAX_MESSAGES = 100;
+    public static final String EXIT_SQUARE_TEXT = "exit";
+    public static final String PAUSE_FILE_CONTENTS = "pause";
+    public static final String LEAVE_SQUARE_TITLE = "Leave Square?";
+    public static final String LEAVE_SQUARE_HEADER = "Are you sure you want to leave?";
+    public static final String LEAVE_SQUARE_CONTENT = "This can't be undone";
+    public static final String NULL_TEXT = "null";
 }

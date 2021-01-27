@@ -25,6 +25,7 @@
             <items>
               <MenuItem fx:id="mnuJoinSquare" mnemonicParsing="false" onAction="#joinSquare" text="Join Square" />
               <MenuItem fx:id="mnuCreateSquare" mnemonicParsing="false" onAction="#createSquare" text="Create Square" />
+              <MenuItem fx:id="mnuLeaveSquare" mnemonicParsing="false" onAction="#leaveSquare" text = "Leave Square" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Message">

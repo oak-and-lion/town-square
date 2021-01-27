@@ -12,6 +12,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -19,6 +20,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -118,6 +120,24 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                 Constants.CREATE_SQUARE_TITLE, Constants.CREATE_SQUARE_HEADER_TEXT, Constants.EMPTY_STRING, this,
                 Constants.INVITATION_DIALOG_WIDTH, Constants.CREATE_TYPE);
         dialogBox.show();
+    }
+
+    @FXML
+    private void leaveSquare(ActionEvent event) {
+        IAlertBox alertBox = Factory.createAlertBox(Constants.BASE_ALERT_BOX);
+        IAlert alert = alertBox.createAlert(Constants.LEAVE_SQUARE_TITLE, Constants.LEAVE_SQUARE_HEADER,
+                Constants.LEAVE_SQUARE_CONTENT, AlertType.CONFIRMATION);
+        ButtonType bt = alert.getSelectedButton();
+        if (bt.equals(ButtonType.OK)) {
+            ISquare square = (ISquare) tabPane.getSelectionModel().getSelectedItem().getUserData();
+            utility.deleteFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT);
+            utility.deleteFile(square.getSafeLowerName() + Constants.POSTS_FILE_EXT);
+            utility.writeFile(square.getSafeLowerName() + Constants.PAUSE_FILE_EXT, Constants.PAUSE_FILE_CONTENTS);
+            utility.writeFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT,
+                    Constants.EXIT_SQUARE_TEXT + Constants.FILE_DATA_SEPARATOR + Constants.NULL_TEXT
+                            + Constants.FILE_DATA_SEPARATOR + Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR
+                            + Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR + uniqueId.getText());
+        }
     }
 
     @FXML
@@ -603,21 +623,21 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     private void buildTextMessage(String message, VBox messageList, ScrollPane scrollPane) {
         HBox hbox = createHBox(0, 0, 0, 0);
-            int index = message.indexOf(Constants.COLON + Constants.SPACE) + Constants.COLON.length()
-                    + Constants.SPACE.length();
-            Label labelInfo = createLabel(message.substring(0, index), 0, 0, 0, 0);
-            hbox.getChildren().add(labelInfo);
-            Label label = createLabel(message.substring(index), 0, 0, 0, 0);
-            label.setWrapText(true);
-            setLabelMaxWidth(label, scrollPane, getLabelWidth(labelInfo));
-            hbox.getChildren().addAll(label);
-            messageList.getChildren().add(hbox);
+        int index = message.indexOf(Constants.COLON + Constants.SPACE) + Constants.COLON.length()
+                + Constants.SPACE.length();
+        Label labelInfo = createLabel(message.substring(0, index), 0, 0, 0, 0);
+        hbox.getChildren().add(labelInfo);
+        Label label = createLabel(message.substring(index), 0, 0, 0, 0);
+        label.setWrapText(true);
+        setLabelMaxWidth(label, scrollPane, getLabelWidth(labelInfo));
+        hbox.getChildren().addAll(label);
+        messageList.getChildren().add(hbox);
 
-            if (postMessageWorkers == null) {
-                postMessageWorkers = new ArrayList<MessageWorker>();
-            }
+        if (postMessageWorkers == null) {
+            postMessageWorkers = new ArrayList<MessageWorker>();
+        }
 
-            postMessageWorkers.add(new MessageWorker(label, scrollPane, labelInfo));
+        postMessageWorkers.add(new MessageWorker(label, scrollPane, labelInfo));
     }
 
     private void buildImageMessage(String message, VBox messageList) {
@@ -652,30 +672,30 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     private void buildVideoMessage(String message, VBox messageList) {
         HBox hbox = createHBox(10, 0, 0, 0);
-            int index = message.indexOf(Constants.END_SQUARE_BRACKET) + Constants.END_SQUARE_BRACKET.length();
-            String file = message.substring(index, message.length());
-            String f = new File(file).toURI().toString();
-            Media media = new Media(f);
-            MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(0.0);
-            mediaPlayer.setAutoPlay(true);
-            MediaView mediaView = new MediaView(mediaPlayer);
-            mediaView.setFitHeight(Constants.IMAGE_SMALL_FIT_HEIGHT);
-            mediaView.setFitWidth(Constants.IMAGE_SMALL_FIT_WIDTH);
-            mediaView.setStyle("-fx-cursor: hand;");
-            mediaView.setOnMouseClicked(new EventHandler<Event>() {
-                @Override
-                public void handle(Event event) {
-                    if (modalVideoViewer == null) {
-                        modalVideoViewer = Factory.createModalViewer(Constants.BASE_MODAL_VIDEO_VIEWER);
-                    }
-                    modalVideoViewer.show(file);
+        int index = message.indexOf(Constants.END_SQUARE_BRACKET) + Constants.END_SQUARE_BRACKET.length();
+        String file = message.substring(index, message.length());
+        String f = new File(file).toURI().toString();
+        Media media = new Media(f);
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setVolume(0.0);
+        mediaPlayer.setAutoPlay(true);
+        MediaView mediaView = new MediaView(mediaPlayer);
+        mediaView.setFitHeight(Constants.IMAGE_SMALL_FIT_HEIGHT);
+        mediaView.setFitWidth(Constants.IMAGE_SMALL_FIT_WIDTH);
+        mediaView.setStyle("-fx-cursor: hand;");
+        mediaView.setOnMouseClicked(new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                if (modalVideoViewer == null) {
+                    modalVideoViewer = Factory.createModalViewer(Constants.BASE_MODAL_VIDEO_VIEWER);
                 }
-            });
-            index = message.indexOf(Constants.COLON + Constants.SPACE);
-            Label label = createLabel(message.substring(0, index), 25, 0, 0, 0);
-            hbox.getChildren().addAll(label, mediaView);
-            messageList.getChildren().addAll(hbox);
+                modalVideoViewer.show(file);
+            }
+        });
+        index = message.indexOf(Constants.COLON + Constants.SPACE);
+        Label label = createLabel(message.substring(0, index), 25, 0, 0, 0);
+        hbox.getChildren().addAll(label, mediaView);
+        messageList.getChildren().addAll(hbox);
     }
 
     private void setLabelMaxWidth(Label label, ScrollPane scrollPane, double other) {

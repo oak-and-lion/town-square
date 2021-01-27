@@ -15,4 +15,12 @@ public class xxMockIAlert implements IAlert {
     public Optional<ButtonType> showAndWait() {
         return Optional.ofNullable(null);
     }
+
+    public void setSelectedButton(ButtonType type) {
+        // not needed
+    }
+
+    public ButtonType getSelectedButton() {
+        return ButtonType.OK;
+    }
 }
