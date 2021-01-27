@@ -198,8 +198,10 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         for (TextField field : postTextFields) {
             field.setMinWidth(width - Constants.POSTS_TEXT_FIELD_WIDTH_DIFF);
         }
-        for (MessageWorker worker : postMessageWorkers) {
-            worker.recalculateWidth();
+        if (postMessageWorkers != null) {
+            for (MessageWorker worker : postMessageWorkers) {
+                worker.recalculateWidth();
+            }
         }
     }
 
