@@ -42,6 +42,8 @@ public class Constants {
     public static final String APP_TITLE = "Town Square";
     public static final String DEFAULT_SQUARE_NAME = "My Square";
     public static final String COMMA = ",";
+    public static final String OPEN_PARENS = "(";
+    public static final String CLOSE_PARENS = ")";
     public static final String NOT_PRIVATE = "0";
     public static final String DEFAULT_PORT = "44123";
     public static final String EMPTY_STRING = "";
@@ -162,7 +164,7 @@ public class Constants {
     public static final String PAUSE_FILE_CONTENTS = "pause";
     public static final String LEAVE_SQUARE_TITLE = "Leave Square?";
     public static final String LEAVE_SQUARE_HEADER = "Are you sure you want to leave?";
-    public static final String LEAVE_SQUARE_CONTENT = "This can't be undone";
+    public static final String LEAVE_SQUARE_CONTENT = "You can rejoin the square using a valid invitation.";
     public static final String NULL_TEXT = "null";
     public static final String LEAVE_FILE_EXT = ".leave";
     public static final String LEAVE_FILE_CONTENTS = "leave";
