@@ -6,7 +6,7 @@ mkdir staging
 
 echo building javac class files
 SET JAVAFX_PATH="C:/Users/wewan/javafx-sdk-11.0.2/lib"
-javac --module-path %JAVAFX_PATH% --add-modules "javafx.controls,javafx.fxml" -d staging *.java
+javac --module-path %JAVAFX_PATH% --add-modules "javafx.controls,javafx.fxml,javafx.media" -d staging *.java
 
 del staging\xx*
 del staging\test.class

@@ -5,7 +5,7 @@ mkdir staging
 echo building javac class files
 JAVA_PATH="jdk-11.0.2.jdk/Contents/Home/bin"
 JAVAFX_PATH="javafx/lib"
-$JAVA_PATH/javac --module-path $JAVAFX_PATH --add-modules "javafx.controls,javafx.fxml" -d staging *.java
+$JAVA_PATH/javac --module-path $JAVAFX_PATH --add-modules "javafx.controls,javafx.fxml,javafx.medai" -d staging *.java
 
 rm staging/xx*
 rm staging/Test.class
