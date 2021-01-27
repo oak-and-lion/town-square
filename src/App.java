@@ -68,7 +68,6 @@ public class App extends Application implements IApp {
 
             final IDialogController controller = loader.<DialogController>getController();
 
-            primaryStage.setTitle(Constants.APP_TITLE);
             primaryStage.setScene(scene);
             primaryStage.setOnCloseRequest(event -> {
                 logger.logInfo("Closing");
@@ -116,19 +115,20 @@ public class App extends Application implements IApp {
             if (!utility.checkFileExists(Constants.DEFAULT_SQUARE_ME_FILE)) {
                 utility.writeFile(Constants.DEFAULT_SQUARE_ME_FILE,
                         defaultName + Constants.DATA_SEPARATOR + keys.getPublicKeyBase64() + Constants.DATA_SEPARATOR
-                                + remoteIP + Constants.DATA_SEPARATOR + port + Constants.DATA_SEPARATOR
-                                + uniqueId);
+                                + remoteIP + Constants.DATA_SEPARATOR + port + Constants.DATA_SEPARATOR + uniqueId);
             }
 
             primaryStage.addEventHandler(WindowEvent.WINDOW_SHOWN, new EventHandler<WindowEvent>() {
                 @Override
                 public void handle(WindowEvent window) {
-                    Stage stage = (Stage)window.getSource();
+                    Stage stage = (Stage) window.getSource();
                     System.out.println(stage.getWidth() + " " + stage.getHeight());
-                    setResizeListeners(stage, controller);                    
+                    setResizeListeners(stage, controller);
                 }
             });
 
+            primaryStage.setTitle(Constants.APP_TITLE + Constants.SPACE + Constants.OPEN_PARENS + defaultName
+                    + Constants.CLOSE_PARENS);
             primaryStage.show();
 
             squareController = Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, controller,
