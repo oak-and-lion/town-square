@@ -162,9 +162,28 @@ public class ClientThread extends Thread implements IClientThread {
                 if (memberSearch.length == 0) {
                     utility.appendToFile(file, newLine + memberLoop);
                     newLine = Constants.NEWLINE;
+                } else if (memberInfo[0].equals(Constants.EXIT_SQUARE_TEXT)) {
+                    removeMember(file, memberInfo[4]);
                 }
             }
         }
+    }
+
+    private void removeMember(String file, String memberId) {
+        String[] currentMembers = utility.readFile(file).split(Constants.READ_FILE_DATA_SEPARATOR);
+        StringBuilder result = new StringBuilder();
+        int count = 0;
+        for (String currentMember : currentMembers) {
+            String[] cm = currentMember.split(Constants.FILE_DATA_SEPARATOR);
+            if (!cm[4].equals(memberId)) {
+                if (count > 0) {
+                    result.append(Constants.NEWLINE);
+                }
+                result.append(currentMember);
+                count++;
+            }
+        }
+        utility.writeFile(file, result.toString());
     }
 
     private void processMessages(String raw) {
@@ -198,7 +217,7 @@ public class ClientThread extends Thread implements IClientThread {
     }
 
     private void updatePosts(String file) {
-        writePostFile(file);        
+        writePostFile(file);
     }
 
     private void writePostFile(String file) {
