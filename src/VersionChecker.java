@@ -19,7 +19,7 @@ public class VersionChecker extends Thread implements IVersionChecker {
         DoubleString[] allMembers = getAllMembers();
         for (DoubleString member : allMembers) {
             String[] info = member.getStringTwo().split(Constants.FILE_DATA_SEPARATOR);
-            if (!info[4].equals(uniqueId)) {
+            if (!info[4].equals(uniqueId) && !info[0].startsWith(Constants.STAR)) {
                 checkVersionAgainstMember(member.getStringTwo(), member.getStringOne());
             }
         }

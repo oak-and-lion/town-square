@@ -127,7 +127,7 @@ public class SquareController implements ISquareController {
             if (b.isSuccessful()) {
                 result = buildResult(Constants.OK_RESULT,
                         Constants.ADDED_MESSAGE + Constants.COLON + data + Constants.COLON
-                                + sampleController.getDefaultName() + Constants.DASH + square.getSafeLowerName()
+                                + sampleController.getDefaultName() + Constants.UNDERSCORE + square.getSafeLowerName()
                                 + Constants.COLON + Integer.toString(b.getLineCount()));
             } else {
                 result = buildResult(Constants.INTERNAL_ERROR_RESULT, Constants.ADDING_MEMBER_MESSAGE);
@@ -151,8 +151,26 @@ public class SquareController implements ISquareController {
             String file = square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT;
             String[] sameNames = utility.searchFile(file, args[3], Constants.SEARCH_STARTS_WITH);
             String[] sameIds = utility.searchFile(file, args[7], Constants.SEARCH_CONTAINS);
+            boolean previousLeave = false;
+            for (String sameId : sameIds) {
+                if (sameId.startsWith(Constants.STAR)) {
+                    previousLeave = true;
+                    break;
+                }
+            }
+            if (previousLeave) {
+                String[] members = utility.readFile(file).split(Constants.READ_FILE_DATA_SEPARATOR);
+                StringBuilder result = new StringBuilder();
+                for (String member : members) {
+                    if (!member.contains(args[7])) {
+                        result.append(member);
+                    }
+                    
+                }
+                utility.writeFile(file, result.toString());
+            }
             String registeredName = args[3];
-            if (sameIds.length < 1) {
+            if (sameIds.length < 1 || previousLeave) {
                 if (sameNames.length > 0) {
                     registeredName += Constants.PERCENT + Integer.toString(sameNames.length);
                 }

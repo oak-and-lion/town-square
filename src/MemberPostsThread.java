@@ -34,7 +34,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
     }
 
     private void getPostsFromOtherMembers() {
-        if (!info.contains(uniqueId)) {
+        if (!info.contains(uniqueId) && !info.startsWith(Constants.STAR)) {
             String[] member = info.split(Constants.DATA_SEPARATOR);
             IClient client = Factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
                     square.getInvite());

@@ -634,9 +634,15 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                 + Constants.SPACE.length();
         Label labelInfo = createLabel(message.substring(0, index), 0, 0, 0, 0);
         hbox.getChildren().add(labelInfo);
-        Label label = createLabel(message.substring(index), 0, 0, 0, 0);
-        label.setWrapText(true);
-        setLabelMaxWidth(label, scrollPane, getLabelWidth(labelInfo));
+        Label label1 = createLabel(message.substring(index), 0, 0, 0, 0);
+        /*label.setStyle("-fx-strikethrough:true;");
+        label.setWrapText(true);*/
+        Text label = new Text();
+        label.setText(message.substring(index));
+        if (labelInfo.getText().contains(Constants.STAR)) {
+            label.setStrikethrough(true);
+        }
+        //setLabelMaxWidth(label, scrollPane, getLabelWidth(labelInfo));
         hbox.getChildren().addAll(label);
         messageList.getChildren().add(hbox);
 
@@ -644,7 +650,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             postMessageWorkers = new ArrayList<MessageWorker>();
         }
 
-        postMessageWorkers.add(new MessageWorker(label, scrollPane, labelInfo));
+        postMessageWorkers.add(new MessageWorker(label1, scrollPane, labelInfo));
     }
 
     private void buildImageMessage(String message, VBox messageList) {

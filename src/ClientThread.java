@@ -50,8 +50,6 @@ public class ClientThread extends Thread implements IClientThread {
                     processMessages(raw);
                 }
 
-                raw = utility.readLastLineOfFile(file);
-
                 String[] msg = new String[1];
                 msg[0] = Constants.NO_POSTS;
 
@@ -135,7 +133,7 @@ public class ClientThread extends Thread implements IClientThread {
     }
 
     private void getMembersFromOtherMembers(String info, String file) {
-        if (!info.contains(uniqueId)) {
+        if (!info.contains(uniqueId) && !info.startsWith(Constants.STAR)) {
             String[] member = info.split(Constants.DATA_SEPARATOR);
             IClient client = Factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
                     square.getInvite());
@@ -175,13 +173,17 @@ public class ClientThread extends Thread implements IClientThread {
         int count = 0;
         for (String currentMember : currentMembers) {
             String[] cm = currentMember.split(Constants.FILE_DATA_SEPARATOR);
-            if (!cm[4].equals(memberId)) {
-                if (count > 0) {
-                    result.append(Constants.NEWLINE);
-                }
-                result.append(currentMember);
-                count++;
+            if (count > 0) {
+                result.append(Constants.NEWLINE);
             }
+            if (!cm[4].equals(memberId)) {                
+                result.append(currentMember);                
+            } else {
+                result.append(Constants.STAR + cm[0] + Constants.FILE_DATA_SEPARATOR + Constants.NULL_TEXT +
+                                Constants.FILE_DATA_SEPARATOR + Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR +
+                                Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR + cm[4]);
+            }
+            count++;
         }
         utility.writeFile(file, result.toString());
     }
@@ -221,6 +223,9 @@ public class ClientThread extends Thread implements IClientThread {
     }
 
     private void writePostFile(String file) {
+        if (posts.size() == 0) {
+            return;
+        }
         utility.deleteFile(file);
         utility.writeFile(file, String.join(Constants.NEWLINE, posts.getAllMessages()));
     }
