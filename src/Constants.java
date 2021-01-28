@@ -25,6 +25,7 @@ public class Constants {
     public static final int SYSTEM_EXIT_FAIL = 1;
     public static final int SYSTEM_EXIT_ALREADY_RUNNING = 2;
     public static final int BASE_COMMAND_CONTROLLER = 1;
+    public static final int BASE_MEMBER_POSTS_THREAD = 1;
     public static final int NULL_OBJECT_TYPE = Integer.MAX_VALUE;
     public static final String VERSION = "0.0.1";
     public static final String SQUARE_FILE_EXT = ".square";

@@ -3,11 +3,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.text.Text;
 
 public class MessageWorker {
-    private Label messageLabel;
+    private Text messageLabel;
     private ScrollPane parentPane;
     private Label leftLabel;
 
-    public MessageWorker(Label label, ScrollPane scrollPane, Label leftLabel) {
+    public MessageWorker(Text label, ScrollPane scrollPane, Label leftLabel) {
         this.messageLabel = label;
         this.parentPane = scrollPane;
         this.leftLabel = leftLabel;
@@ -17,9 +17,8 @@ public class MessageWorker {
         setLabelMaxWidth(messageLabel, parentPane, getLabelWidth(leftLabel));
     }
 
-    private void setLabelMaxWidth(Label label, ScrollPane scrollPane, double other) {
-        label.setMaxWidth(scrollPane.getWidth() - 50 - other);
-        label.setMinWidth(scrollPane.getWidth() - 50 - other);
+    private void setLabelMaxWidth(Text label, ScrollPane scrollPane, double other) {
+        label.setWrappingWidth(scrollPane.getWidth() - 25 - other);
     }
 
     private double getLabelWidth(Label theLabel) {

@@ -131,6 +131,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         ButtonType bt = alert.getSelectedButton();
         if (bt.equals(ButtonType.OK)) {
             ISquare square = (ISquare) tabPane.getSelectionModel().getSelectedItem().getUserData();
+            if (square == null || square.getName().equals("My Square")) {
+                return;
+            }
             utility.writeFile(square.getSafeLowerName() + Constants.PAUSE_FILE_EXT, Constants.PAUSE_FILE_CONTENTS);
             utility.writeFile(square.getSafeLowerName() + Constants.LEAVE_FILE_EXT, Constants.LEAVE_FILE_CONTENTS);
             utility.deleteFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT);
@@ -139,6 +142,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                     Constants.EXIT_SQUARE_TEXT + Constants.FILE_DATA_SEPARATOR + Constants.NULL_TEXT
                             + Constants.FILE_DATA_SEPARATOR + Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR
                             + Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR + uniqueId.getText());
+            Tab tab = tabPane.getSelectionModel().getSelectedItem();
+            tabPane.getTabs().remove(tab);
         }
     }
 
@@ -643,15 +648,13 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                 + Constants.SPACE.length();
         Label labelInfo = createLabel(message.substring(0, index), 0, 0, 0, 0);
         hbox.getChildren().add(labelInfo);
-        Label label1 = createLabel(message.substring(index), 0, 0, 0, 0);
-        /*label.setStyle("-fx-strikethrough:true;");
-        label.setWrapText(true);*/
         Text label = new Text();
         label.setText(message.substring(index));
         if (labelInfo.getText().contains(Constants.STAR)) {
             label.setStrikethrough(true);
         }
-        //setLabelMaxWidth(label, scrollPane, getLabelWidth(labelInfo));
+        setTextMaxWidth(label, scrollPane, getLabelWidth(labelInfo));
+        //setLabelMaxWidth(labelInfo, scrollPane, getLabelWidth(labelInfo));
         hbox.getChildren().addAll(label);
         messageList.getChildren().add(hbox);
 
@@ -659,7 +662,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             postMessageWorkers = new ArrayList<MessageWorker>();
         }
 
-        postMessageWorkers.add(new MessageWorker(label1, scrollPane, labelInfo));
+        postMessageWorkers.add(new MessageWorker(label, scrollPane, labelInfo));
     }
 
     private void buildImageMessage(String message, VBox messageList) {
@@ -720,9 +723,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         messageList.getChildren().addAll(hbox);
     }
 
-    private void setLabelMaxWidth(Label label, ScrollPane scrollPane, double other) {
-        label.setMaxWidth(scrollPane.getWidth() - 25 - other);
-        label.setMinWidth(scrollPane.getWidth() - 25 - other);
+    private void setTextMaxWidth(Text text, ScrollPane scrollPane, double other) {
+        text.setWrappingWidth(scrollPane.getWidth() - 25 - other);
     }
 
     private double getLabelWidth(Label theLabel) {

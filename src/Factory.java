@@ -166,4 +166,12 @@ public class Factory {
 
         return null;
     }
+
+    public static IMemberPostsThread createMemberPostsThread(int type, String info, String uniqueId, String[] msg, ISquare square, IUtility utility) {
+        if (type == Constants.BASE_MEMBER_POSTS_THREAD) {
+            return new MemberPostsThread(info, uniqueId, msg, square, utility);
+        }
+
+        return null;
+    }
 }
