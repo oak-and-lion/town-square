@@ -24,6 +24,7 @@ public class Constants {
     public static final int SYSTEM_EXIT_OK = 0;
     public static final int SYSTEM_EXIT_FAIL = 1;
     public static final int SYSTEM_EXIT_ALREADY_RUNNING = 2;
+    public static final int BASE_COMMAND_CONTROLLER = 1;
     public static final int NULL_OBJECT_TYPE = Integer.MAX_VALUE;
     public static final String VERSION = "0.0.1";
     public static final String SQUARE_FILE_EXT = ".square";
@@ -73,7 +74,7 @@ public class Constants {
     public static final String JOIN_SQUARE_TITLE = "Join Square";
     public static final String JOIN_SQUARE_HEADER_TEXT = "Paste the Invitation";
     public static final String CREATE_SQUARE_TITLE = "Create Square";
-    public static final String CREATE_SQUARE_HEADER_TEXT = "Name your new Square - Prefix with {readonly} if you want to prevent others from posting.\n\nExample: {private}News Updates";
+    public static final String CREATE_SQUARE_HEADER_TEXT = "Name your new Square."; //\nPrefix with {readonly} if you want to prevent others from posting.\n\nExample: {readonly}News Updates";
     public static final String POST_PROMPT_TEXT = "Type your message";
     public static final String JOIN_COMMAND = "join";
     public static final String MEMBER_COMMAND = "members";
@@ -168,4 +169,8 @@ public class Constants {
     public static final String NULL_TEXT = "null";
     public static final String LEAVE_FILE_EXT = ".leave";
     public static final String LEAVE_FILE_CONTENTS = "leave";
+    public static final String COMMAND_PREFIX = "/";
+    public static final String BLOCK_COMMAND = "block";
+    public static final String BLOCK_FILE_EXT = ".block";
+    public static final String SEMI_COLON = ";";
 }

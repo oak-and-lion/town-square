@@ -158,4 +158,12 @@ public class Factory {
 
         return null;
     }
+
+    public static ICommandController createCommandController(int type, IUtility utility) {
+        if (type == Constants.BASE_COMMAND_CONTROLLER) {
+            return new CommandController(utility);
+        }
+
+        return null;
+    }
 }

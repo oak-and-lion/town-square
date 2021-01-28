@@ -22,4 +22,5 @@ public interface IDialogController {
     void resizeControls(double width, double height);
     void setStage(Stage stage);
     void updateDefaultNameInMemberFiles(String name);
+    void setCommandController(ICommandController value);
 }

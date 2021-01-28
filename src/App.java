@@ -48,12 +48,15 @@ public class App extends Application implements IApp {
 
         ISquareController squareController = null;
         IVersionChecker versionChecker;
+        ICommandController commandController;
 
         ICryptoUtils cryptoUtils = Factory.createCryptoUtils(Constants.BASE_CRYPTO_UTILS);
 
         keys = Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
 
         utility = Factory.createUtility(Constants.BASE_UTILITY);
+
+        commandController = Factory.createCommandController(Constants.BASE_COMMAND_CONTROLLER, utility);
 
         ILogIt logger = Factory.createLogger(Constants.FILE_LOGGER, Constants.MAIN_LOG_FILE, utility);
 
@@ -144,7 +147,7 @@ public class App extends Application implements IApp {
 
             alias = getAlias(ip);
 
-            initializeController(controller, uniqueId, port, ip, ipAddresses, alias, defaultSquare);
+            initializeController(controller, uniqueId, port, ip, ipAddresses, alias, defaultSquare, commandController);
 
             initializeSquareController(squareController, port);
 
@@ -212,7 +215,7 @@ public class App extends Application implements IApp {
     }
 
     private void initializeController(IDialogController controller, String uniqueId, String port, String ip,
-            ObservableList<IPAddress> ipAddresses, String alias, ISquare defaultSquare) {
+            ObservableList<IPAddress> ipAddresses, String alias, ISquare defaultSquare, ICommandController commandController) {
         controller.setUtilityController(utility);
         controller.setParent(this);
         controller.setUniqueId(uniqueId);
@@ -224,6 +227,7 @@ public class App extends Application implements IApp {
         controller.setPublicKey(keys.getPublicKeyBase64());
         controller.buildSquares();
         controller.setAlias(alias);
+        controller.setCommandController(commandController);
     }
 
     private String getAlias(String ip) {

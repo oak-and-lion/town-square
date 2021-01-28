@@ -43,6 +43,7 @@ public class ClientThread extends Thread implements IClientThread {
             String raw;
             while (process) {
                 if (utility.checkFileExists(square.getSafeLowerName() + Constants.PAUSE_FILE_EXT)) {
+                    Thread.sleep(10000);
                     continue;
                 }
                 raw = utility.readFile(file, lastKnownPost);

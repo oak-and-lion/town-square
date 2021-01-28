@@ -61,6 +61,9 @@ public class xxMockIDialogController implements IDialogController {
     @Override
     public void updateDefaultNameInMemberFiles(String name) {
         // not needed
+    }
 
+    public void setCommandController(ICommandController value) {
+        // not needed
     }
 }

@@ -49,6 +49,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     private ArrayList<Long> knownPostMessages;
     private IModalViewer modalImageViewer;
     private IModalViewer modalVideoViewer;
+    private ICommandController commandController;
 
     @FXML
     private TextField uniqueId;
@@ -130,10 +131,10 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         ButtonType bt = alert.getSelectedButton();
         if (bt.equals(ButtonType.OK)) {
             ISquare square = (ISquare) tabPane.getSelectionModel().getSelectedItem().getUserData();
-            utility.deleteFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT);
-            utility.deleteFile(square.getSafeLowerName() + Constants.POSTS_FILE_EXT);
             utility.writeFile(square.getSafeLowerName() + Constants.PAUSE_FILE_EXT, Constants.PAUSE_FILE_CONTENTS);
             utility.writeFile(square.getSafeLowerName() + Constants.LEAVE_FILE_EXT, Constants.LEAVE_FILE_CONTENTS);
+            utility.deleteFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT);
+            utility.deleteFile(square.getSafeLowerName() + Constants.POSTS_FILE_EXT);
             utility.writeFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT,
                     Constants.EXIT_SQUARE_TEXT + Constants.FILE_DATA_SEPARATOR + Constants.NULL_TEXT
                             + Constants.FILE_DATA_SEPARATOR + Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR
@@ -184,6 +185,10 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     public void setStage(Stage stage) {
         primaryStage = stage;
+    }
+
+    public void setCommandController(ICommandController value) {
+        commandController = value;
     }
 
     public void resizeControls(double width, double height) {
@@ -385,10 +390,14 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     }
 
     private void postTheMessage(ISquare newSquare, String msg) {
-        long currentMillis = System.currentTimeMillis();
-        String data = Long.toString(currentMillis) + Constants.FILE_DATA_SEPARATOR + msg + Constants.FILE_DATA_SEPARATOR
-                + uniqueId.getText();
-        newSquare.addPostMessage(new PostMessage(currentMillis, data));
+        if (msg.startsWith(Constants.COMMAND_PREFIX)) {
+            commandController.processCommand(msg, newSquare);
+        } else {
+            long currentMillis = System.currentTimeMillis();
+            String data = Long.toString(currentMillis) + Constants.FILE_DATA_SEPARATOR + msg + Constants.FILE_DATA_SEPARATOR
+                    + uniqueId.getText();
+            newSquare.addPostMessage(new PostMessage(currentMillis, data));
+        }
     }
 
     private ScrollPane createPostPane(VBox postsList) {
@@ -539,12 +548,14 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         if (response.getCode().equals(Constants.OK_RESULT)
                 || response.getCode().equals(Constants.ALREADY_REGISTERED_RESULT)) {
             String[] responseData = response.getResponseSplit();
+            String squareSafeName = safeString(responseData[3]);
+            utility.deleteFile(squareSafeName + Constants.PAUSE_FILE_EXT);
+            utility.deleteFile(squareSafeName + Constants.LEAVE_FILE_EXT);
             String temp = Constants.MEMBER_COMMAND + Constants.COMMAND_DATA_SEPARATOR + uniqueId.getText();
             String password = utility.generateRandomString(16);
             data = tempKeys.encryptToBase64(password) + Constants.COMMAND_DATA_SEPARATOR
                     + utility.encrypt(temp, password);
             response = processTCPReturn(client.sendMessage(data, encrypt));
-            String squareSafeName = safeString(responseData[3]);
             utility.writeFile(squareSafeName + Constants.MEMBERS_FILE_EXT,
                     response.getMessage().replace(Constants.COMMAND_DATA_SEPARATOR, Constants.NEWLINE));
             String info = responseData[3] + Constants.COMMA + client.getSquareId() + Constants.COMMA
@@ -557,8 +568,6 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                                     utility),
                             Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
                     utility, this, uniqueId.getText());
-            utility.deleteFile(squareSafeName + Constants.PAUSE_FILE_CONTENTS);
-            utility.deleteFile(squareSafeName + Constants.LEAVE_FILE_CONTENTS);
             utility.writeFile(squareSafeName + Constants.SQUARE_FILE_EXT, info);
             setTabSquare(square);
 
