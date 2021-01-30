@@ -22,7 +22,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
         decodeBase64NullStringPass();
         decodeBase64ValidStringPass();
         decodeBase64InvalidStringFail();
-        decodeBase64NullStringPass();
+        decodeBase64EmptyStringPass();
 
         finish();
     }
@@ -118,7 +118,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
     }
 
     private void decodeBase64EmptyStringPass() {
-        final String METHOD_NAME = "decodeBase64NullStringPass";
+        final String METHOD_NAME = "decodeBase64EmptyStringPass";
 
         IUtility utility = Utility.create();
 
