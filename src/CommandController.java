@@ -1,15 +1,26 @@
 import java.util.ArrayList;
 
+import javafx.application.Platform;
+
 public class CommandController implements ICommandController {
     private IUtility utility;
+    private IDialogController parent;
+    private ArrayList<String> commands;
 
-    public CommandController(IUtility utility) {
+    public CommandController(IUtility utility, IDialogController parent) {
         this.utility = utility;
+        this.parent = parent;
+        this.commands = new ArrayList<String>();
+        commands.add(Constants.HELP_COMMAND);
+        commands.add(Constants.ABOUT_COMMAND);
+        commands.add(Constants.BLOCK_COMMAND);
+        commands.add(Constants.PAUSE_COMMAND);
+        commands.add(Constants.UNPAUSE_COMMAND);
     }
 
     public Boolean[] processCommand(String command, ISquare square) {
         if (!command.startsWith(Constants.COMMAND_PREFIX)) {
-            return new Boolean[] {false};
+            return new Boolean[] { false };
         }
 
         command = command.replace(Constants.COMMAND_PREFIX, Constants.EMPTY_STRING);
@@ -23,6 +34,15 @@ public class CommandController implements ICommandController {
             for (String user : users) {
                 result.add(blockUser(user, square));
             }
+        } else if (cmd.equals(Constants.PAUSE_COMMAND)) {
+            pauseSquare(square);
+        } else if (cmd.equals(Constants.UNPAUSE_COMMAND)) {
+            unPauseSquare(square);
+        } else if (cmd.equals(Constants.ABOUT_COMMAND)) {
+            parent.showAbout();
+        } else if (cmd.equals(Constants.HELP_COMMAND)) {
+            parent.showList(commands.toArray(new String[commands.size()]), Constants.COMMANDS_TITLE,
+                    Constants.COMMANDS_HEADER);
         } else {
             result.add(false);
         }
@@ -30,7 +50,49 @@ public class CommandController implements ICommandController {
         return result.toArray(new Boolean[result.size()]);
     }
 
+    public boolean pauseSquare(ISquare square) {
+        if (square == null) {
+            return false;
+        }
+
+        FileWriteResponse result = utility.writeFile(square.getSafeLowerName() + Constants.PAUSE_FILE_EXT,
+                Constants.PAUSE_FILE_CONTENTS);
+
+        if (result.isSuccessful()) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    parent.updatePauseNotification(square, true);
+                }
+            });
+        }
+
+        return result.isSuccessful();
+    }
+
+    public boolean unPauseSquare(ISquare square) {
+        if (square == null) {
+            return false;
+        }
+
+        boolean result = utility.deleteFile(square.getSafeLowerName() + Constants.PAUSE_FILE_EXT);
+
+        if (result) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    parent.updatePauseNotification(square, false);
+                }
+            });
+        }
+
+        return result;
+    }
+
     public boolean blockUser(String user, ISquare square) {
+        if (square == null) {
+            return false;
+        }
         if (user == null) {
             return false;
         }

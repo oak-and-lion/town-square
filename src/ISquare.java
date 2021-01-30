@@ -1,4 +1,5 @@
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.VBox;
 
 public interface ISquare {
@@ -19,4 +20,6 @@ public interface ISquare {
     void setLastKnownPost(int lastKnownPost);
     int getLastKnownPost();
     void addPostMessage(PostMessage message);
+    void setTab(Tab tab);
+    Tab getTab();
 }

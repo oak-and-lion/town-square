@@ -57,8 +57,6 @@ public class App extends Application implements IApp {
 
         utility = Factory.createUtility(Constants.BASE_UTILITY);
 
-        commandController = Factory.createCommandController(Constants.BASE_COMMAND_CONTROLLER, utility);
-
         systemExit.setParent(this);
 
         try {
@@ -69,6 +67,8 @@ public class App extends Application implements IApp {
             Scene scene = new Scene(root);
 
             final IDialogController controller = loader.<DialogController>getController();
+
+            commandController = Factory.createCommandController(Constants.BASE_COMMAND_CONTROLLER, utility, controller);
 
             primaryStage.setScene(scene);
             primaryStage.setOnCloseRequest(event -> {

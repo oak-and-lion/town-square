@@ -1,4 +1,5 @@
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.VBox;
 
 public class xxMockSquare implements ISquare {
@@ -52,5 +53,11 @@ public class xxMockSquare implements ISquare {
     }
     public void addPostMessage(PostMessage message) {
         // not needed
+    }
+    public void setTab(Tab tab){
+        // not needed
+    }
+    public Tab getTab() {
+        return null;
     }
 }

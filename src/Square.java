@@ -1,6 +1,7 @@
 import java.util.concurrent.ThreadLocalRandom;
 
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.VBox;
 
 public class Square implements ISquare {
@@ -20,6 +21,7 @@ public class Square implements ISquare {
     private IDialogController sampleController;
     private String uniqueId;
     private IClientThread clientThread;
+    private Tab tab;
 
     public Square(String info, String port, String ip, ISquareController squareController, IUtility utility,
             IDialogController sampleController, String uniqueId) {
@@ -178,5 +180,13 @@ public class Square implements ISquare {
 
     public void addPostMessage(PostMessage message) {
         clientThread.addPostMessage(message);
+    }
+
+    public void setTab(Tab tab) {
+        this.tab = tab;
+    }
+
+    public Tab getTab() {
+        return tab;
     }
 }

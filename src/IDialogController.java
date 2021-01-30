@@ -23,4 +23,7 @@ public interface IDialogController {
     void setStage(Stage stage);
     void updateDefaultNameInMemberFiles(String name);
     void setCommandController(ICommandController value);
+    void showAbout();
+    void showList(String[] items, String listTitle, String listHeader);
+    void updatePauseNotification(ISquare square, boolean paused);
 }

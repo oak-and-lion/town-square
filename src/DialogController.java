@@ -88,6 +88,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     private TextField aliasServers;
 
     @FXML
+    private MenuItem mnuAbout;
+
+    @FXML
     private void handleSettingsUpdate(ActionEvent event) {
         if (parent != null) {
             parent.sendDefaultName(defaultName.getText());
@@ -131,7 +134,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         ButtonType bt = alert.getSelectedButton();
         if (bt.equals(ButtonType.OK)) {
             ISquare square = (ISquare) tabPane.getSelectionModel().getSelectedItem().getUserData();
-            if (square == null || square.getName().equals("My Square")) {
+            if (square == null || square.getName().equals(Constants.DEFAULT_SQUARE_NAME)) {
                 return;
             }
             utility.writeFile(square.getSafeLowerName() + Constants.PAUSE_FILE_EXT, Constants.PAUSE_FILE_CONTENTS);
@@ -158,6 +161,27 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         attachAttachment(Constants.VIDEO_DIALOG_TITLE, Constants.VIDEO_MARKER);
     }
 
+    @FXML
+    private void showAbout(ActionEvent event) {
+        showAbout();
+    }
+
+    @FXML
+    void showCommands(ActionEvent event) {
+        commandController.processCommand(Constants.FORWARD_SLASH + Constants.HELP_COMMAND, null);
+    }
+
+    public void showAbout() {
+        IAlertBox alertBox = Factory.createAlertBox(Constants.BASE_ALERT_BOX);
+        alertBox.createAlert(Constants.ABOUT_TITLE, Constants.ABOUT_HEADER,
+                Constants.VERSION_TEXT_PREFIX + Constants.VERSION, AlertType.INFORMATION);
+    }
+
+    public void showList(String[] items, String listTitle, String listHeader) {
+        IAlertBox alertBox = Factory.createAlertBox(Constants.BASE_ALERT_BOX);
+        alertBox.createAlert(listTitle, listHeader, String.join(Constants.NEWLINE, items), AlertType.INFORMATION);
+    }
+
     private void attachAttachment(String dialogTitle, String marker) {
         FileChooser fc = new FileChooser();
         fc.setTitle(dialogTitle);
@@ -179,6 +203,16 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             processInvitation(input);
         } else if (type == Constants.CREATE_TYPE) {
             processCreateSquare(input);
+        }
+    }
+
+    public void updatePauseNotification(ISquare square, boolean paused) {
+        Tab tab = square.getTab();
+
+        if (paused) {
+            tab.setText(tab.getText() + Constants.PAUSED_TAB_NOTIFICATION);
+        } else {
+            tab.setText(tab.getText().replace(Constants.PAUSED_TAB_NOTIFICATION, Constants.EMPTY_STRING));
         }
     }
 
@@ -309,6 +343,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         VBox main = new VBox();
         Tab tab = new Tab();
         tab.setText(square.getName());
+        if (utility.checkFileExists(square.getSafeLowerName() + Constants.PAUSE_FILE_EXT)) {
+            tab.setText(tab.getText() + Constants.PAUSED_TAB_NOTIFICATION);
+        }
         tab.setId(square.getId());
         tab.setUserData(square);
 
@@ -326,6 +363,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         // add main
         tab.setContent(main);
         tabPane.getTabs().add(0, tab);
+        square.setTab(tab);
     }
 
     private VBox createGeneratePostControls(ISquare square) {
@@ -399,8 +437,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             commandController.processCommand(msg, newSquare);
         } else {
             long currentMillis = System.currentTimeMillis();
-            String data = Long.toString(currentMillis) + Constants.FILE_DATA_SEPARATOR + msg + Constants.FILE_DATA_SEPARATOR
-                    + uniqueId.getText();
+            String data = Long.toString(currentMillis) + Constants.FILE_DATA_SEPARATOR + msg
+                    + Constants.FILE_DATA_SEPARATOR + uniqueId.getText();
             newSquare.addPostMessage(new PostMessage(currentMillis, data));
         }
     }
@@ -654,7 +692,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             label.setStrikethrough(true);
         }
         setTextMaxWidth(label, scrollPane, getLabelWidth(labelInfo));
-        //setLabelMaxWidth(labelInfo, scrollPane, getLabelWidth(labelInfo));
+        // setLabelMaxWidth(labelInfo, scrollPane, getLabelWidth(labelInfo));
         hbox.getChildren().addAll(label);
         messageList.getChildren().add(hbox);
 

@@ -66,4 +66,16 @@ public class xxMockIDialogController implements IDialogController {
     public void setCommandController(ICommandController value) {
         // not needed
     }
+
+    public void showAbout() {
+        // not needed
+    }
+
+    public void showList(String[] items, String listTitle, String listHeader) {
+        // not needed
+    }
+
+    public void updatePauseNotification(ISquare square, boolean paused) {
+        // not needed
+    }
 }

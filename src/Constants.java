@@ -174,6 +174,11 @@ public class Constants {
     public static final String COMMAND_PREFIX = "/";
     public static final String BLOCK_COMMAND = "block";
     public static final String BLOCK_FILE_EXT = ".block";
+    public static final String ABOUT_COMMAND = "about";
+    public static final String HELP_COMMAND = "help";
+    public static final String PAUSE_COMMAND = "pause";
+    public static final String UNPAUSE_COMMAND = "unpause";
+    public static final String COMMANDS_TITLE = "List of Commands";
     public static final String SEMI_COLON = ";";
     public static final int PAUSE_WAIT_TIME = 10000;
     public static final String WAIT_TIME_FILE = "wait.time";
@@ -181,4 +186,9 @@ public class Constants {
     public static final String HELLO_WORLD = "hello world";
     public static final int ASCII_ZERO = 48;
     public static final int ASCII_LOWER_Z = 122;
+    public static final String ABOUT_TITLE = "About Town Square";
+    public static final String ABOUT_HEADER = "Town Square Messaging App";
+    public static final String VERSION_TEXT_PREFIX = "Version: ";
+    public static final String COMMANDS_HEADER = "All Commands start with a '/' (forward slash)";
+    public static final String PAUSED_TAB_NOTIFICATION = " (paused)";
 }
