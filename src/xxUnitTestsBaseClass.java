@@ -41,6 +41,12 @@ public class xxUnitTestsBaseClass {
         logger.logInfo("---------------");
     }
 
+    void checkEquals(String actual, String expected, String methodName) {
+        if (!actual.equals(expected)) {
+            error(methodName);
+        }
+    }
+
     void checkEquals(Object actual, Object expected, String methodName) {
         if (actual != expected) {
             error(methodName);

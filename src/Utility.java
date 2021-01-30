@@ -348,6 +348,9 @@ public class Utility implements IUtility {
     }
 
     public int countLinesInFile(String file) {
+        if (!checkFileExists(file)) {
+            return Constants.NOT_FOUND_ROW;
+        }
         int result = 0;
         // using class of nio file package
         Path filePath = Paths.get(file);

@@ -11,5 +11,9 @@ public class xxUnitTestRun {
         xxUnitTestsCommandController commandControllerUnitTests = new xxUnitTestsCommandController("CommandController");
 
         commandControllerUnitTests.go();
+
+        xxUnitTestsUtility utilityUnitTests = new xxUnitTestsUtility("Utility");
+
+        utilityUnitTests.go();
     }
 }
