@@ -14,8 +14,10 @@ public class ClientThread extends Thread implements IClientThread {
     private boolean process;
     private String uniqueId;
     private PostMessageList posts;
+    private IFactory factory;
+    private int waitTime;
 
-    public ClientThread(ISquare s, IUtility utility, String uniqueId) {
+    public ClientThread(ISquare s, IUtility utility, String uniqueId, IFactory factory) {
         squareName = s.getName();
         lastKnownPost = s.getLastKnownPost();
         square = s;
@@ -24,6 +26,16 @@ public class ClientThread extends Thread implements IClientThread {
         squareName = square.getName();
         this.uniqueId = uniqueId;
         posts = new PostMessageList();
+        this.factory = factory;
+        getWaitTime();
+    }
+
+    private void getWaitTime() {
+        if (utility.checkFileExists(Constants.WAIT_TIME_FILE)) {
+            waitTime = Integer.valueOf(utility.readFile(Constants.WAIT_TIME_FILE));
+        } else {
+            waitTime = Constants.DEFAULT_WAIT_TIME;
+        }
     }
 
     public void setLastKnownPost(int index) {
@@ -43,7 +55,7 @@ public class ClientThread extends Thread implements IClientThread {
             String raw;
             while (process) {
                 if (utility.checkFileExists(square.getSafeLowerName() + Constants.PAUSE_FILE_EXT)) {
-                    Thread.sleep(10000);
+                    Thread.sleep(Constants.PAUSE_WAIT_TIME);
                     continue;
                 }
                 raw = utility.readFile(file, lastKnownPost);
@@ -64,7 +76,7 @@ public class ClientThread extends Thread implements IClientThread {
                 boolean threadsDone = false;
                 for (String info : members) {
                     // spin up new thread for each member and process ASAP
-                    IMemberPostsThread thread = Factory.createMemberPostsThread(Constants.BASE_MEMBER_POSTS_THREAD, info, uniqueId, msg, square, utility);
+                    IMemberPostsThread thread = factory.createMemberPostsThread(Constants.BASE_MEMBER_POSTS_THREAD, info, uniqueId, msg, square, utility);
                     memberThreads.add(thread);
                     thread.start();
                 }
@@ -77,7 +89,7 @@ public class ClientThread extends Thread implements IClientThread {
 
                 updatePosts(file);
 
-                Thread.sleep(1000);
+                Thread.sleep(waitTime);
             }
         } catch (InterruptedException ie) {
             ie.printStackTrace();

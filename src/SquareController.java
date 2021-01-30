@@ -151,24 +151,8 @@ public class SquareController implements ISquareController {
             String file = square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT;
             String[] sameNames = utility.searchFile(file, args[3], Constants.SEARCH_STARTS_WITH);
             String[] sameIds = utility.searchFile(file, args[7], Constants.SEARCH_CONTAINS);
-            boolean previousLeave = false;
-            for (String sameId : sameIds) {
-                if (sameId.startsWith(Constants.STAR)) {
-                    previousLeave = true;
-                    break;
-                }
-            }
-            if (previousLeave) {
-                String[] members = utility.readFile(file).split(Constants.READ_FILE_DATA_SEPARATOR);
-                StringBuilder result = new StringBuilder();
-                for (String member : members) {
-                    if (!member.contains(args[7])) {
-                        result.append(member);
-                    }
-                    
-                }
-                utility.writeFile(file, result.toString());
-            }
+            boolean previousLeave = checkPreviousLeave(sameIds);
+            processPreviousLeave(previousLeave, file, args);
             String registeredName = args[3];
             if (sameIds.length < 1 || previousLeave) {
                 if (sameNames.length > 0) {
@@ -190,6 +174,31 @@ public class SquareController implements ISquareController {
         return buildResult(Constants.MALFORMED_REQUEST_RESULT, Constants.MALFORMED_REQUEST_MESSAGE);
     }
 
+    private void processPreviousLeave(boolean previousLeave, String file, String[] args) {
+        if (previousLeave) {
+            String[] members = utility.readFile(file).split(Constants.READ_FILE_DATA_SEPARATOR);
+            StringBuilder result = new StringBuilder();
+            for (String member : members) {
+                if (!member.contains(args[7])) {
+                    result.append(member);
+                }
+            }
+            utility.writeFile(file, result.toString());
+        }
+    }
+
+    private boolean checkPreviousLeave(String[] sameIds) {
+        boolean previousLeave = false;
+        for (String sameId : sameIds) {
+            if (sameId.startsWith(Constants.STAR)) {
+                previousLeave = true;
+                break;
+            }
+        }
+
+        return previousLeave;
+    }
+
     private String processPostMessage(String[] args, ISquare square) {
         // command arguments
         // 3 == message to post
@@ -201,7 +210,7 @@ public class SquareController implements ISquareController {
             String[] sameNames = utility.searchFile(memberFile, args[4], Constants.SEARCH_CONTAINS);
             if (sameNames.length > 0) {
                 return processCommand(Long.toString(currentMillis) + Constants.DATA_SEPARATOR + args[3], args[4], file,
-                        square);                
+                        square);
             } else {
                 return buildResult(Constants.FORBIDDEN_RESULT, Constants.FORBIDDEN_MESSAGE);
             }
@@ -348,10 +357,12 @@ public class SquareController implements ISquareController {
 
     private boolean checkSquareAccess(ISquare square, String memberId) {
         String file = square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT;
-        int first = utility.findFirstOccurence(file, memberId, Constants.SEARCH_CONTAINS, Constants.NOT_FOUND_RETURN_NEG_ONE);
+        int first = utility.findFirstOccurence(file, memberId, Constants.SEARCH_CONTAINS,
+                Constants.NOT_FOUND_RETURN_NEG_ONE);
 
         if (first < 0) {
-            first = utility.findFirstOccurence(file, Constants.EXIT_SQUARE_TEXT, Constants.SEARCH_STARTS_WITH, Constants.NOT_FOUND_RETURN_NEG_ONE);
+            first = utility.findFirstOccurence(file, Constants.EXIT_SQUARE_TEXT, Constants.SEARCH_STARTS_WITH,
+                    Constants.NOT_FOUND_RETURN_NEG_ONE);
         }
         return (first > -1);
     }
@@ -376,11 +387,12 @@ public class SquareController implements ISquareController {
     }
 
     private String processAlias(String[] info, ArrayList<String> memberAliases, String file) {
-        String alias = info[0] + Constants.COLON + info[3] + Constants.QUESTION_MARK + info[1] + Constants.COLON + info[2];
+        String alias = info[0] + Constants.COLON + info[3] + Constants.QUESTION_MARK + info[1] + Constants.COLON
+                + info[2];
 
         boolean found = false;
         int count = 0;
-        for(String memberAlias : memberAliases) {
+        for (String memberAlias : memberAliases) {
             if (memberAlias.startsWith(info[0] + Constants.COLON + info[3])) {
                 memberAlias += Constants.FORWARD_SLASH + info[1] + Constants.COLON + info[2];
                 memberAliases.set(count, memberAlias);
@@ -404,7 +416,7 @@ public class SquareController implements ISquareController {
         } else {
             utility.appendToFile(file, Constants.NEWLINE + alias);
         }
-        
+
         return "registered";
     }
 }

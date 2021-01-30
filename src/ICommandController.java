@@ -1,3 +1,4 @@
 public interface ICommandController {
-    void processCommand(String command, ISquare square);
+    Boolean[] processCommand(String command, ISquare square);
+    boolean blockUser(String user, ISquare square);
 }

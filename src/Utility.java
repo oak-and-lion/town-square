@@ -50,7 +50,7 @@ public class Utility implements IUtility {
     }
 
     public String getRemoteIP() {
-        String result = "";
+        String result = Constants.EMPTY_STRING;
         try {
             URL whatismyip = new URL(Constants.REMOTE_IP_URL);
 
@@ -62,7 +62,7 @@ public class Utility implements IUtility {
             mue.printStackTrace();
         }
 
-        return result.replace("hello world", Constants.EMPTY_STRING);
+        return result.replace(Constants.HELLO_WORLD, Constants.EMPTY_STRING);
     }
 
     public IPAddress[] getLocalIPs() {
@@ -475,8 +475,8 @@ public class Utility implements IUtility {
     }
 
     public String generateRandomString(int targetStringLength) {
-        int leftLimit = 48; // numeral '0'
-        int rightLimit = 122; // letter 'z'
+        int leftLimit = Constants.ASCII_ZERO; // numeral '0'
+        int rightLimit = Constants.ASCII_LOWER_Z; // letter 'z'
 
         return random.ints(leftLimit, rightLimit + 1).filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
                 .limit(targetStringLength)

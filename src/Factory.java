@@ -4,7 +4,7 @@ import java.security.PublicKey;
 
 import javafx.scene.control.TextField;
 
-public class Factory {
+public class Factory implements IFactory {
     private Factory() {
     }
 
@@ -40,8 +40,8 @@ public class Factory {
         return null;
     }
 
-    public static ISquareController createSquareController(int type, IUtility mainUtility,
-            IDialogController controller, ILogIt logger, ISquareKeyPair keyPair) {
+    public static ISquareController createSquareController(int type, IUtility mainUtility, IDialogController controller,
+            ILogIt logger, ISquareKeyPair keyPair) {
         if (type == Constants.BASE_SQUARE_CONTROLLER) {
             return new SquareController(mainUtility, controller, logger, keyPair);
         }
@@ -82,7 +82,8 @@ public class Factory {
         return null;
     }
 
-    public static ITownSquareButton createTownSquareButton(int type, String buttonText, ISquare square, TextField postsTextField) {
+    public static ITownSquareButton createTownSquareButton(int type, String buttonText, ISquare square,
+            TextField postsTextField) {
         if (type == Constants.BASE_TOWN_SQUARE_BUTTON) {
             return new TownSquareButton(buttonText, square, postsTextField);
         }
@@ -102,13 +103,14 @@ public class Factory {
 
     public static IClientThread createClientThread(int type, ISquare square, IUtility utility, String uniqueId) {
         if (type == Constants.BASE_CLIENT_THREAD) {
-            return new ClientThread(square, utility, uniqueId);
+            return new ClientThread(square, utility, uniqueId, new Factory());
         }
 
         return null;
     }
 
-    public static IServerThread createServerThread(int type, Socket socket, ISquareController squareController, ILogIt logger) {
+    public static IServerThread createServerThread(int type, Socket socket, ISquareController squareController,
+            ILogIt logger) {
         if (type == Constants.BASE_SERVER_THREAD) {
             return new ServerThread(socket, squareController, logger);
         }
@@ -116,8 +118,8 @@ public class Factory {
         return null;
     }
 
-    public static ITextDialogBox creaTextDialogBox(int type, String title, String headerText,
-    String content, ITextDialogBoxCallback controller, double width, int createType) {
+    public static ITextDialogBox creaTextDialogBox(int type, String title, String headerText, String content,
+            ITextDialogBoxCallback controller, double width, int createType) {
         if (type == Constants.BASE_TEXT_DIALOG_BOX) {
             return new TextDialogBox(title, headerText, content, controller, width, createType);
         }
@@ -167,7 +169,8 @@ public class Factory {
         return null;
     }
 
-    public static IMemberPostsThread createMemberPostsThread(int type, String info, String uniqueId, String[] msg, ISquare square, IUtility utility) {
+    public IMemberPostsThread createMemberPostsThread(int type, String info, String uniqueId, String[] msg,
+            ISquare square, IUtility utility) {
         if (type == Constants.BASE_MEMBER_POSTS_THREAD) {
             return new MemberPostsThread(info, uniqueId, msg, square, utility);
         }

@@ -1,15 +1,17 @@
 public class xxMockIUtility implements IUtility {
+    private static final String SEARCH_VALUE = "searchFound";
+
     public String createUUID() {
         return Constants.EMPTY_STRING;
     }
     public FileWriteResponse writeFile(String file, String data) {
-        return null;
+        return new FileWriteResponse(true, 1);
     }
     public FileWriteResponse writeBinaryFile(String file, byte[] data) {
-        return null;
+        return new FileWriteResponse(true, 1);
     }
     public FileWriteResponse appendToFile(String file, String data) {
-        return null;
+        return new FileWriteResponse(true, 1);
     }
     public String readFile(String file) {
         return Constants.EMPTY_STRING;
@@ -21,9 +23,13 @@ public class xxMockIUtility implements IUtility {
         return Constants.EMPTY_STRING;
     }
     public String[] searchFile(String file, String value, boolean startsWith) {
-        return new String[0];
+        return searchFile(file, value, startsWith, -1);
     }
     public String[] searchFile(String file, String value, boolean startsWith, int lastKnownRow) {
+        if (value.equals(SEARCH_VALUE)) {
+            return new String[] {SEARCH_VALUE};
+        }
+
         return new String[0];
     }
     public String generateRandomString(int length) {

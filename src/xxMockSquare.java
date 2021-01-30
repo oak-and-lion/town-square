@@ -9,19 +9,19 @@ public class xxMockSquare implements ISquare {
         // not needed
     }
     public String getPort() {
-        return Constants.EMPTY_STRING;
+        return "44123";
     }
     public String getInvite(){
-        return Constants.EMPTY_STRING;
+        return "invite123";
     }
     public Object getTemp(){
         return null;
     }
     public String getName(){
-        return Constants.EMPTY_STRING;
+        return "Mock Square";
     }
     public String getId(){
-        return Constants.EMPTY_STRING;
+        return "123";
     }
     public void setPostsScrollPane(ScrollPane scrollPane){
         // not needed
@@ -33,7 +33,7 @@ public class xxMockSquare implements ISquare {
         // not needed
     }
     public String getSafeLowerName() {
-        return "my_square";
+        return getName().toLowerCase().replace(" ", "_");
     }
     public VBox getPostsVBox() {
         return null;

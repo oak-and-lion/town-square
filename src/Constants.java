@@ -175,4 +175,10 @@ public class Constants {
     public static final String BLOCK_COMMAND = "block";
     public static final String BLOCK_FILE_EXT = ".block";
     public static final String SEMI_COLON = ";";
+    public static final int PAUSE_WAIT_TIME = 10000;
+    public static final String WAIT_TIME_FILE = "wait.time";
+    public static final int DEFAULT_WAIT_TIME = 1000;
+    public static final String HELLO_WORLD = "hello world";
+    public static final int ASCII_ZERO = 48;
+    public static final int ASCII_LOWER_Z = 122;
 }

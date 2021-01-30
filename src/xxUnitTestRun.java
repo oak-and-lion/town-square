@@ -7,5 +7,9 @@ public class xxUnitTestRun {
         xxUnitTestsFactory factoryUnitTests = new xxUnitTestsFactory("Factory");
 
         factoryUnitTests.go();
+
+        xxUnitTestsCommandController commandControllerUnitTests = new xxUnitTestsCommandController("CommandController");
+
+        commandControllerUnitTests.go();
     }
 }
