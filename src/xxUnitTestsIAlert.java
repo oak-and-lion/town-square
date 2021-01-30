@@ -14,6 +14,7 @@ public class xxUnitTestsIAlert extends xxUnitTestsBaseClass {
         finish();
     }
 
+    @TestMethod
     private void testIAlertPass() {
         final String METHOD_NAME = "testIAlertPass";
         IUtility utility = Utility.create();

@@ -27,6 +27,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
         finish();
     }
 
+    @TestMethod
     private void readLastLineOfFilePass() {
         final String METHOD_NAME = "readLastLineOfFilePass";
 
@@ -37,6 +38,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
         checkEquals(result, "last line", METHOD_NAME + ACTUAL_VALUE + result);
     }
 
+    @TestMethod
     private void readLastLineOfInvalidFilePass() {
         final String METHOD_NAME = "readLastLineOfInvalidFilePass";
 
@@ -47,6 +49,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
         checkEquals(result, Constants.EMPTY_STRING, METHOD_NAME + ACTUAL_VALUE + result);
     }
 
+    @TestMethod
     private void countLinesOfFilePass() {
         final String METHOD_NAME = "countLinesOfFilePass";
 
@@ -57,6 +60,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
         checkEquals(result, 6, METHOD_NAME + ACTUAL_VALUE + result);
     }
 
+    @TestMethod
     private void countLinesOfInvalidFilePass() {
         final String METHOD_NAME = "countLinesOfInvalidFilePass";
 
@@ -67,6 +71,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
         checkEquals(result, -1, METHOD_NAME + ACTUAL_VALUE + result);
     }
 
+    @TestMethod
     private void findFirstOccurrencePass() {
         final String METHOD_NAME = "findFirstOccurrencePass";
 
@@ -77,6 +82,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
         checkEquals(result, 1, METHOD_NAME + ACTUAL_VALUE + result);
     }
 
+    @TestMethod
     private void findFirstOccurrenceFail() {
         final String METHOD_NAME = "findFirstOccurrenceFail";
 
@@ -87,6 +93,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
         checkEquals(result, 6, METHOD_NAME + ACTUAL_VALUE + result);
     }
 
+    @TestMethod
     private void findFirstOccurrenceNonZeroFail() {
         final String METHOD_NAME = "findFirstOccurrenceNonZeroFail";
 
@@ -97,6 +104,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
         checkEquals(result, -1, METHOD_NAME + ACTUAL_VALUE + result);
     }
 
+    @TestMethod
     private void findFirstOccurrenceInvalidFileFail() {
         final String METHOD_NAME = "findFirstOccurrenceInvalidFileFail";
 
@@ -107,6 +115,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
         checkEquals(result, -1, METHOD_NAME + ACTUAL_VALUE + result);
     }
 
+    @TestMethod
     private void decodeBase64NullStringPass() {
         final String METHOD_NAME = "decodeBase64NullStringPass";
 
@@ -117,6 +126,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
         checkEquals(result.length, 0, METHOD_NAME + ACTUAL_VALUE + result);
     }
 
+    @TestMethod
     private void decodeBase64EmptyStringPass() {
         final String METHOD_NAME = "decodeBase64EmptyStringPass";
 
@@ -127,6 +137,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
         checkEquals(result.length, 0, METHOD_NAME + ACTUAL_VALUE + result);
     }
 
+    @TestMethod
     private void decodeBase64ValidStringPass() {
         final String METHOD_NAME = "decodeBase64ValidStringPass";
 
@@ -138,6 +149,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
         checkEquals(new String(result), "test data", METHOD_NAME + ACTUAL_VALUE + new String(result));
     }
 
+    @TestMethod
     private void decodeBase64InvalidStringFail() {
         final String METHOD_NAME = "decodeBase64InvalidStringFail";
 

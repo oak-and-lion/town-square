@@ -1,18 +1,36 @@
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class xxUnitTestsBaseClass {
     private int errorCount;
     private ArrayList<String> errorTests;
     private String suiteName;
+    private int totalTests;
 
     public xxUnitTestsBaseClass(String testSuite) {
         initialize();
         setup(testSuite);
     }
 
+    public int getTotalTests() {
+        return totalTests;
+    }
+
+    public int getTotalFailed() {
+        return errorCount;
+    }
+
     private void initialize() {
         errorCount = 0;
         errorTests = new ArrayList<String>();
+
+        totalTests = 0;
+        Class<?> clazz = this.getClass();
+        for (Method method : clazz.getDeclaredMethods()) {
+            if (method.isAnnotationPresent(TestMethod.class)) {
+                totalTests++;
+            }
+        }
     }
 
     void setup(String testSuite) {
@@ -31,6 +49,7 @@ public class xxUnitTestsBaseClass {
     void finish() {
         ILogIt logger = LogItConsole.create();
         logger.logInfo("[" + suiteName + "] Results");
+        logger.logInfo("Total tests: " + totalTests);
         logger.logInfo("  Errors: " + Integer.toString(errorCount));
         if (errorCount > 0) {
             logger.logInfo("  Methods in error:");

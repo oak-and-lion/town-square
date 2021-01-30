@@ -19,6 +19,7 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
         finish();
     }
 
+    @TestMethod
     private void testBlockCommandPass() {
         final String METHOD_NAME = "testBlockCommandPass";
         ICommandController commandController = Factory.createCommandController(1, new xxMockIUtility());
@@ -28,6 +29,7 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
         checkEquals(result, true, METHOD_NAME);
     }
 
+    @TestMethod
     private void testBlockCommandFail() {
         final String METHOD_NAME = "testBlockCommandFail";
         ICommandController commandController = Factory.createCommandController(1, new xxMockIUtility());
@@ -37,6 +39,7 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
         checkEquals(result, false, METHOD_NAME);
     }
 
+    @TestMethod
     private void testBlockCommandNullFail() {
         final String METHOD_NAME = "testBlockCommandNullFail";
         ICommandController commandController = Factory.createCommandController(1, new xxMockIUtility());
@@ -46,6 +49,7 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
         checkEquals(result, false, METHOD_NAME);
     }
 
+    @TestMethod
     private void testBlockCommandEmptyFail() {
         final String METHOD_NAME = "testBlockCommandEmptyFail";
         ICommandController commandController = Factory.createCommandController(1, new xxMockIUtility());
@@ -55,6 +59,7 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
         checkEquals(result, false, METHOD_NAME);
     }
 
+    @TestMethod
     private void testProcessCommandInvalidPrefixFail() {
         final String METHOD_NAME = "testProcessCommandInvalidPrefixFail";
         final String INVALID_COMMAND_PREFIX = "-command";
@@ -66,6 +71,7 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
         checkEquals(result.length, 1, WRONG_RESULT_LENGTH_MESSAGE + METHOD_NAME);
     }
 
+    @TestMethod
     private void testProcessCommandInvalidCommandFail() {
         final String METHOD_NAME = "testProcessCommandInvalidCommandFail";
         final String INVALID_COMMAND = "/command";
@@ -77,6 +83,7 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
         checkEquals(result.length, 1, WRONG_RESULT_LENGTH_MESSAGE + METHOD_NAME);
     }
 
+    @TestMethod
     private void testProcessCommandValidBlockPass() {
         final String METHOD_NAME = "testProcessCommandValidBlockPass";
         final String COMMAND = "/block searchFound";
@@ -88,6 +95,7 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
         checkEquals(result.length, 1, WRONG_RESULT_LENGTH_MESSAGE + METHOD_NAME);
     }
 
+    @TestMethod
     private void testProcessCommandInvalidBlockPass() {
         final String METHOD_NAME = "testProcessCommandInvalidBlockPass";
         final String COMMAND = "/block searchNotFound";
