@@ -1,16 +1,16 @@
 public class xxUnitTestRun {
     public static void main(String[] args) {
-        xxUnitTestsIAlert alertUnitTests = new xxUnitTestsIAlert("IAlert");
+        xxUnitTestsCommandController commandControllerUnitTests = new xxUnitTestsCommandController("CommandController");
 
-        alertUnitTests.go();
+        commandControllerUnitTests.go();
 
         xxUnitTestsFactory factoryUnitTests = new xxUnitTestsFactory("Factory");
 
         factoryUnitTests.go();
 
-        xxUnitTestsCommandController commandControllerUnitTests = new xxUnitTestsCommandController("CommandController");
+        xxUnitTestsIAlert alertUnitTests = new xxUnitTestsIAlert("IAlert");
 
-        commandControllerUnitTests.go();
+        alertUnitTests.go();
 
         xxUnitTestsUtility utilityUnitTests = new xxUnitTestsUtility("Utility");
 
