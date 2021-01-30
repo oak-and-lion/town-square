@@ -1,6 +1,7 @@
 public class Constants {
     private Constants() {}
 
+    public static final String VERSION = "0.0.2";
     public static final int BASE_CRYPTO_UTILS = 1;
     public static final int BASE_SQUARE_KEY_PAIR = 1;
     public static final int UTILITY_SQUARE_KEY_PAIR = 2;
@@ -27,7 +28,6 @@ public class Constants {
     public static final int BASE_COMMAND_CONTROLLER = 1;
     public static final int BASE_MEMBER_POSTS_THREAD = 1;
     public static final int NULL_OBJECT_TYPE = Integer.MAX_VALUE;
-    public static final String VERSION = "0.0.1";
     public static final String SQUARE_FILE_EXT = ".square";
     public static final String UNIQUE_ID_FILE = "unique.id";
     public static final String DEFAULT_NAME_FILE = "default.name";
