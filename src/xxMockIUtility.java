@@ -59,10 +59,10 @@ public class xxMockIUtility implements IUtility {
     public String createIdFile(String file) {
         return Constants.EMPTY_STRING;
     }
-    public String getRemoteIP() {
+    public String getRemoteIP(ILogIt logger) {
         return Constants.EMPTY_STRING;
     }
-    public IPAddress[] getLocalIPs() {
+    public IPAddress[] getLocalIPs(ILogIt logger) {
         return new IPAddress[0];
     }
     public boolean deleteFile(String file) {

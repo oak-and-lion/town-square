@@ -19,6 +19,11 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
         findFirstOccurrenceNonZeroFail();
         findFirstOccurrenceInvalidFileFail();
 
+        decodeBase64NullStringPass();
+        decodeBase64ValidStringPass();
+        decodeBase64InvalidStringFail();
+        decodeBase64NullStringPass();
+
         finish();
     }
 
@@ -100,5 +105,47 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
         int result = utility.findFirstOccurence(INVALID_TEST_UTILITY_FILE, "is", true, true);
 
         checkEquals(result, -1, METHOD_NAME + ACTUAL_VALUE + result);
+    }
+
+    private void decodeBase64NullStringPass() {
+        final String METHOD_NAME = "decodeBase64NullStringPass";
+
+        IUtility utility = Utility.create();
+
+        byte[] result = utility.convertFromBase64("");
+
+        checkEquals(result.length, 0, METHOD_NAME + ACTUAL_VALUE + result);
+    }
+
+    private void decodeBase64EmptyStringPass() {
+        final String METHOD_NAME = "decodeBase64NullStringPass";
+
+        IUtility utility = Utility.create();
+
+        byte[] result = utility.convertFromBase64(null);
+
+        checkEquals(result.length, 0, METHOD_NAME + ACTUAL_VALUE + result);
+    }
+
+    private void decodeBase64ValidStringPass() {
+        final String METHOD_NAME = "decodeBase64ValidStringPass";
+
+        IUtility utility = Utility.create();
+
+        byte[] result = utility.convertFromBase64("dGVzdCBkYXRh");
+
+        checkEquals(result.length, 9, METHOD_NAME + ACTUAL_VALUE + result);
+        checkEquals(new String(result), "test data", METHOD_NAME + ACTUAL_VALUE + new String(result));
+    }
+
+    private void decodeBase64InvalidStringFail() {
+        final String METHOD_NAME = "decodeBase64InvalidStringFail";
+
+        IUtility utility = Utility.create();
+
+        byte[] result = utility.convertFromBase64("dGVzdCBkYXRhr");
+
+        checkEquals(result.length, 0, METHOD_NAME + ACTUAL_VALUE + new String(result));
+        checkEquals(new String(result), "", METHOD_NAME + ACTUAL_VALUE + new String(result));
     }
 }

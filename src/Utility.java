@@ -49,7 +49,7 @@ public class Utility implements IUtility {
         return UUID.randomUUID().toString();
     }
 
-    public String getRemoteIP() {
+    public String getRemoteIP(ILogIt logger) {
         String result = Constants.EMPTY_STRING;
         try {
             URL whatismyip = new URL(Constants.REMOTE_IP_URL);
@@ -59,13 +59,13 @@ public class Utility implements IUtility {
                 result = bufferedReaderRead(in);
             }
         } catch (MalformedURLException mue) {
-            mue.printStackTrace();
+            logger.logInfo(mue.getMessage());
         }
 
         return result.replace(Constants.HELLO_WORLD, Constants.EMPTY_STRING);
     }
 
-    public IPAddress[] getLocalIPs() {
+    public IPAddress[] getLocalIPs(ILogIt logger) {
         ArrayList<IPAddress> result = new ArrayList<IPAddress>();
 
         Enumeration<NetworkInterface> n;
@@ -82,7 +82,7 @@ public class Utility implements IUtility {
                 }
             }
         } catch (SocketException e1) {
-            e1.printStackTrace();
+            logger.logInfo(e1.getMessage());
         }
 
         return result.toArray(new IPAddress[result.size()]);
@@ -474,7 +474,14 @@ public class Utility implements IUtility {
     }
 
     public byte[] convertFromBase64(String data) {
-        return Base64.getDecoder().decode(data);
+        if (data == null) {
+            return new byte[0];
+        }
+        try {
+            return Base64.getDecoder().decode(data);
+        } catch (Exception e) {
+            return new byte[0];
+        }
     }
 
     public String generateRandomString(int targetStringLength) {

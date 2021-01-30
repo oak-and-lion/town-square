@@ -37,13 +37,14 @@ public class App extends Application implements IApp {
     }
 
     private IDialogController processStart(Stage primaryStage) {
+        ILogIt logger = Factory.createLogger(Constants.FILE_LOGGER, Constants.MAIN_LOG_FILE, utility);
         String uniqueId = Constants.EMPTY_STRING;
         String defaultSquareInfo = Constants.EMPTY_STRING;
         ISquare defaultSquare = null;
         String port = Constants.DEFAULT_PORT;
         String ip = Constants.DEFAULT_IP;
         String alias = Constants.EMPTY_STRING;
-        String remoteIP = utility.getRemoteIP();
+        String remoteIP = utility.getRemoteIP(logger);
         defaultName = Constants.DEFAULT_USER_NAME;
 
         ISquareController squareController = null;
@@ -57,8 +58,6 @@ public class App extends Application implements IApp {
         utility = Factory.createUtility(Constants.BASE_UTILITY);
 
         commandController = Factory.createCommandController(Constants.BASE_COMMAND_CONTROLLER, utility);
-
-        ILogIt logger = Factory.createLogger(Constants.FILE_LOGGER, Constants.MAIN_LOG_FILE, utility);
 
         systemExit.setParent(this);
 
@@ -143,7 +142,7 @@ public class App extends Application implements IApp {
 
             ObservableList<IPAddress> ipAddresses = FXCollections.observableArrayList();
             ipAddresses.add(new IPAddress(remoteIP, remoteIP));
-            ipAddresses.addAll(utility.getLocalIPs());
+            ipAddresses.addAll(utility.getLocalIPs(logger));
 
             alias = getAlias(ip);
 
