@@ -3,6 +3,7 @@ public interface IUtility {
     FileWriteResponse writeFile(String file, String data);
     FileWriteResponse writeBinaryFile(String file, byte[] data);
     FileWriteResponse appendToFile(String file, String data);
+    byte[] readBinaryFile(String file);
     String readFile(String file);
     String readFile(String file, int afterLine);
     String readLastLineOfFile(String file);

@@ -20,7 +20,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -50,6 +49,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     private ArrayList<TextField> postTextFields;
     private ArrayList<MessageWorker> postMessageWorkers;
     private ArrayList<Long> knownPostMessages;
+    private ArrayList<ImageView> images;
     private IModalViewer modalImageViewer;
     private IModalViewer modalVideoViewer;
     private ICommandController commandController;
@@ -740,6 +740,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         try (InputStream stream = new FileInputStream(file)) {
             Image image = new Image(stream);
             ImageView imageView = new ImageView();
+            imageView.setUserData(millis);
             imageView.setFitHeight(Constants.IMAGE_SMALL_FIT_HEIGHT);
             imageView.setFitWidth(Constants.IMAGE_SMALL_FIT_WIDTH);
             imageView.setPreserveRatio(true);
@@ -754,32 +755,50 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                     }
                     int button = Constants.NO_BUTTON;
                     MouseButton mb = me.getButton();
-                    
+
                     if (mb.compareTo(MouseButton.PRIMARY) == Constants.EQUALS_VALUE) {
                         button = Constants.PRIMARY_BUTTON;
                     } else if (mb.compareTo(MouseButton.SECONDARY) == Constants.EQUALS_VALUE) {
                         button = Constants.SECONDARY_BUTTON;
                     }
 
-                    processImageAction(button, file);
+                    processImageAction(button, file, millis);
                 }
             });
             index = message.indexOf(Constants.COLON + Constants.SPACE);
             Label label = createLabel(message.substring(0, index), 25, 0, 0, 0);
-            Tooltip.install(label, new Tooltip(Long.toString(millis)));
             hbox.getChildren().addAll(label, imageView);
             messageList.getChildren().addAll(hbox);
+            if (images == null) {
+                images = new ArrayList<>();
+            }
+            images.add(imageView);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void processImageAction(int buttonClicked, String file) {
+    public void processImageAction(int buttonClicked, String file, long millis) {
         if (buttonClicked == Constants.PRIMARY_BUTTON) {
             if (modalImageViewer == null) {
                 modalImageViewer = factory.createModalViewer(Constants.BASE_MODAL_IMAGE_VIEWER);
             }
             modalImageViewer.show(file);
+        } else if (buttonClicked == Constants.SECONDARY_BUTTON) {
+            byte[] data = utility.readBinaryFile(Constants.BLOCKED_IMAGE_FILE);
+            utility.writeBinaryFile(file, data);
+            for (ImageView image : images) {
+                Long l = (Long) image.getUserData();
+                if (l != null && l.equals(millis)) {
+                    try (InputStream stream = new FileInputStream(file)) {
+                        Image i = new Image(stream);
+                        image.setImage(i);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return;
+                }
+            }
         }
     }
 

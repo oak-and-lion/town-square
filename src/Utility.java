@@ -66,7 +66,7 @@ public class Utility implements IUtility {
     }
 
     public IPAddress[] getLocalIPs(ILogIt logger) {
-        ArrayList<IPAddress> result = new ArrayList<IPAddress>();
+        ArrayList<IPAddress> result = new ArrayList<>();
 
         Enumeration<NetworkInterface> n;
         try {
@@ -105,7 +105,7 @@ public class Utility implements IUtility {
     public boolean deleteFiles(String match) {
         String[] files = getFiles(match);
 
-        for(String file : files) {
+        for (String file : files) {
             deleteFile(file);
         }
 
@@ -173,7 +173,7 @@ public class Utility implements IUtility {
         FileWriteResponse result = new FileWriteResponse(false, 0);
         try (OutputStream outputStream = new FileOutputStream(file)) {
             int byteRead = 0;
- 
+
             for (int x = 0; x < data.length; x++) {
                 outputStream.write(data[x]);
                 byteRead++;
@@ -256,6 +256,25 @@ public class Utility implements IUtility {
         }
     }
 
+    public byte[] readBinaryFile(String file) {
+        if (!checkFileExists(file)) {
+            return new byte[0];
+        }
+
+        Path path = Paths.get(file);
+        try {
+            return Files.readAllBytes(path);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        } catch (OutOfMemoryError oome) {
+            oome.printStackTrace();
+        } catch (SecurityException se) {
+            se.printStackTrace();
+        }
+
+        return new byte[0];
+    }
+
     public String readFile(String file) {
         return readFile(file, -1);
     }
@@ -303,7 +322,7 @@ public class Utility implements IUtility {
         if (!checkFileExists(file)) {
             return new String[0];
         }
-        ArrayList<String> temp = new ArrayList<String>();
+        ArrayList<String> temp = new ArrayList<>();
 
         // using class of nio file package
         Path filePath = Paths.get(file);

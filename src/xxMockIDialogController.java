@@ -79,7 +79,7 @@ public class xxMockIDialogController implements IDialogController {
         // not needed
     }
 
-    public void processImageAction(int buttonClicked, String file) {
+    public void processImageAction(int buttonClicked, String file, long millis) {
         // not needed
     }
 
