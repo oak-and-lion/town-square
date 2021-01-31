@@ -22,13 +22,14 @@ public class Square implements ISquare {
     private String uniqueId;
     private IClientThread clientThread;
     private Tab tab;
+    private IFactory factory;
 
     public Square(String info, String port, String ip, ISquareController squareController, IUtility utility,
-            IDialogController sampleController, String uniqueId) {
-        setPassword("");
+            IDialogController sampleController, String uniqueId, IFactory factory) {
+        setPassword(Constants.EMPTY_STRING);
         this.port = port;
         this.ip = ip;
-        String[] split = info.split(",");
+        String[] split = info.split(Constants.COMMA);
         for (int x = 0; x < split.length; x++) {
             if (x == 0) {
                 name = split[x];
@@ -52,11 +53,12 @@ public class Square implements ISquare {
         this.utility = utility;
         controller = squareController;
         this.sampleController = sampleController;
+        this.factory = factory;
         initializeClientThread();
     }
 
     private void initializeClientThread() {
-        clientThread = Factory.createClientThread(Constants.BASE_CLIENT_THREAD, this, utility, uniqueId);
+        clientThread = factory.createClientThread(Constants.BASE_CLIENT_THREAD, this, utility, uniqueId);
 
         if (utility.checkFileExists(getSafeLowerName() + Constants.POSTS_FILE_EXT)) {
             lastKnownPost = utility.countLinesInFile(getSafeLowerName() + Constants.POSTS_FILE_EXT);

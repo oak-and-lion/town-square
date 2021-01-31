@@ -26,8 +26,9 @@ public class xxMockIUtility implements IUtility {
         return searchFile(file, value, startsWith, -1);
     }
     public String[] searchFile(String file, String value, boolean startsWith, int lastKnownRow) {
+        final String SEARCH_FOUND_USER = "searchFound~_~one~_~two~_~three~_~four";;
         if (value.equals(SEARCH_VALUE)) {
-            return new String[] {SEARCH_VALUE};
+            return new String[] {SEARCH_FOUND_USER};
         }
 
         return new String[0];

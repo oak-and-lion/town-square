@@ -9,12 +9,14 @@ public class SquareController implements ISquareController {
     private IDialogController sampleController;
     private ISquareKeyPair keys;
     private ILogIt logger;
+    private IFactory factory;
 
-    public SquareController(IUtility mainUtility, IDialogController controller, ILogIt logger, ISquareKeyPair keyPair) {
+    public SquareController(IUtility mainUtility, IDialogController controller, ILogIt logger, ISquareKeyPair keyPair, IFactory factory) {
         utility = mainUtility;
         sampleController = controller;
         keys = keyPair;
         this.logger = logger;
+        this.factory = factory;
     }
 
     public SquareResponse processRequest(String request) {
@@ -49,7 +51,7 @@ public class SquareController implements ISquareController {
     }
 
     private String[] decryptArray(String[] split) {
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
 
         ISquare square = sampleController.getSquareByInvite(split[1]);
         if (square != null) {
@@ -244,8 +246,8 @@ public class SquareController implements ISquareController {
 
             String[] members = utility.readFile(memberFile).split(Constants.COMMAND_DATA_SEPARATOR);
 
-            ArrayList<String> memberIds = new ArrayList<String>();
-            ArrayList<String> memberNames = new ArrayList<String>();
+            ArrayList<String> memberIds = new ArrayList<>();
+            ArrayList<String> memberNames = new ArrayList<>();
 
             for (int x = 0; x < members.length; x++) {
                 String[] data = members[x].split(Constants.DATA_SEPARATOR);
@@ -256,7 +258,7 @@ public class SquareController implements ISquareController {
             }
 
             if (!memberNames.isEmpty()) {
-                ISquareKeyPair tempKeys = Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
+                ISquareKeyPair tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
                 tempKeys.setPublicKeyFromBase64(memberIds.get(0));
                 String password = utility.generateRandomString(16);
                 StringBuilder temp = new StringBuilder();
@@ -293,8 +295,8 @@ public class SquareController implements ISquareController {
 
             String[] members = utility.readFile(memberFile).split(Constants.COMMAND_DATA_SEPARATOR);
 
-            ArrayList<String> memberIds = new ArrayList<String>();
-            ArrayList<String> memberNames = new ArrayList<String>();
+            ArrayList<String> memberIds = new ArrayList<>();
+            ArrayList<String> memberNames = new ArrayList<>();
 
             for (int x = 0; x < members.length; x++) {
                 String[] data = members[x].split(Constants.DATA_SEPARATOR);
@@ -304,7 +306,7 @@ public class SquareController implements ISquareController {
                 }
             }
 
-            ISquareKeyPair tempKeys = Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
+            ISquareKeyPair tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
             tempKeys.setPublicKeyFromBase64(memberIds.get(0));
             String password = utility.generateRandomString(16);
             StringBuilder temp = new StringBuilder();
@@ -373,7 +375,7 @@ public class SquareController implements ISquareController {
             return Constants.MALFORMED_REQUEST_MESSAGE;
         }
         String file = square.getSafeLowerName() + Constants.ALIAS_FILE_EXT;
-        ArrayList<String> memberAliases = new ArrayList<String>();
+        ArrayList<String> memberAliases = new ArrayList<>();
         if (utility.checkFileExists(file)) {
             String[] members = utility.readFile(file).split(Constants.READ_FILE_DATA_SEPARATOR);
             for (String member : members) {

@@ -5,10 +5,7 @@ import java.security.PublicKey;
 import javafx.scene.control.TextField;
 
 public class Factory implements IFactory {
-    private Factory() {
-    }
-
-    public static ISquareKeyPair createSquareKeyPair(int type, PublicKey publicKey, PrivateKey privateKey) {
+    public ISquareKeyPair createSquareKeyPair(int type, PublicKey publicKey, PrivateKey privateKey) {
         if (type == Constants.KEYS_SQUARE_KEY_PAIR) {
             return new SquareKeyPair(publicKey, privateKey);
         }
@@ -16,7 +13,7 @@ public class Factory implements IFactory {
         return null;
     }
 
-    public static ISquareKeyPair createSquareKeyPair(int type) {
+    public ISquareKeyPair createSquareKeyPair(int type) {
         if (type == Constants.BASE_SQUARE_KEY_PAIR) {
             return new SquareKeyPair();
         }
@@ -24,7 +21,7 @@ public class Factory implements IFactory {
         return null;
     }
 
-    public static ISquareKeyPair createSquareKeyPair(int type, IUtility utility) {
+    public ISquareKeyPair createSquareKeyPair(int type, IUtility utility) {
         if (type == Constants.UTILITY_SQUARE_KEY_PAIR) {
             return new SquareKeyPair(utility);
         }
@@ -32,40 +29,40 @@ public class Factory implements IFactory {
         return null;
     }
 
-    public static ICryptoUtils createCryptoUtils(int type) {
+    public ICryptoUtils createCryptoUtils(int type) {
         if (type == Constants.BASE_CRYPTO_UTILS) {
-            return new CryptoUtils();
+            return new CryptoUtils(this);
         }
 
         return null;
     }
 
-    public static ISquareController createSquareController(int type, IUtility mainUtility, IDialogController controller,
+    public ISquareController createSquareController(int type, IUtility mainUtility, IDialogController controller,
             ILogIt logger, ISquareKeyPair keyPair) {
         if (type == Constants.BASE_SQUARE_CONTROLLER) {
-            return new SquareController(mainUtility, controller, logger, keyPair);
+            return new SquareController(mainUtility, controller, logger, keyPair, this);
         }
 
         return null;
     }
 
-    public static IServer createServer(int type, int port, ISquareController squareController, ILogIt logger) {
+    public IServer createServer(int type, int port, ISquareController squareController, ILogIt logger) {
         if (type == Constants.BASE_SERVER) {
-            return Server.create(port, squareController, logger);
+            return Server.create(port, squareController, logger, this);
         }
 
         return null;
     }
 
-    public static IClient createClient(int type, String hostname, int port, String squareId) {
+    public IClient createClient(int type, String hostname, int port, String squareId) {
         if (type == Constants.BASE_CLIENT) {
-            return new Client(hostname, port, squareId);
+            return new Client(hostname, port, squareId, this);
         }
 
         return null;
     }
 
-    public static IUtility createUtility(int type) {
+    public IUtility createUtility(int type) {
         if (type == Constants.BASE_UTILITY) {
             return Utility.create();
         }
@@ -73,16 +70,16 @@ public class Factory implements IFactory {
         return null;
     }
 
-    public static ISquare createSquare(int type, String defaultSquareInfo, String port, String ip,
+    public ISquare createSquare(int type, String defaultSquareInfo, String port, String ip,
             ISquareController squareController, IUtility utility, IDialogController controller, String uniqueId) {
         if (type == Constants.BASE_SQUARE) {
-            return new Square(defaultSquareInfo, port, ip, squareController, utility, controller, uniqueId);
+            return new Square(defaultSquareInfo, port, ip, squareController, utility, controller, uniqueId, this);
         }
 
         return null;
     }
 
-    public static ITownSquareButton createTownSquareButton(int type, String buttonText, ISquare square,
+    public ITownSquareButton createTownSquareButton(int type, String buttonText, ISquare square,
             TextField postsTextField) {
         if (type == Constants.BASE_TOWN_SQUARE_BUTTON) {
             return new TownSquareButton(buttonText, square, postsTextField);
@@ -91,7 +88,7 @@ public class Factory implements IFactory {
         return null;
     }
 
-    public static ILogIt createLogger(int type, String file, IUtility utility) {
+    public ILogIt createLogger(int type, String file, IUtility utility) {
         if (type == Constants.CONSOLE_LOGGER) {
             return LogItConsole.create();
         } else if (type == Constants.FILE_LOGGER) {
@@ -101,15 +98,15 @@ public class Factory implements IFactory {
         return null;
     }
 
-    public static IClientThread createClientThread(int type, ISquare square, IUtility utility, String uniqueId) {
+    public IClientThread createClientThread(int type, ISquare square, IUtility utility, String uniqueId) {
         if (type == Constants.BASE_CLIENT_THREAD) {
-            return new ClientThread(square, utility, uniqueId, new Factory());
+            return new ClientThread(square, utility, uniqueId, this);
         }
 
         return null;
     }
 
-    public static IServerThread createServerThread(int type, Socket socket, ISquareController squareController,
+    public IServerThread createServerThread(int type, Socket socket, ISquareController squareController,
             ILogIt logger) {
         if (type == Constants.BASE_SERVER_THREAD) {
             return new ServerThread(socket, squareController, logger);
@@ -118,7 +115,7 @@ public class Factory implements IFactory {
         return null;
     }
 
-    public static ITextDialogBox creaTextDialogBox(int type, String title, String headerText, String content,
+    public ITextDialogBox createTextDialogBox(int type, String title, String headerText, String content,
             ITextDialogBoxCallback controller, double width, int createType) {
         if (type == Constants.BASE_TEXT_DIALOG_BOX) {
             return new TextDialogBox(title, headerText, content, controller, width, createType);
@@ -127,7 +124,7 @@ public class Factory implements IFactory {
         return null;
     }
 
-    public static IAlertBox createAlertBox(int type) {
+    public IAlertBox createAlertBox(int type) {
         if (type == Constants.BASE_ALERT_BOX) {
             return AlertBox.create();
         }
@@ -135,7 +132,7 @@ public class Factory implements IFactory {
         return null;
     }
 
-    public static ISystemExit createSystemExit(int type) {
+    public ISystemExit createSystemExit(int type) {
         if (type == Constants.BASE_SYSTEM_EXIT) {
             return new SystemExit();
         }
@@ -143,15 +140,15 @@ public class Factory implements IFactory {
         return null;
     }
 
-    public static IVersionChecker createVersionChecker(int type, IUtility utility, String uniqueId) {
+    public IVersionChecker createVersionChecker(int type, IUtility utility, String uniqueId) {
         if (type == Constants.BASE_VERSION_CHECKER) {
-            return new VersionChecker(utility, uniqueId);
+            return new VersionChecker(utility, uniqueId, this);
         }
 
         return null;
     }
 
-    public static IModalViewer createModalViewer(int type) {
+    public IModalViewer createModalViewer(int type) {
         if (type == Constants.BASE_MODAL_IMAGE_VIEWER) {
             return new ModalImageViewer();
         } else if (type == Constants.BASE_MODAL_VIDEO_VIEWER) {
@@ -161,7 +158,7 @@ public class Factory implements IFactory {
         return null;
     }
 
-    public static ICommandController createCommandController(int type, IUtility utility, IDialogController controller) {
+    public ICommandController createCommandController(int type, IUtility utility, IDialogController controller) {
         if (type == Constants.BASE_COMMAND_CONTROLLER) {
             return new CommandController(utility, controller);
         }
@@ -172,7 +169,7 @@ public class Factory implements IFactory {
     public IMemberPostsThread createMemberPostsThread(int type, String info, String uniqueId, String[] msg,
             ISquare square, IUtility utility) {
         if (type == Constants.BASE_MEMBER_POSTS_THREAD) {
-            return new MemberPostsThread(info, uniqueId, msg, square, utility);
+            return new MemberPostsThread(info, uniqueId, msg, square, utility, this);
         }
 
         return null;

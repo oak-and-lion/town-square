@@ -19,7 +19,7 @@ public class xxUnitTestsIAlert extends xxUnitTestsBaseClass {
         final String METHOD_NAME = "testIAlertPass";
         IUtility utility = Utility.create();
         utility.writeFile(TOWN_SQUARE_LOCK_FILE, "lock");
-        App.execute(new xxMockIAlertBox(), new xxMockISystemExit());
+        App.execute(new xxMockIAlertBox(), new xxMockISystemExit(), new Factory());
         utility.deleteFile(TOWN_SQUARE_LOCK_FILE);
 
         // these files are written by the mock alert box object from the above line

@@ -17,22 +17,22 @@ public class Client implements IClient {
 
     private static final String CLIENT_PREFIX = "Client '";
 
-    public Client(String hostName, int port, String squareId) {
+    public Client(String hostName, int port, String squareId, IFactory factory) {
         this.hostName = hostName;
         this.port = port;
         this.squareId = squareId;
-        createLogger();
+        createLogger(factory);
     }
 
-    public Client(Square square) {
+    public Client(Square square, IFactory factory) {
         port = Integer.valueOf(square.getPort());
         hostName = square.getIP();
         squareId = square.getId();
-        createLogger();
+        createLogger(factory);
     }
 
-    private void createLogger() {
-        logger = Factory.createLogger(Constants.FILE_LOGGER, Constants.CLIENT_LOG_PREFIX + squareId + Constants.LOG_FILE_EXT, Factory.createUtility(Constants.BASE_UTILITY));
+    private void createLogger(IFactory factory) {
+        logger = factory.createLogger(Constants.FILE_LOGGER, Constants.CLIENT_LOG_PREFIX + squareId + Constants.LOG_FILE_EXT, factory.createUtility(Constants.BASE_UTILITY));
     }
 
     public String sendMessage(String text, boolean encrypt) {        

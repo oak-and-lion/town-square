@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CryptoUtils implements ICryptoUtils {
+    private IFactory factory;
+    public CryptoUtils(IFactory factory) {
+        this.factory = factory;
+    }
     public static byte[] getRandomNonce(int numBytes) {
         byte[] nonce = new byte[numBytes];
         new SecureRandom().nextBytes(nonce);
@@ -79,7 +83,7 @@ public class CryptoUtils implements ICryptoUtils {
         if (kpg != null) {
             kpg.initialize(2048);
             KeyPair kp = kpg.generateKeyPair();
-            return Factory.createSquareKeyPair(Constants.KEYS_SQUARE_KEY_PAIR, kp.getPublic(), kp.getPrivate());
+            return factory.createSquareKeyPair(Constants.KEYS_SQUARE_KEY_PAIR, kp.getPublic(), kp.getPrivate());
         }
 
         return null;

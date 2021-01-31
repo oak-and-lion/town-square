@@ -4,10 +4,12 @@ import java.util.Collections;
 public class VersionChecker extends Thread implements IVersionChecker {
     private IUtility utility;
     private String uniqueId;
+    private IFactory factory;
 
-    public VersionChecker(IUtility utility, String uniqueId) {
+    public VersionChecker(IUtility utility, String uniqueId, IFactory factory) {
         this.utility = utility;
         this.uniqueId = uniqueId;
+        this.factory = factory;
     }
 
     @Override
@@ -26,7 +28,7 @@ public class VersionChecker extends Thread implements IVersionChecker {
     }
 
     private DoubleString[] getAllMembers() {
-        ArrayList<DoubleString> members = new ArrayList<DoubleString>();
+        ArrayList<DoubleString> members = new ArrayList<>();
 
         String[] squareFiles = utility.getFiles(Constants.SQUARE_FILE_EXT);
 
@@ -45,7 +47,7 @@ public class VersionChecker extends Thread implements IVersionChecker {
     }
 
     private ArrayList<String> getMembersFromFile(String file) {
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
 
         String[] members = utility.readFile(file).split(Constants.READ_FILE_DATA_SEPARATOR);
 
@@ -57,7 +59,7 @@ public class VersionChecker extends Thread implements IVersionChecker {
     private void checkVersionAgainstMember(String member, String squareInvite) {
         String[] memberInfo = member.split(Constants.DATA_SEPARATOR);
 
-        IClient client = Factory.createClient(Constants.BASE_CLIENT, memberInfo[2], Integer.valueOf(memberInfo[3]),
+        IClient client = factory.createClient(Constants.BASE_CLIENT, memberInfo[2], Integer.valueOf(memberInfo[3]),
                 squareInvite);
 
         String result = client.sendMessage(Constants.CHECK_VERSION_COMMAND, false);
@@ -87,7 +89,7 @@ public class VersionChecker extends Thread implements IVersionChecker {
                 return;
             }
 
-            ISquareKeyPair keys = Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
+            ISquareKeyPair keys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
             keys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
 
             String[] fileData = responseData.getMessage().split(Constants.COMMAND_DATA_SEPARATOR);

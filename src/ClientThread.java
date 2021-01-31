@@ -148,7 +148,7 @@ public class ClientThread extends Thread implements IClientThread {
     private void getMembersFromOtherMembers(String info, String file) {
         if (!info.contains(uniqueId) && !info.startsWith(Constants.STAR)) {
             String[] member = info.split(Constants.DATA_SEPARATOR);
-            IClient client = Factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
+            IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
                     square.getInvite());
             String response = client.sendMessage(Constants.MEMBER_COMMAND + Constants.COMMAND_DATA_SEPARATOR + uniqueId,
                     false);

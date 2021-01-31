@@ -193,4 +193,8 @@ public class Constants {
     public static final String COMMANDS_HEADER = "All Commands start with a '/' (forward slash)";
     public static final String PAUSED_TAB_NOTIFICATION = " (paused)";
     public static final String CLOSING_LOG_MESSAGE = "Closing";
+    public static final int NO_BUTTON = -1;
+    public static final int PRIMARY_BUTTON = 1;
+    public static final int SECONDARY_BUTTON = 2;
+    public static final int EQUALS_VALUE = 0;
 }

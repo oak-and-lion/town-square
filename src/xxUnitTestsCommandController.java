@@ -2,8 +2,11 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
     private static final String WRONG_RESULT_VALUE_MESSAGE = "Wrong result value ";
     private static final String WRONG_RESULT_LENGTH_MESSAGE = "Wrong result length ";
 
+    private IFactory factory;
+
     public xxUnitTestsCommandController(String suiteName) {
         super(suiteName);
+        factory = new Factory();
     }
 
     public void go() {
@@ -22,7 +25,7 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
     @TestMethod
     private void testBlockCommandPass() {
         final String METHOD_NAME = "testBlockCommandPass";
-        ICommandController commandController = Factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
+        ICommandController commandController = factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
 
         boolean result = commandController.blockUser("searchFound", new xxMockSquare());
 
@@ -32,7 +35,7 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
     @TestMethod
     private void testBlockCommandFail() {
         final String METHOD_NAME = "testBlockCommandFail";
-        ICommandController commandController = Factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
+        ICommandController commandController = factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
 
         boolean result = commandController.blockUser("searchNotFound", new xxMockSquare());
 
@@ -42,7 +45,7 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
     @TestMethod
     private void testBlockCommandNullFail() {
         final String METHOD_NAME = "testBlockCommandNullFail";
-        ICommandController commandController = Factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
+        ICommandController commandController = factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
 
         boolean result = commandController.blockUser(null, new xxMockSquare());
 
@@ -52,7 +55,7 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
     @TestMethod
     private void testBlockCommandEmptyFail() {
         final String METHOD_NAME = "testBlockCommandEmptyFail";
-        ICommandController commandController = Factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
+        ICommandController commandController = factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
 
         boolean result = commandController.blockUser("", new xxMockSquare());
 
@@ -63,7 +66,7 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
     private void testProcessCommandInvalidPrefixFail() {
         final String METHOD_NAME = "testProcessCommandInvalidPrefixFail";
         final String INVALID_COMMAND_PREFIX = "-command";
-        ICommandController commandController = Factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
+        ICommandController commandController = factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
 
         Boolean[] result = commandController.processCommand(INVALID_COMMAND_PREFIX, new xxMockSquare());
 
@@ -75,7 +78,7 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
     private void testProcessCommandInvalidCommandFail() {
         final String METHOD_NAME = "testProcessCommandInvalidCommandFail";
         final String INVALID_COMMAND = "/command";
-        ICommandController commandController = Factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
+        ICommandController commandController = factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
 
         Boolean[] result = commandController.processCommand(INVALID_COMMAND, new xxMockSquare());
 
@@ -87,7 +90,7 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
     private void testProcessCommandValidBlockPass() {
         final String METHOD_NAME = "testProcessCommandValidBlockPass";
         final String COMMAND = "/block searchFound";
-        ICommandController commandController = Factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
+        ICommandController commandController = factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
 
         Boolean[] result = commandController.processCommand(COMMAND, new xxMockSquare());
 
@@ -99,7 +102,7 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
     private void testProcessCommandInvalidBlockPass() {
         final String METHOD_NAME = "testProcessCommandInvalidBlockPass";
         final String COMMAND = "/block searchNotFound";
-        ICommandController commandController = Factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
+        ICommandController commandController = factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
 
         Boolean[] result = commandController.processCommand(COMMAND, new xxMockSquare());
 

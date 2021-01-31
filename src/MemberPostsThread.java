@@ -8,15 +8,17 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
     private IUtility utility;
     private boolean workDone;
     private ArrayList<PostMessage> allPosts;
+    private IFactory factory;
 
-    public MemberPostsThread(String info, String uniqueId, String[] msg, ISquare square, IUtility utility) {
+    public MemberPostsThread(String info, String uniqueId, String[] msg, ISquare square, IUtility utility, IFactory factory) {
         this.info = info;
         this.uniqueId = uniqueId;
         this.msg = msg;
         this.square = square;
         this.utility = utility;
         workDone = false;
-        allPosts = new ArrayList<PostMessage>();
+        allPosts = new ArrayList<>();
+        this.factory = factory;
     }
 
     @Override
@@ -36,7 +38,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
     private void getPostsFromOtherMembers() {
         if (!info.contains(uniqueId) && !info.startsWith(Constants.STAR)) {
             String[] member = info.split(Constants.DATA_SEPARATOR);
-            IClient client = Factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
+            IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
                     square.getInvite());
             String response = client.sendMessage(Constants.READ_COMMAND + Constants.COMMAND_DATA_SEPARATOR + msg[0]
                     + Constants.COMMAND_DATA_SEPARATOR + uniqueId, false);
@@ -57,7 +59,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
     }
 
     public void processPostData(String[] responseSplit, String[] member) {
-        ISquareKeyPair tempKeys = Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
+        ISquareKeyPair tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
         tempKeys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
         String[] decryptData = responseSplit[1].split(Constants.COMMAND_DATA_SEPARATOR);
         if (decryptData.length > 1) {
@@ -86,7 +88,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
             return;
         }
 
-        IClient client = Factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
+        IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
                 square.getInvite());
 
         String response = client.sendMessage(Constants.REQUEST_FILE_COMMAND + Constants.COMMAND_DATA_SEPARATOR
@@ -94,7 +96,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
 
         SquareResponse responseData = new SquareResponse(response);
 
-        ISquareKeyPair keys = Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
+        ISquareKeyPair keys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
         keys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
 
         String[] fileData = responseData.getMessage().split(Constants.COMMAND_DATA_SEPARATOR);

@@ -22,15 +22,17 @@ public class App extends Application implements IApp {
     private ILogIt logger;
     private static IAlertBox alert;
     private static ISystemExit systemExit;
+    private static IFactory factory;
 
-    private static void setUpDependencies(IAlertBox alertbox, ISystemExit exit) {
+    private static void setUpDependencies(IAlertBox alertbox, ISystemExit exit, IFactory f) {
         alert = alertbox;
         systemExit = exit;
+        factory = f;
     }
 
     @Override
     public void start(Stage primaryStage) {
-        utility = Factory.createUtility(Constants.BASE_UTILITY);
+        utility = factory.createUtility(Constants.BASE_UTILITY);
         systemExit.setParent(this);
         if (checkCurrentState(alert)) {
             processStart(primaryStage);
@@ -38,7 +40,7 @@ public class App extends Application implements IApp {
     }
 
     private IDialogController processStart(Stage primaryStage) {
-        logger = Factory.createLogger(Constants.FILE_LOGGER, Constants.MAIN_LOG_FILE, utility);
+        logger = factory.createLogger(Constants.FILE_LOGGER, Constants.MAIN_LOG_FILE, utility);
         String uniqueId = Constants.EMPTY_STRING;
         String defaultSquareInfo = Constants.EMPTY_STRING;
         ISquare defaultSquare = null;
@@ -52,11 +54,11 @@ public class App extends Application implements IApp {
         IVersionChecker versionChecker;
         ICommandController commandController;
 
-        ICryptoUtils cryptoUtils = Factory.createCryptoUtils(Constants.BASE_CRYPTO_UTILS);
+        ICryptoUtils cryptoUtils = factory.createCryptoUtils(Constants.BASE_CRYPTO_UTILS);
 
-        keys = Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
+        keys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
 
-        utility = Factory.createUtility(Constants.BASE_UTILITY);
+        utility = factory.createUtility(Constants.BASE_UTILITY);
 
         systemExit.setParent(this);
 
@@ -69,7 +71,7 @@ public class App extends Application implements IApp {
 
             final IDialogController controller = loader.<DialogController>getController();
 
-            commandController = Factory.createCommandController(Constants.BASE_COMMAND_CONTROLLER, utility, controller);
+            commandController = factory.createCommandController(Constants.BASE_COMMAND_CONTROLLER, utility, controller);
 
             primaryStage.setScene(scene);
             primaryStage.setOnCloseRequest(event -> closeApp(Constants.SYSTEM_EXIT_OK, Constants.GRACEFUL_SHUTDOWN));
@@ -129,11 +131,11 @@ public class App extends Application implements IApp {
                     + Constants.CLOSE_PARENS);
             primaryStage.show();
 
-            squareController = Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, controller,
-                    Factory.createLogger(Constants.FILE_LOGGER, Constants.SQUARE_CONTROLLER_LOG_FILE, utility),
-                    Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility));
+            squareController = factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, controller,
+                    factory.createLogger(Constants.FILE_LOGGER, Constants.SQUARE_CONTROLLER_LOG_FILE, utility),
+                    factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility));
 
-            defaultSquare = Factory.createSquare(Constants.BASE_SQUARE, defaultSquareInfo, port, ip, squareController,
+            defaultSquare = factory.createSquare(Constants.BASE_SQUARE, defaultSquareInfo, port, ip, squareController,
                     utility, controller, uniqueId);
 
             ObservableList<IPAddress> ipAddresses = FXCollections.observableArrayList();
@@ -150,7 +152,7 @@ public class App extends Application implements IApp {
 
             controller.processPendingInvites();
 
-            versionChecker = Factory.createVersionChecker(Constants.BASE_VERSION_CHECKER, utility, uniqueId);
+            versionChecker = factory.createVersionChecker(Constants.BASE_VERSION_CHECKER, utility, uniqueId);
             versionChecker.run();
 
             return controller;
@@ -203,8 +205,8 @@ public class App extends Application implements IApp {
 
     private void initializeSquareController(ISquareController squareController, String port) {
         if (squareController != null) {
-            server = Factory.createServer(Constants.BASE_SERVER, Integer.parseInt(port), squareController,
-                    Factory.createLogger(Constants.FILE_LOGGER, Constants.SERVER_LOG_FILE, utility));
+            server = factory.createServer(Constants.BASE_SERVER, Integer.parseInt(port), squareController,
+                    factory.createLogger(Constants.FILE_LOGGER, Constants.SERVER_LOG_FILE, utility));
             server.start();
         }
     }
@@ -335,13 +337,14 @@ public class App extends Application implements IApp {
     }
 
     public static void main(String[] args) {
-        setUpDependencies(Factory.createAlertBox(Constants.BASE_ALERT_BOX),
-                Factory.createSystemExit(Constants.BASE_SYSTEM_EXIT));
+        IFactory factory = new Factory();
+        setUpDependencies(factory.createAlertBox(Constants.BASE_ALERT_BOX),
+                factory.createSystemExit(Constants.BASE_SYSTEM_EXIT), factory);
         launch(args);
     }
 
-    public static void execute(IAlertBox alertbox, ISystemExit systemExit) {
-        setUpDependencies(alertbox, systemExit);
+    public static void execute(IAlertBox alertbox, ISystemExit systemExit, IFactory factory) {
+        setUpDependencies(alertbox, systemExit, factory);
         App app = new App();
         app.start(null);
     }

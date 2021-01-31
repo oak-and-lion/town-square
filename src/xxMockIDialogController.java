@@ -78,4 +78,12 @@ public class xxMockIDialogController implements IDialogController {
     public void updatePauseNotification(ISquare square, boolean paused) {
         // not needed
     }
+
+    public void processImageAction(int buttonClicked, String file) {
+        // not needed
+    }
+
+    public void setFactory(IFactory factory) {
+        // not needed
+    }
 }

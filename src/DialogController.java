@@ -20,10 +20,13 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
@@ -50,6 +53,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     private IModalViewer modalImageViewer;
     private IModalViewer modalVideoViewer;
     private ICommandController commandController;
+    private IFactory factory;
 
     @FXML
     private TextField uniqueId;
@@ -115,7 +119,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     @FXML
     private void joinSquare(ActionEvent event) {
-        ITextDialogBox dialogBox = Factory.creaTextDialogBox(Constants.BASE_TEXT_DIALOG_BOX,
+        ITextDialogBox dialogBox = factory.createTextDialogBox(Constants.BASE_TEXT_DIALOG_BOX,
                 Constants.JOIN_SQUARE_TITLE, Constants.JOIN_SQUARE_HEADER_TEXT, Constants.EMPTY_STRING, this,
                 Constants.INVITATION_DIALOG_WIDTH, Constants.JOIN_TYPE);
         dialogBox.show();
@@ -123,7 +127,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     @FXML
     private void createSquare(ActionEvent event) {
-        ITextDialogBox dialogBox = Factory.creaTextDialogBox(Constants.BASE_TEXT_DIALOG_BOX,
+        ITextDialogBox dialogBox = factory.createTextDialogBox(Constants.BASE_TEXT_DIALOG_BOX,
                 Constants.CREATE_SQUARE_TITLE, Constants.CREATE_SQUARE_HEADER_TEXT, Constants.EMPTY_STRING, this,
                 Constants.INVITATION_DIALOG_WIDTH, Constants.CREATE_TYPE);
         dialogBox.show();
@@ -131,7 +135,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     @FXML
     private void leaveSquare(ActionEvent event) {
-        IAlertBox alertBox = Factory.createAlertBox(Constants.BASE_ALERT_BOX);
+        IAlertBox alertBox = factory.createAlertBox(Constants.BASE_ALERT_BOX);
         IAlert alert = alertBox.createAlert(Constants.LEAVE_SQUARE_TITLE, Constants.LEAVE_SQUARE_HEADER,
                 Constants.LEAVE_SQUARE_CONTENT, AlertType.CONFIRMATION);
         ButtonType bt = alert.getSelectedButton();
@@ -180,13 +184,13 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     }
 
     public void showAbout() {
-        IAlertBox alertBox = Factory.createAlertBox(Constants.BASE_ALERT_BOX);
+        IAlertBox alertBox = factory.createAlertBox(Constants.BASE_ALERT_BOX);
         alertBox.createAlert(Constants.ABOUT_TITLE, Constants.ABOUT_HEADER,
                 Constants.VERSION_TEXT_PREFIX + Constants.VERSION, AlertType.INFORMATION);
     }
 
     public void showList(String[] items, String listTitle, String listHeader) {
-        IAlertBox alertBox = Factory.createAlertBox(Constants.BASE_ALERT_BOX);
+        IAlertBox alertBox = factory.createAlertBox(Constants.BASE_ALERT_BOX);
         alertBox.createAlert(listTitle, listHeader, String.join(Constants.NEWLINE, items), AlertType.INFORMATION);
     }
 
@@ -242,6 +246,10 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     public void setCommandController(ICommandController value) {
         commandController = value;
+    }
+
+    public void setFactory(IFactory value) {
+        factory = value;
     }
 
     public void resizeControls(double width, double height) {
@@ -417,7 +425,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         TextField postsTextField = createTextField(Constants.EMPTY_STRING, Constants.POST_PROMPT_TEXT, true,
                 Constants.POSTS_TEXTFIELD_WIDTH);
 
-        ITownSquareButton postsButton = Factory.createTownSquareButton(Constants.BASE_TOWN_SQUARE_BUTTON,
+        ITownSquareButton postsButton = factory.createTownSquareButton(Constants.BASE_TOWN_SQUARE_BUTTON,
                 Constants.POST_BUTTON_TEXT, square, postsTextField);
         postsButton.setOnAction(event -> {
             ISquare newSquare = postsButton.getSquare();
@@ -571,9 +579,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         // 3 == id of the square being invited to
         // u~207.244.84.59~44123~a7075b5b-b91d-4448-a0f9-d9b0bec1a726
         String[] split = invite.split(Constants.TILDE);
-        IClient client = Factory.createClient(Constants.BASE_CLIENT, split[1], Integer.valueOf(split[2]), split[3]);
+        IClient client = factory.createClient(Constants.BASE_CLIENT, split[1], Integer.valueOf(split[2]), split[3]);
         boolean encrypt = false;
-        ISquareKeyPair tempKeys = Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
+        ISquareKeyPair tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
 
         if (split[0].equals(Constants.ENCRYPTION_FLAG)) {
             encrypt = true;
@@ -621,12 +629,12 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             String info = responseData[3] + Constants.COMMA + client.getSquareId() + Constants.COMMA
                     + Constants.TAB_PREFIX + squareSafeName + Constants.COMMA + Constants.ZERO
                     + Constants.NO_PASSWORD_VALUE;
-            ISquare square = Factory.createSquare(Constants.BASE_SQUARE, info, port.getText(),
+            ISquare square = factory.createSquare(Constants.BASE_SQUARE, info, port.getText(),
                     remoteIP.getValue().getDisplay(),
-                    Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
-                            Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT,
+                    factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
+                            factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT,
                                     utility),
-                            Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
+                            factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
                     utility, this, uniqueId.getText());
             utility.writeFile(squareSafeName + Constants.SQUARE_FILE_EXT, info);
             setTabSquare(square);
@@ -645,11 +653,11 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             }
             String contents = utility.readFile(file);
             setTabSquare(new Square(contents, port.getText(), remoteIP.getValue().getDisplay(),
-                    Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
-                            Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT,
+                    factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
+                            factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT,
                                     utility),
-                            Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
-                    utility, this, uniqueId.getText()));
+                            factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
+                    utility, this, uniqueId.getText(), factory));
         }
     }
 
@@ -657,8 +665,10 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         return new SquareResponse(result);
     }
 
-    public void addPostMessages(ISquare square, VBox messageList, ScrollPane scrollPane, String message, long millis, String memberId) {
-        String[] alreadyBlocked = utility.searchFile(square.getSafeLowerName() + Constants.BLOCK_FILE_EXT, memberId, Constants.SEARCH_STARTS_WITH);
+    public void addPostMessages(ISquare square, VBox messageList, ScrollPane scrollPane, String message, long millis,
+            String memberId) {
+        String[] alreadyBlocked = utility.searchFile(square.getSafeLowerName() + Constants.BLOCK_FILE_EXT, memberId,
+                Constants.SEARCH_STARTS_WITH);
         if (alreadyBlocked.length > 0) {
             return;
         }
@@ -675,7 +685,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         knownPostMessages.add(millis);
 
         if (message.contains(Constants.IMAGE_MARKER)) {
-            buildImageMessage(message, messageList);
+            buildImageMessage(message, messageList, millis);
         } else if (message.contains(Constants.VIDEO_MARKER)) {
             buildVideoMessage(message, messageList);
         } else {
@@ -723,7 +733,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         postMessageWorkers.add(new MessageWorker(label, scrollPane, labelInfo));
     }
 
-    private void buildImageMessage(String message, VBox messageList) {
+    private void buildImageMessage(String message, VBox messageList, long millis) {
         HBox hbox = createHBox(10, 0, 0, 0);
         int index = message.indexOf(Constants.END_SQUARE_BRACKET) + Constants.END_SQUARE_BRACKET.length();
         String file = message.substring(index, message.length());
@@ -738,18 +748,38 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             imageView.setOnMouseClicked(new EventHandler<Event>() {
                 @Override
                 public void handle(Event event) {
-                    if (modalImageViewer == null) {
-                        modalImageViewer = Factory.createModalViewer(Constants.BASE_MODAL_IMAGE_VIEWER);
+                    MouseEvent me = (MouseEvent) event;
+                    if (me == null) {
+                        return;
                     }
-                    modalImageViewer.show(file);
+                    int button = Constants.NO_BUTTON;
+                    MouseButton mb = me.getButton();
+                    
+                    if (mb.compareTo(MouseButton.PRIMARY) == Constants.EQUALS_VALUE) {
+                        button = Constants.PRIMARY_BUTTON;
+                    } else if (mb.compareTo(MouseButton.SECONDARY) == Constants.EQUALS_VALUE) {
+                        button = Constants.SECONDARY_BUTTON;
+                    }
+
+                    processImageAction(button, file);
                 }
             });
             index = message.indexOf(Constants.COLON + Constants.SPACE);
             Label label = createLabel(message.substring(0, index), 25, 0, 0, 0);
+            Tooltip.install(label, new Tooltip(Long.toString(millis)));
             hbox.getChildren().addAll(label, imageView);
             messageList.getChildren().addAll(hbox);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void processImageAction(int buttonClicked, String file) {
+        if (buttonClicked == Constants.PRIMARY_BUTTON) {
+            if (modalImageViewer == null) {
+                modalImageViewer = factory.createModalViewer(Constants.BASE_MODAL_IMAGE_VIEWER);
+            }
+            modalImageViewer.show(file);
         }
     }
 
@@ -770,7 +800,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             @Override
             public void handle(Event event) {
                 if (modalVideoViewer == null) {
-                    modalVideoViewer = Factory.createModalViewer(Constants.BASE_MODAL_VIDEO_VIEWER);
+                    modalVideoViewer = factory.createModalViewer(Constants.BASE_MODAL_VIDEO_VIEWER);
                 }
                 modalVideoViewer.show(file);
             }
@@ -805,11 +835,11 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                 + Constants.COMMA + Constants.ZERO + Constants.NO_PASSWORD_VALUE;
         utility.writeFile(safeName + Constants.SQUARE_FILE_EXT, contents);
         setTabSquare(new Square(contents, port.getText(), remoteIP.getValue().getDisplay(),
-                Factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
-                        Factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT,
+                factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
+                        factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT,
                                 utility),
-                        Factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
-                utility, this, uniqueId.getText()));
+                        factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
+                utility, this, uniqueId.getText(), factory));
     }
 
     public void processPendingInvites() {

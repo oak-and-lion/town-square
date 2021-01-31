@@ -4,7 +4,8 @@ public class ClientCmdTest {
         // setup
         //=========================================
 
-        IUtility utility = Factory.createUtility(1);
+        IFactory factory = new Factory();
+        IUtility utility = factory.createUtility(1);
 
         //String hostname = "192.168.1.159";
         int port = 44123;
@@ -12,7 +13,7 @@ public class ClientCmdTest {
         String uniqueId = utility.readFile(Constants.UNIQUE_ID_FILE);
         String defaultSquareInfo = utility.readFile(Constants.DEFAULT_SQUARE_FILE);
         
-        ILogIt logger = Factory.createLogger(1, "clientCmdTest.log", utility);       
+        ILogIt logger = factory.createLogger(1, "clientCmdTest.log", utility);       
         
         String text = "u%%%a7075b5b-b91d-4448-a0f9-d9b0bec1a726%%%regalias%%%lightning-server~_~192.168.1.153~_~11111~_~e6c2b645-2c14-420c-a027-17eaa0fba0a6";
 
@@ -20,9 +21,9 @@ public class ClientCmdTest {
 
         ISquareKeyPair keyPair = new xxMockISquareKeyPair(utility);
 
-        ISquareController squareController = Factory.createSquareController(1, utility, dController, logger, keyPair);
+        ISquareController squareController = factory.createSquareController(1, utility, dController, logger, keyPair);
 
-        Factory.createSquare(1, defaultSquareInfo, Integer.toString(port), ip, squareController, utility, dController, uniqueId);
+        factory.createSquare(1, defaultSquareInfo, Integer.toString(port), ip, squareController, utility, dController, uniqueId);
 
         // ===============================================================
 
