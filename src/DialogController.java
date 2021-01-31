@@ -657,7 +657,11 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         return new SquareResponse(result);
     }
 
-    public void addPostMessages(VBox messageList, ScrollPane scrollPane, String message, long millis) {
+    public void addPostMessages(ISquare square, VBox messageList, ScrollPane scrollPane, String message, long millis, String memberId) {
+        String[] alreadyBlocked = utility.searchFile(square.getSafeLowerName() + Constants.BLOCK_FILE_EXT, memberId, Constants.SEARCH_STARTS_WITH);
+        if (alreadyBlocked.length > 0) {
+            return;
+        }
         if (knownPostMessages == null) {
             knownPostMessages = new ArrayList<>();
         }

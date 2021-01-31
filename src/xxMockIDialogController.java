@@ -22,7 +22,7 @@ public class xxMockIDialogController implements IDialogController {
     public void setParent(IApp app){
         // not needed 
     }
-    public void addPostMessages(VBox vbox, ScrollPane scrollPane, String message, long millis){
+    public void addPostMessages(ISquare square, VBox vbox, ScrollPane scrollPane, String message, long millis, String memberId){
         // not needed 
     }
     public void setUtilityController(IUtility utility){

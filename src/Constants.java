@@ -172,6 +172,7 @@ public class Constants {
     public static final String LEAVE_FILE_EXT = ".leave";
     public static final String LEAVE_FILE_CONTENTS = "leave";
     public static final String COMMAND_PREFIX = "/";
+    public static final String UNBLOCK_COMMAND = "unblock";
     public static final String BLOCK_COMMAND = "block";
     public static final String BLOCK_FILE_EXT = ".block";
     public static final String ABOUT_COMMAND = "about";

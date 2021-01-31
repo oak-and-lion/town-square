@@ -72,7 +72,7 @@ public class ClientThread extends Thread implements IClientThread {
                     getMembersFromOtherMembers(info, memberFile);
                 }
 
-                ArrayList<IMemberPostsThread> memberThreads = new ArrayList<IMemberPostsThread>();
+                ArrayList<IMemberPostsThread> memberThreads = new ArrayList<>();
                 boolean threadsDone = false;
                 for (String info : members) {
                     // spin up new thread for each member and process ASAP
@@ -122,7 +122,7 @@ public class ClientThread extends Thread implements IClientThread {
                 .split(Constants.READ_FILE_DATA_SEPARATOR);
 
         String[] members = memberRaw.split(Constants.COMMAND_DATA_SEPARATOR);
-        ArrayList<String> memberWork = new ArrayList<String>();
+        ArrayList<String> memberWork = new ArrayList<>();
         memberWork.addAll(Arrays.asList(members));
         for (String info : members) {
             String[] member = info.split(Constants.DATA_SEPARATOR);
@@ -223,8 +223,8 @@ public class ClientThread extends Thread implements IClientThread {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        square.getSampleController().addPostMessages(vbox, scrollPane, message,
-                                Long.parseLong(post[0]));
+                        square.getSampleController().addPostMessages(square, vbox, scrollPane, message,
+                                Long.parseLong(post[0]), memberName[4]);
                     }
                 });
             }
