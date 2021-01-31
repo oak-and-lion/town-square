@@ -199,4 +199,5 @@ public class Constants {
     public static final int EQUALS_VALUE = 0;
     public static final String BLOCKED_IMAGE_FILE = "blocked-image.png";
     public static final String BLOCKED_VIDEO_FILE = "blocked-video.mp4";
+    public static final String CSS_STYLE_HAND = "-fx-cursor: hand;";
 }

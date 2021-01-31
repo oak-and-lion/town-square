@@ -825,7 +825,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         mediaView.setUserData(millis);
         mediaView.setFitHeight(Constants.IMAGE_SMALL_FIT_HEIGHT);
         mediaView.setFitWidth(Constants.IMAGE_SMALL_FIT_WIDTH);
-        mediaView.setStyle("-fx-cursor: hand;");
+        mediaView.setStyle(Constants.CSS_STYLE_HAND);
         mediaView.setOnMouseClicked(new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
