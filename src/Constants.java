@@ -75,7 +75,7 @@ public class Constants {
     public static final String JOIN_SQUARE_TITLE = "Join Square";
     public static final String JOIN_SQUARE_HEADER_TEXT = "Paste the Invitation";
     public static final String CREATE_SQUARE_TITLE = "Create Square";
-    public static final String CREATE_SQUARE_HEADER_TEXT = "Name your new Square."; //\nPrefix with {readonly} if you want to prevent others from posting.\n\nExample: {readonly}News Updates";
+    public static final String CREATE_SQUARE_HEADER_TEXT = "Name your new Square.";
     public static final String POST_PROMPT_TEXT = "Type your message";
     public static final String JOIN_COMMAND = "join";
     public static final String MEMBER_COMMAND = "members";
@@ -91,7 +91,7 @@ public class Constants {
     public static final String FILE_DATA_SEPARATOR = "~_~";
     public static final String USER_DIR = "user.dir";
     public static final String PATH_DELIMITER = "/";
-    public static final String REMOTE_IP_URL = "https://childsheartyoga.com/api.aspx?pf=ip"; //"https://checkip.amazonaws.com/";
+    public static final String REMOTE_IP_URL = "https://childsheartyoga.com/api.aspx?pf=ip"; //"https://checkip.amazonaws.com/"
     public static final int NOT_FOUND_ROW = -1;
     public static final String ALGORITHM = "AES";
     public static final String TRANSFORMATION = "AES/ECB/PKCS5Padding";
@@ -191,4 +191,5 @@ public class Constants {
     public static final String VERSION_TEXT_PREFIX = "Version: ";
     public static final String COMMANDS_HEADER = "All Commands start with a '/' (forward slash)";
     public static final String PAUSED_TAB_NOTIFICATION = " (paused)";
+    public static final String CLOSING_LOG_MESSAGE = "Closing";
 }

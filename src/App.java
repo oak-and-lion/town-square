@@ -19,6 +19,7 @@ public class App extends Application implements IApp {
     private IServer server;
     private String defaultName;
     private ISquareKeyPair keys;
+    private ILogIt logger;
     private static IAlertBox alert;
     private static ISystemExit systemExit;
 
@@ -37,7 +38,7 @@ public class App extends Application implements IApp {
     }
 
     private IDialogController processStart(Stage primaryStage) {
-        ILogIt logger = Factory.createLogger(Constants.FILE_LOGGER, Constants.MAIN_LOG_FILE, utility);
+        logger = Factory.createLogger(Constants.FILE_LOGGER, Constants.MAIN_LOG_FILE, utility);
         String uniqueId = Constants.EMPTY_STRING;
         String defaultSquareInfo = Constants.EMPTY_STRING;
         ISquare defaultSquare = null;
@@ -71,11 +72,7 @@ public class App extends Application implements IApp {
             commandController = Factory.createCommandController(Constants.BASE_COMMAND_CONTROLLER, utility, controller);
 
             primaryStage.setScene(scene);
-            primaryStage.setOnCloseRequest(event -> {
-                logger.logInfo("Closing");
-                close(Constants.SYSTEM_EXIT_OK);
-                systemExit.handleExit(Constants.GRACEFUL_SHUTDOWN);
-            });
+            primaryStage.setOnCloseRequest(event -> closeApp(Constants.SYSTEM_EXIT_OK, Constants.GRACEFUL_SHUTDOWN));
 
             cleanup();
 
@@ -124,7 +121,6 @@ public class App extends Application implements IApp {
                 @Override
                 public void handle(WindowEvent window) {
                     Stage stage = (Stage) window.getSource();
-                    System.out.println(stage.getWidth() + " " + stage.getHeight());
                     setResizeListeners(stage, controller);
                 }
             });
@@ -214,7 +210,8 @@ public class App extends Application implements IApp {
     }
 
     private void initializeController(IDialogController controller, String uniqueId, String port, String ip,
-            ObservableList<IPAddress> ipAddresses, String alias, ISquare defaultSquare, ICommandController commandController) {
+            ObservableList<IPAddress> ipAddresses, String alias, ISquare defaultSquare,
+            ICommandController commandController) {
         controller.setUtilityController(utility);
         controller.setParent(this);
         controller.setUniqueId(uniqueId);
@@ -271,6 +268,12 @@ public class App extends Application implements IApp {
         }
     }
 
+    public void closeApp(int exitCode, int shutdownCode) {
+        logger.logInfo(Constants.CLOSING_LOG_MESSAGE);
+        close(exitCode);
+        systemExit.handleExit(shutdownCode);
+    }
+
     private void cleanup() {
         utility.deleteFiles(Constants.LOG_FILE_EXT);
     }
@@ -290,7 +293,7 @@ public class App extends Application implements IApp {
         String[] files = utility.getFiles(Constants.MEMBERS_FILE_EXT);
 
         for (String file : files) {
-            ArrayList<String> newLines = new ArrayList<String>();
+            ArrayList<String> newLines = new ArrayList<>();
             String[] lines = utility.readFile(file).split(Constants.READ_FILE_DATA_SEPARATOR);
             for (String line : lines) {
                 if (line.contains(oldIp) && line.contains(uniqueId)) {

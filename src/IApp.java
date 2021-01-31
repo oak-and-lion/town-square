@@ -7,4 +7,5 @@ public interface IApp {
     String getPublicKeyBase64();
     void sendAlias(String alias);
     void sendIP(String ip, String oldIp, String uniqueId);
+    void closeApp(int exitCode, int shutdownCode);
 }

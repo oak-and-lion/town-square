@@ -18,7 +18,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem fx:id="mnuFileClose" mnemonicParsing="false" text="Close" />
+              <MenuItem fx:id="mnuFileClose" mnemonicParsing="false" text="Close" onAction="#handleClose" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Town Square">
