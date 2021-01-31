@@ -214,7 +214,9 @@ public class App extends Application implements IApp {
     private void initializeController(IDialogController controller, String uniqueId, String port, String ip,
             ObservableList<IPAddress> ipAddresses, String alias, ISquare defaultSquare,
             ICommandController commandController) {
+        controller.setFactory(factory);
         controller.setUtilityController(utility);
+        controller.setCommandController(commandController);
         controller.setParent(this);
         controller.setUniqueId(uniqueId);
         controller.setDefaultName(defaultName);
@@ -225,7 +227,6 @@ public class App extends Application implements IApp {
         controller.setPublicKey(keys.getPublicKeyBase64());
         controller.buildSquares();
         controller.setAlias(alias);
-        controller.setCommandController(commandController);
     }
 
     private String getAlias(String ip) {
