@@ -21,6 +21,7 @@ build.xml
 *.pause
 sample2.fxml
 iron-maiden.jpg
+iron-maiden-copy.jpg
 iron-maiden-2.jpg
 anakin.jpg
 IMG_20151212_0002.jpg
@@ -35,6 +36,7 @@ jdk-11.0.9/
 test/
 openjdk-11.0.2_osx-x64_bin.tar.gz
 jdk-11.0.2.jdk/
-*.mp4
+bnb-peter-gabriel.mp4
+bnb-peter-gabriel-copy.mp4
 *.leave
 20201208_201913.jpg
