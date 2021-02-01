@@ -786,24 +786,28 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             }
             modalImageViewer.show(file);
         } else if (buttonClicked == Constants.SECONDARY_BUTTON) {
-            IAlertBox alertBox = factory.createAlertBox(Constants.BASE_ALERT_BOX);
-            IAlert alert = alertBox.createAlert("Block this image?", "Do you want to block this image?", "",
-                    AlertType.CONFIRMATION);
-            ButtonType bt = alert.getSelectedButton();
-            if (bt.equals(ButtonType.OK)) {
-                byte[] data = utility.readBinaryFile(Constants.BLOCKED_IMAGE_FILE);
-                utility.writeBinaryFile(file, data);
-                for (ImageView image : images) {
-                    Long l = (Long) image.getUserData();
-                    if (l != null && l.equals(millis)) {
-                        try (InputStream stream = new FileInputStream(file)) {
-                            Image i = new Image(stream);
-                            image.setImage(i);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        return;
+            blockImage(file, millis);
+        }
+    }
+
+    private void blockImage(String file, long millis) {
+        IAlertBox alertBox = factory.createAlertBox(Constants.BASE_ALERT_BOX);
+        IAlert alert = alertBox.createAlert("Block this image?", "Do you want to block this image?", "",
+                AlertType.CONFIRMATION);
+        ButtonType bt = alert.getSelectedButton();
+        if (bt.equals(ButtonType.OK)) {
+            byte[] data = utility.readBinaryFile(Constants.BLOCKED_IMAGE_FILE);
+            utility.writeBinaryFile(file, data);
+            for (ImageView image : images) {
+                Long l = (Long) image.getUserData();
+                if (l != null && l.equals(millis)) {
+                    try (InputStream stream = new FileInputStream(file)) {
+                        Image i = new Image(stream);
+                        image.setImage(i);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+                    return;
                 }
             }
         }
