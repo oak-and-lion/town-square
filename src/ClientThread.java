@@ -16,6 +16,7 @@ public class ClientThread extends Thread implements IClientThread {
     private PostMessageList posts;
     private IFactory factory;
     private int waitTime;
+    private int maxRuns;
 
     public ClientThread(ISquare s, IUtility utility, String uniqueId, IFactory factory) {
         squareName = s.getName();
@@ -27,6 +28,7 @@ public class ClientThread extends Thread implements IClientThread {
         this.uniqueId = uniqueId;
         posts = new PostMessageList();
         this.factory = factory;
+        this.maxRuns = -1;
         getWaitTime();
     }
 
@@ -46,6 +48,11 @@ public class ClientThread extends Thread implements IClientThread {
         return squareName;
     }
 
+    public void run(int maxRuns) {
+        this.maxRuns = maxRuns;
+        run();
+    }
+
     @Override
     public void run() {
         try {
@@ -53,6 +60,7 @@ public class ClientThread extends Thread implements IClientThread {
             String memberFile = square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT;
             String memberAliasFile = square.getSafeLowerName() + Constants.ALIAS_FILE_EXT;
             String raw;
+            int count = 0;
             while (process) {
                 if (utility.checkFileExists(square.getSafeLowerName() + Constants.PAUSE_FILE_EXT)) {
                     Thread.sleep(Constants.PAUSE_WAIT_TIME);
@@ -70,13 +78,17 @@ public class ClientThread extends Thread implements IClientThread {
 
                 for (String info : members) {
                     getMembersFromOtherMembers(info, memberFile);
+                    getAliasesFromOtherMembers(info, memberAliasFile);
                 }
+
+                members = getAllMembers(memberFile, memberAliasFile);
 
                 ArrayList<IMemberPostsThread> memberThreads = new ArrayList<>();
                 boolean threadsDone = false;
                 for (String info : members) {
                     // spin up new thread for each member and process ASAP
-                    IMemberPostsThread thread = factory.createMemberPostsThread(Constants.BASE_MEMBER_POSTS_THREAD, info, uniqueId, msg, square, utility);
+                    IMemberPostsThread thread = factory.createMemberPostsThread(Constants.BASE_MEMBER_POSTS_THREAD,
+                            info, uniqueId, msg, square, utility);
                     memberThreads.add(thread);
                     thread.start();
                 }
@@ -90,6 +102,13 @@ public class ClientThread extends Thread implements IClientThread {
                 updatePosts(file);
 
                 Thread.sleep(waitTime);
+
+                count++;
+                if (maxRuns == -1) {
+                    count = -2;
+                } else if (count >= maxRuns) {
+                    process = false;
+                }
             }
         } catch (InterruptedException ie) {
             ie.printStackTrace();
@@ -131,13 +150,12 @@ public class ClientThread extends Thread implements IClientThread {
                     continue;
                 }
                 String[] aliasSplit = alias.split(Constants.QUESTION_MARK_SPLIT);
-                String[] aliasInfo = aliasSplit[0].split(Constants.COLON);
-                if (info.contains(aliasInfo[1])) {
+                if (info.endsWith(aliasSplit[0])) {
                     String[] aliases = aliasSplit[1].split(Constants.FORWARD_SLASH);
                     for (String a : aliases) {
                         String[] a1 = a.split(Constants.COLON);
                         memberWork.add(member[0] + Constants.DATA_SEPARATOR + member[1] + Constants.DATA_SEPARATOR
-                                + a1[0] + Constants.DATA_SEPARATOR + a1[1] + Constants.DATA_SEPARATOR + aliasInfo[1]);
+                                + a1[0] + Constants.DATA_SEPARATOR + a1[1] + Constants.DATA_SEPARATOR + aliasSplit[0]);
                     }
                 }
             }
@@ -149,11 +167,24 @@ public class ClientThread extends Thread implements IClientThread {
         if (!info.contains(uniqueId) && !info.startsWith(Constants.STAR)) {
             String[] member = info.split(Constants.DATA_SEPARATOR);
             IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
-                    square.getInvite());
+                square.getInvite());
             String response = client.sendMessage(Constants.MEMBER_COMMAND + Constants.COMMAND_DATA_SEPARATOR + uniqueId,
-                    false);
+                false);
             if (!response.equals(Constants.EMPTY_STRING)) {
                 findNewMembers(response, file);
+            }
+        }
+    }
+
+    private void getAliasesFromOtherMembers(String info, String file) {
+        if (!info.contains(uniqueId) && !info.startsWith(Constants.STAR)) {
+            String[] member = info.split(Constants.DATA_SEPARATOR);
+            IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
+                square.getInvite());
+            String response = client.sendMessage(Constants.READ_ALIAS_COMMAND + Constants.COMMAND_DATA_SEPARATOR + uniqueId,
+                false);
+            if (!response.equals(Constants.EMPTY_STRING)) {
+                //
             }
         }
     }
@@ -189,12 +220,12 @@ public class ClientThread extends Thread implements IClientThread {
             if (count > 0) {
                 result.append(Constants.NEWLINE);
             }
-            if (!cm[4].equals(memberId)) {                
-                result.append(currentMember);                
+            if (!cm[4].equals(memberId)) {
+                result.append(currentMember);
             } else {
-                result.append(Constants.STAR + cm[0] + Constants.FILE_DATA_SEPARATOR + Constants.NULL_TEXT +
-                                Constants.FILE_DATA_SEPARATOR + Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR +
-                                Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR + cm[4]);
+                result.append(Constants.STAR + cm[0] + Constants.FILE_DATA_SEPARATOR + Constants.NULL_TEXT
+                        + Constants.FILE_DATA_SEPARATOR + Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR
+                        + Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR + cm[4]);
             }
             count++;
         }

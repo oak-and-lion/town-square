@@ -19,7 +19,7 @@ public class xxMockSquare implements ISquare {
         return null;
     }
     public String getName(){
-        return "Mock Square";
+        return "My Square";
     }
     public String getId(){
         return "123";
@@ -59,5 +59,8 @@ public class xxMockSquare implements ISquare {
     }
     public Tab getTab() {
         return null;
+    }
+    public void runClientFunctions(int maxRuns) {
+        // not needed
     }
 }

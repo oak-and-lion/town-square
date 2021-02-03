@@ -287,6 +287,22 @@ public class SquareController implements ISquareController {
             return Constants.EMPTY_STRING;
         }
 
+        if (split[3].trim().toLowerCase().endsWith(Constants.KEY_FILE_EXT)) {
+            return Constants.GO_AWAY;
+        }
+
+        if (split[3].trim().toLowerCase().endsWith(Constants.BLOCK_FILE_EXT)) {
+            return Constants.GO_AWAY;
+        }
+
+        if (split[3].trim().toLowerCase().endsWith(Constants.ALIAS_FILE_EXT)) {
+            return Constants.GO_AWAY;
+        }
+
+        if (split[3].trim().toLowerCase().endsWith(Constants.MEMBERS_FILE_EXT)) {
+            return Constants.GO_AWAY;
+        }
+
         String result = Constants.EMPTY_STRING;
         String memberFile = square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT;
 
@@ -389,13 +405,13 @@ public class SquareController implements ISquareController {
     }
 
     private String processAlias(String[] info, ArrayList<String> memberAliases, String file) {
-        String alias = info[0] + Constants.COLON + info[3] + Constants.QUESTION_MARK + info[1] + Constants.COLON
+        String alias = info[3] + Constants.QUESTION_MARK + info[1] + Constants.COLON
                 + info[2];
 
         boolean found = false;
         int count = 0;
         for (String memberAlias : memberAliases) {
-            if (memberAlias.startsWith(info[0] + Constants.COLON + info[3])) {
+            if (memberAlias.startsWith(info[3])) {
                 memberAlias += Constants.FORWARD_SLASH + info[1] + Constants.COLON + info[2];
                 memberAliases.set(count, memberAlias);
                 found = true;

@@ -77,6 +77,10 @@ public class Square implements ISquare {
         }
     }
 
+    public void runClientFunctions(int maxRuns) {
+        clientThread.run(maxRuns);
+    }
+
     public String toString() {
         String isPrivate = "0";
         if (this.isPrivate()) {

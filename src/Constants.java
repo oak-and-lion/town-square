@@ -198,4 +198,6 @@ public class Constants {
     public static final int SECONDARY_BUTTON = 2;
     public static final int EQUALS_VALUE = 0;
     public static final String BLOCKED_IMAGE_FILE = "blocked-image.png";
+    public static final String GO_AWAY = "go away";
+    public static final String KEY_FILE_EXT = ".key";
 }

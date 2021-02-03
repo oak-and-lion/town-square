@@ -22,4 +22,5 @@ public interface ISquare {
     void addPostMessage(PostMessage message);
     void setTab(Tab tab);
     Tab getTab();
+    void runClientFunctions(int maxRuns);
 }
