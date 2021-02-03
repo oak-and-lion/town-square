@@ -363,7 +363,14 @@ public class SquareController implements ISquareController {
         String memberId = split[3];
 
         if (checkSquareAccess(square, memberId)) {
-            return utility.readFile(square.getSafeLowerName() + Constants.ALIAS_FILE_EXT);
+            String[] member = utility.searchFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT, memberId, Constants.SEARCH_CONTAINS);
+            String[] memberInfo = member[0].split(Constants.FILE_DATA_SEPARATOR);
+            ISquareKeyPair tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
+            tempKeys.setPublicKeyFromBase64(memberInfo[1]);
+            String password = utility.generateRandomString(16);
+            StringBuilder temp = new StringBuilder();
+            temp.append(utility.encrypt(utility.readFile(square.getSafeLowerName() + Constants.ALIAS_FILE_EXT), password));
+            return tempKeys.encryptToBase64(password) + Constants.COMMAND_DATA_SEPARATOR + temp.toString();
         }
 
         return Constants.EMPTY_STRING;
