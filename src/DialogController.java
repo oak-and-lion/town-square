@@ -50,6 +50,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     private ArrayList<MessageWorker> postMessageWorkers;
     private ArrayList<Long> knownPostMessages;
     private ArrayList<ImageView> images;
+    private ArrayList<MediaView> videos;
     private IModalViewer modalImageViewer;
     private IModalViewer modalVideoViewer;
     private ICommandController commandController;
@@ -687,7 +688,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         if (message.contains(Constants.IMAGE_MARKER)) {
             buildImageMessage(message, messageList, millis);
         } else if (message.contains(Constants.VIDEO_MARKER)) {
-            buildVideoMessage(message, messageList);
+            buildVideoMessage(message, messageList, millis);
         } else {
             buildTextMessage(message, messageList, scrollPane);
         }
@@ -785,6 +786,16 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             }
             modalImageViewer.show(file);
         } else if (buttonClicked == Constants.SECONDARY_BUTTON) {
+            blockImage(file, millis);
+        }
+    }
+
+    private void blockImage(String file, long millis) {
+        IAlertBox alertBox = factory.createAlertBox(Constants.BASE_ALERT_BOX);
+        IAlert alert = alertBox.createAlert("Block this image?", "Do you want to block this image?", "",
+                AlertType.CONFIRMATION);
+        ButtonType bt = alert.getSelectedButton();
+        if (bt.equals(ButtonType.OK)) {
             byte[] data = utility.readBinaryFile(Constants.BLOCKED_IMAGE_FILE);
             utility.writeBinaryFile(file, data);
             for (ImageView image : images) {
@@ -802,32 +813,80 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         }
     }
 
-    private void buildVideoMessage(String message, VBox messageList) {
+    private void buildVideoMessage(String message, VBox messageList, long millis) {
         HBox hbox = createHBox(10, 0, 0, 0);
         int index = message.indexOf(Constants.END_SQUARE_BRACKET) + Constants.END_SQUARE_BRACKET.length();
         String file = message.substring(index, message.length());
+        if (!utility.checkFileExists(file)) {
+            return;
+        }
         String f = new File(file).toURI().toString();
         Media media = new Media(f);
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setVolume(0.0);
         mediaPlayer.setAutoPlay(true);
         MediaView mediaView = new MediaView(mediaPlayer);
+        mediaView.setUserData(millis);
         mediaView.setFitHeight(Constants.IMAGE_SMALL_FIT_HEIGHT);
         mediaView.setFitWidth(Constants.IMAGE_SMALL_FIT_WIDTH);
-        mediaView.setStyle("-fx-cursor: hand;");
+        mediaView.setStyle(Constants.CSS_STYLE_HAND);
         mediaView.setOnMouseClicked(new EventHandler<Event>() {
             @Override
             public void handle(Event event) {
-                if (modalVideoViewer == null) {
-                    modalVideoViewer = factory.createModalViewer(Constants.BASE_MODAL_VIDEO_VIEWER);
+                MouseEvent me = (MouseEvent) event;
+                if (me == null) {
+                    return;
                 }
-                modalVideoViewer.show(file);
+                int button = Constants.NO_BUTTON;
+                MouseButton mb = me.getButton();
+
+                if (mb.compareTo(MouseButton.PRIMARY) == Constants.EQUALS_VALUE) {
+                    button = Constants.PRIMARY_BUTTON;
+                } else if (mb.compareTo(MouseButton.SECONDARY) == Constants.EQUALS_VALUE) {
+                    button = Constants.SECONDARY_BUTTON;
+                }
+
+                processVideoAction(file, button, millis);
             }
         });
+        if (videos == null) {
+            videos = new ArrayList<>();
+        }
+        videos.add(mediaView);
         index = message.indexOf(Constants.COLON + Constants.SPACE);
         Label label = createLabel(message.substring(0, index), 25, 0, 0, 0);
         hbox.getChildren().addAll(label, mediaView);
         messageList.getChildren().addAll(hbox);
+    }
+
+    private void processVideoAction(String file, int buttonClicked, long millis) {
+        if (buttonClicked == Constants.PRIMARY_BUTTON) {
+            if (modalVideoViewer == null) {
+                modalVideoViewer = factory.createModalViewer(Constants.BASE_MODAL_VIDEO_VIEWER);
+            }
+            modalVideoViewer.show(file);
+        } else if (buttonClicked == Constants.SECONDARY_BUTTON) {
+            IAlertBox alertBox = factory.createAlertBox(Constants.BASE_ALERT_BOX);
+            IAlert alert = alertBox.createAlert("Block this video?", "Do you want to block this video?", "",
+                    AlertType.CONFIRMATION);
+            ButtonType bt = alert.getSelectedButton();
+            if (bt.equals(ButtonType.OK)) {
+                byte[] data = utility.readBinaryFile(Constants.BLOCKED_VIDEO_FILE);
+                utility.writeBinaryFile(file, data);
+                for (MediaView video : videos) {
+                    Long l = (Long) video.getUserData();
+                    if (l != null && l.equals(millis)) {
+                        String f = new File(file).toURI().toString();
+                        Media media = new Media(f);
+                        MediaPlayer mediaPlayer = new MediaPlayer(media);
+                        mediaPlayer.setVolume(0.0);
+                        mediaPlayer.setAutoPlay(true);
+                        video.setMediaPlayer(mediaPlayer);
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     private void setTextMaxWidth(Text text, ScrollPane scrollPane, double other) {

@@ -200,4 +200,6 @@ public class Constants {
     public static final String BLOCKED_IMAGE_FILE = "blocked-image.png";
     public static final String GO_AWAY = "go away";
     public static final String KEY_FILE_EXT = ".key";
+    public static final String BLOCKED_VIDEO_FILE = "blocked-video.mp4";
+    public static final String CSS_STYLE_HAND = "-fx-cursor: hand;";
 }
