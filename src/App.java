@@ -23,6 +23,9 @@ public class App extends Application implements IApp {
     private static IAlertBox alert;
     private static ISystemExit systemExit;
     private static IFactory factory;
+    private boolean hidingServer;
+    private String stageTitle;
+    private Stage theStage;
 
     private static void setUpDependencies(IAlertBox alertbox, ISystemExit exit, IFactory f) {
         alert = alertbox;
@@ -40,6 +43,7 @@ public class App extends Application implements IApp {
     }
 
     private IDialogController processStart(Stage primaryStage) {
+        this.theStage = primaryStage;
         logger = factory.createLogger(Constants.FILE_LOGGER, Constants.MAIN_LOG_FILE, utility);
         String uniqueId = Constants.EMPTY_STRING;
         String defaultSquareInfo = Constants.EMPTY_STRING;
@@ -49,6 +53,7 @@ public class App extends Application implements IApp {
         String alias = Constants.EMPTY_STRING;
         String remoteIP = utility.getRemoteIP(logger);
         defaultName = Constants.DEFAULT_USER_NAME;
+        hidingServer = false;
 
         ISquareController squareController = null;
         IVersionChecker versionChecker;
@@ -128,8 +133,10 @@ public class App extends Application implements IApp {
                 }
             });
 
-            primaryStage.setTitle(Constants.APP_TITLE + Constants.SPACE + Constants.OPEN_PARENS + defaultName
-                    + Constants.CLOSE_PARENS);
+            stageTitle = Constants.APP_TITLE + Constants.SPACE + Constants.OPEN_PARENS + defaultName
+                    + Constants.CLOSE_PARENS;
+
+            primaryStage.setTitle(stageTitle);
             primaryStage.show();
 
             squareController = factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, controller,
@@ -320,9 +327,26 @@ public class App extends Application implements IApp {
         return keys.getPublicKeyBase64();
     }
 
+    public void hideServer() {
+        hidingServer = true;
+        this.theStage.setTitle(stageTitle + Constants.SERVER_HIDING_TITLE);
+    }
+
+    public void exposeServer() {
+        if (hidingServer) {
+            hidingServer = false;
+            this.theStage.setTitle(stageTitle);
+        }
+    }
+
+    public boolean isHidingServer() {
+        return hidingServer;
+    }
+
     private String getAliases(String uniqueId) {
         if (utility.checkFileExists(Constants.MY_SQUARE_DEFAULT + Constants.ALIAS_FILE_EXT)) {
-            String[] temp = utility.searchFile(Constants.MY_SQUARE_DEFAULT + Constants.ALIAS_FILE_EXT, uniqueId, Constants.SEARCH_STARTS_WITH);
+            String[] temp = utility.searchFile(Constants.MY_SQUARE_DEFAULT + Constants.ALIAS_FILE_EXT, uniqueId,
+                    Constants.SEARCH_STARTS_WITH);
             if (temp.length > 0) {
                 StringBuilder result = new StringBuilder();
                 String[] values = temp[0].split(Constants.QUESTION_MARK_SPLIT);

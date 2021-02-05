@@ -86,4 +86,8 @@ public class xxMockIDialogController implements IDialogController {
     public void setFactory(IFactory factory) {
         // not needed
     }
+
+    public IApp getParent() {
+        return null;
+    }
 }

@@ -458,4 +458,8 @@ public class SquareController implements ISquareController {
 
         return "registered";
     }
+    
+    public boolean isHiding() {
+        return sampleController.getParent().isHidingServer();
+    }
 }

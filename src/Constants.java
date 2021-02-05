@@ -177,6 +177,8 @@ public class Constants {
     public static final String BLOCK_FILE_EXT = ".block";
     public static final String ABOUT_COMMAND = "about";
     public static final String HELP_COMMAND = "help";
+    public static final String HIDE_COMMAND = "hide";
+    public static final String EXPOSE_COMMAND = "expose";
     public static final String PAUSE_COMMAND = "pause";
     public static final String UNPAUSE_COMMAND = "unpause";
     public static final String COMMANDS_TITLE = "List of Commands";
@@ -206,4 +208,5 @@ public class Constants {
     public static final int TINY_PAUSE = 10;
     public static final int INFINITE_LOOP_FLAG = -1;
     public static final int REALLY_LOW_NUMBER = -999;
+    public static final String SERVER_HIDING_TITLE = " (hiding)";
 }

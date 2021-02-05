@@ -7,4 +7,7 @@ public interface IApp {
     String getPublicKeyBase64();
     void sendIP(String ip, String oldIp, String uniqueId);
     void closeApp(int exitCode, int shutdownCode);
+    void hideServer();
+    void exposeServer();
+    boolean isHidingServer();
 }

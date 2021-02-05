@@ -229,6 +229,10 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         squareInvites = new ArrayList<>();
     }
 
+    public IApp getParent() {
+        return parent;
+    }
+
     public void setStage(Stage stage) {
         primaryStage = stage;
     }

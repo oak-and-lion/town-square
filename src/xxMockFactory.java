@@ -73,7 +73,7 @@ public class xxMockFactory implements IFactory {
     }
 
     public IServerThread createServerThread(int type, Socket socket, ISquareController squareController,
-            ILogIt logger) {
+            ILogIt logger, IUtility utility) {
         return null;
     }
 

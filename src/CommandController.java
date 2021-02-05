@@ -11,9 +11,11 @@ public class CommandController implements ICommandController {
         this.utility = utility;
         this.parent = parent;
         this.commands = new ArrayList<>();
-        commands.add(Constants.HELP_COMMAND);
         commands.add(Constants.ABOUT_COMMAND);
         commands.add(Constants.BLOCK_COMMAND);
+        commands.add(Constants.EXPOSE_COMMAND);
+        commands.add(Constants.HELP_COMMAND);
+        commands.add(Constants.HIDE_COMMAND);
         commands.add(Constants.PAUSE_COMMAND);
         commands.add(Constants.UNBLOCK_COMMAND);
         commands.add(Constants.UNPAUSE_COMMAND);
@@ -49,6 +51,10 @@ public class CommandController implements ICommandController {
         } else if (cmd.equals(Constants.HELP_COMMAND)) {
             parent.showList(commands.toArray(new String[commands.size()]), Constants.COMMANDS_TITLE,
                     Constants.COMMANDS_HEADER);
+        } else if (cmd.equals(Constants.HIDE_COMMAND)) {
+            parent.getParent().hideServer();
+        } else if (cmd.equals(Constants.EXPOSE_COMMAND)) {
+            parent.getParent().exposeServer();
         } else {
             result.add(false);
         }

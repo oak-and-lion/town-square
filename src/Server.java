@@ -61,7 +61,8 @@ public class Server extends Thread implements IServer {
             String clientIP = socket.getInetAddress().getHostAddress();
             logger.logInfo("New client connected: " + clientIP);
 
-            serverThread = factory.createServerThread(Constants.BASE_SERVER_THREAD, socket, squareController, logger);
+            serverThread = factory.createServerThread(Constants.BASE_SERVER_THREAD, socket, squareController, logger,
+                    factory.createUtility(Constants.BASE_UTILITY));
             serverThread.start();
         } catch (Exception e) {
             e.printStackTrace();

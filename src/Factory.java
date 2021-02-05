@@ -107,9 +107,9 @@ public class Factory implements IFactory {
     }
 
     public IServerThread createServerThread(int type, Socket socket, ISquareController squareController,
-            ILogIt logger) {
+            ILogIt logger, IUtility utility) {
         if (type == Constants.BASE_SERVER_THREAD) {
-            return new ServerThread(socket, squareController, logger);
+            return new ServerThread(socket, squareController, logger, utility);
         }
 
         return null;

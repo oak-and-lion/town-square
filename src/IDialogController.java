@@ -28,4 +28,5 @@ public interface IDialogController {
     void updatePauseNotification(ISquare square, boolean paused);
     void processImageAction(int buttonClicked, String file, long millis);
     void setFactory(IFactory factory);
+    IApp getParent();
 }

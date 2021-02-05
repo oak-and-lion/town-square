@@ -25,7 +25,7 @@ public interface IFactory {
     ISquareKeyPair createSquareKeyPair(int type);
     ISquareKeyPair createSquareKeyPair(int type, PublicKey publicKey, PrivateKey privateKey);
     IServerThread createServerThread(int type, Socket socket, ISquareController squareController,
-            ILogIt logger);
+            ILogIt logger, IUtility utility);
     ITextDialogBox createTextDialogBox(int type, String title, String headerText, String content,
             ITextDialogBoxCallback controller, double width, int createType);
     ITownSquareButton createTownSquareButton(int type, String buttonText, ISquare square,
