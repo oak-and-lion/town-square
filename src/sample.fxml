@@ -32,6 +32,7 @@
             <items>
               <MenuItem fx:id="mnuAttachImage" mnemonicParsing="false" onAction="#attachImage" text="Attach Image" />
               <MenuItem fx:id="mnuAttachVideo" mnemonicParsing="false" onAction="#attachVideo" text="Attach Video" />
+              <MenuItem fx:id="mnuAttachFile" mnemonicParsing="false" onAction="#attachFile" text="Attach File" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">

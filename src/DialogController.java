@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -31,6 +32,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -85,6 +87,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     @FXML
     private MenuItem mnuAttachImage;
+
+    @FXML
+    private MenuItem mnuAttachFile;
 
     @FXML
     private TextField alias;
@@ -155,6 +160,11 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     @FXML
     private void attachVideo(ActionEvent event) {
         attachAttachment(Constants.VIDEO_DIALOG_TITLE, Constants.VIDEO_MARKER);
+    }
+
+    @FXML
+    private void attachFile(ActionEvent event) {
+        attachAttachment(Constants.FILE_DIALOG_TITLE, Constants.FILE_MARKER);
     }
 
     @FXML
@@ -684,6 +694,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             buildImageMessage(message, messageList, millis);
         } else if (message.contains(Constants.VIDEO_MARKER)) {
             buildVideoMessage(message, messageList, millis);
+        } else if (message.contains(Constants.FILE_MARKER)) {
+            buildZipMessage(message, messageList, scrollPane, millis);
         } else {
             buildTextMessage(message, messageList, scrollPane);
         }
@@ -705,6 +717,45 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             }
         };
         new Thread(task).start();
+    }
+
+    private void buildZipMessage(String message, VBox messageList, ScrollPane scrollPane, long millis) {
+        HBox hbox = createHBox(0, 0, 0, 0);
+        int index = message.indexOf(Constants.COLON + Constants.SPACE) + Constants.COLON.length()
+                + Constants.SPACE.length();
+        Label labelInfo = createLabel(message.substring(0, index), 0, 0, 0, 0);
+        hbox.getChildren().add(labelInfo);
+        Text label = new Text();
+        String file = message.substring(index).replace(Constants.FILE_MARKER, Constants.EMPTY_STRING);
+        label.setText(file);
+        label.setStyle(Constants.CSS_STYLE_HAND);
+        label.setFill(Color.color(0.0,0.76,0.153));
+        label.setUnderline(true);
+        label.setOnMouseClicked(new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                try {
+                    File f = new File(file);
+                    Desktop.getDesktop().open(f);
+                } catch (NullPointerException npe) {
+                    npe.printStackTrace();
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                }
+            }
+        });
+        if (labelInfo.getText().contains(Constants.STAR)) {
+            label.setStrikethrough(true);
+        }
+        setTextMaxWidth(label, scrollPane, getLabelWidth(labelInfo));
+        hbox.getChildren().addAll(label);
+        messageList.getChildren().add(hbox);
+
+        if (postMessageWorkers == null) {
+            postMessageWorkers = new ArrayList<>();
+        }
+
+        postMessageWorkers.add(new MessageWorker(label, scrollPane, labelInfo));
     }
 
     private void buildTextMessage(String message, VBox messageList, ScrollPane scrollPane) {
@@ -741,7 +792,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             imageView.setFitWidth(Constants.IMAGE_SMALL_FIT_WIDTH);
             imageView.setPreserveRatio(true);
             imageView.setImage(image);
-            imageView.setStyle("-fx-cursor: hand;");
+            imageView.setStyle(Constants.CSS_STYLE_HAND);
             imageView.setOnMouseClicked(new EventHandler<Event>() {
                 @Override
                 public void handle(Event event) {

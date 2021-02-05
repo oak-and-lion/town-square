@@ -1,7 +1,7 @@
 public class Constants {
     private Constants() {}
 
-    public static final String VERSION = "0.0.2";
+    public static final String VERSION = "0.0.3";
     public static final int BASE_CRYPTO_UTILS = 1;
     public static final int BASE_SQUARE_KEY_PAIR = 1;
     public static final int UTILITY_SQUARE_KEY_PAIR = 2;
@@ -144,8 +144,10 @@ public class Constants {
     public static final String IMAGE_MARKER = "[image]";
     public static final String END_SQUARE_BRACKET = "]";
     public static final String VIDEO_MARKER = "[video]";
+    public static final String FILE_MARKER = "[file]";
     public static final String IMAGE_DIALOG_TITLE = "Attach Image...";
     public static final String VIDEO_DIALOG_TITLE = "Attach Video...";
+    public static final String FILE_DIALOG_TITLE = "Attach File...";
     public static final int NOT_FOUND_IN_STRING = -1;
     public static final String JAR_FILE = "App.jar";
     public static final String TEMP_JAR_FILE = "_new_App.jar";
