@@ -174,4 +174,12 @@ public class Factory implements IFactory {
 
         return null;
     }
+
+    public IMemberAliasUpdateThread createMemberAliasUpdateThread(int type, String info, String uniqueId, ISquare square, IUtility utility) {
+        if (type == Constants.BASE_MEMBER_ALIAS_UPDATE_THREAD) {
+            return new MemberAliasUpdateThread(this, info, uniqueId, square, utility);
+        }
+
+        return null;
+    }
 }

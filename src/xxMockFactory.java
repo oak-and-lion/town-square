@@ -90,4 +90,8 @@ public class xxMockFactory implements IFactory {
     public IModalViewer createModalViewer(int type) {
         return null;
     }
+
+    public IMemberAliasUpdateThread createMemberAliasUpdateThread(int type, String info, String uniqueId, ISquare square, IUtility utility) {
+        return null;
+    }
 }

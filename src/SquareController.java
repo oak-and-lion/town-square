@@ -427,11 +427,13 @@ public class SquareController implements ISquareController {
         boolean found = false;
         int count = 0;
         for (String memberAlias : memberAliases) {
-            if (memberAlias.startsWith(info[3])) {
+            if (memberAlias.startsWith(info[3]) && !memberAlias.contains(info[1] + Constants.COLON + info[2])) {
                 memberAlias += Constants.FORWARD_SLASH + info[1] + Constants.COLON + info[2];
                 memberAliases.set(count, memberAlias);
                 found = true;
                 break;
+            } else if (memberAlias.startsWith(info[3]) && memberAlias.contains(info[1] + Constants.COLON + info[2])) {
+                return "registered";
             }
             count++;
         }
@@ -448,7 +450,10 @@ public class SquareController implements ISquareController {
                 }
             }
         } else {
-            utility.appendToFile(file, Constants.NEWLINE + alias);
+            if (utility.checkFileExists(file)) {
+                utility.appendToFile(file, Constants.NEWLINE);
+            }
+            utility.appendToFile(file, alias);
         }
 
         return "registered";

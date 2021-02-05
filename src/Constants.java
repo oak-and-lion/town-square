@@ -27,6 +27,7 @@ public class Constants {
     public static final int SYSTEM_EXIT_ALREADY_RUNNING = 2;
     public static final int BASE_COMMAND_CONTROLLER = 1;
     public static final int BASE_MEMBER_POSTS_THREAD = 1;
+    public static final int BASE_MEMBER_ALIAS_UPDATE_THREAD = 1;
     public static final int NULL_OBJECT_TYPE = Integer.MAX_VALUE;
     public static final String SQUARE_FILE_EXT = ".square";
     public static final String UNIQUE_ID_FILE = "unique.id";
@@ -139,7 +140,6 @@ public class Constants {
     public static final String INVITE_FILE_EXT = ".invite";
     public static final String INVITE_FILE_PREFIX = "__pending_";
     public static final int GRACEFUL_SHUTDOWN = 0;
-    public static final String ALIAS_FILE = "alias.id";
     public static final String SQUARE_CONTROLLER_LOG_FILE = "squareController.log";
     public static final String IMAGE_MARKER = "[image]";
     public static final String END_SQUARE_BRACKET = "]";
@@ -202,4 +202,5 @@ public class Constants {
     public static final String KEY_FILE_EXT = ".key";
     public static final String BLOCKED_VIDEO_FILE = "blocked-video.mp4";
     public static final String CSS_STYLE_HAND = "-fx-cursor: hand;";
+    public static final String UNENCRYPTED_FLAG = "u";
 }

@@ -63,4 +63,7 @@ public class xxMockSquare implements ISquare {
     public void runClientFunctions(int maxRuns) {
         // not needed
     }
+    public ISquareController getController() {
+        return null;
+    }
 }

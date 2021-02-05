@@ -142,8 +142,6 @@ public class App extends Application implements IApp {
             ipAddresses.add(new IPAddress(remoteIP, remoteIP));
             ipAddresses.addAll(utility.getLocalIPs(logger));
 
-            alias = getAlias(ip);
-
             initializeController(controller, uniqueId, port, ip, ipAddresses, alias, defaultSquare, commandController);
 
             initializeSquareController(squareController, port);
@@ -229,17 +227,6 @@ public class App extends Application implements IApp {
         controller.setAlias(alias);
     }
 
-    private String getAlias(String ip) {
-        String alias = ip;
-        if (!utility.checkFileExists(Constants.ALIAS_FILE)) {
-            utility.writeFile(Constants.ALIAS_FILE, ip);
-        } else {
-            alias = utility.readFile(Constants.ALIAS_FILE);
-        }
-
-        return alias;
-    }
-
     private boolean checkCurrentState(IAlertBox alert) {
         if (isRunning()) {
             alert.createAlert("Already Running!", "An instance of Town Square is already running!",
@@ -322,11 +309,6 @@ public class App extends Application implements IApp {
         String name = square.getSafeLowerName() + Constants.SQUARE_FILE_EXT;
         utility.deleteFile(name);
         utility.writeFile(name, square.toString());
-    }
-
-    public void sendAlias(String alias) {
-        alias = alias.toLowerCase().trim().replace(Constants.SPACE, Constants.UNDERSCORE);
-        utility.writeFile(Constants.ALIAS_FILE, alias);
     }
 
     public String getDefaultName() {

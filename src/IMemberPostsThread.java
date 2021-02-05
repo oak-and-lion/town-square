@@ -1,4 +1,4 @@
-public interface IMemberPostsThread {
+public interface IMemberPostsThread extends IWorkerThread {
     void start();
     boolean isWorkDone();
     void run();

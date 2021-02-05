@@ -84,16 +84,22 @@ public class ClientThread extends Thread implements IClientThread {
                 members = getAllMembers(memberFile, memberAliasFile);
 
                 ArrayList<IMemberPostsThread> memberThreads = new ArrayList<>();
-                boolean threadsDone = false;
+                ArrayList<IMemberAliasUpdateThread> memberAliasThreads = new ArrayList<>();
+
                 for (String info : members) {
                     // spin up new thread for each member and process ASAP
                     IMemberPostsThread thread = factory.createMemberPostsThread(Constants.BASE_MEMBER_POSTS_THREAD,
                             info, uniqueId, msg, square, utility);
                     memberThreads.add(thread);
                     thread.start();
+
+                    IMemberAliasUpdateThread thread2 = factory.createMemberAliasUpdateThread(
+                            Constants.BASE_MEMBER_ALIAS_UPDATE_THREAD, info, uniqueId, square, utility);
+                    memberAliasThreads.add(thread2);
+                    thread2.start();
                 }
 
-                checkForDoneThreads(threadsDone, memberThreads);
+                performWork(memberThreads, memberAliasThreads);
 
                 for (IMemberPostsThread mt : memberThreads) {
                     posts.addAll(mt.getAllPosts());
@@ -116,7 +122,20 @@ public class ClientThread extends Thread implements IClientThread {
         }
     }
 
-    private void checkForDoneThreads(boolean threadsDone, ArrayList<IMemberPostsThread> memberThreads) {
+    private void performWork(ArrayList<IMemberPostsThread> memberThreads,
+            ArrayList<IMemberAliasUpdateThread> memberAliasThreads) {
+        boolean threadsDone = false;
+        ArrayList<IWorkerThread> workers = new ArrayList<>();
+        for (IMemberPostsThread memberThread : memberThreads) {
+            workers.add(memberThread);
+        }
+        for (IMemberAliasUpdateThread memberThread : memberAliasThreads) {
+            workers.add(memberThread);
+        }
+        checkForDoneThreads(threadsDone, workers);
+    }
+
+    private void checkForDoneThreads(boolean threadsDone, ArrayList<IWorkerThread> memberThreads) {
         while (!threadsDone) {
             threadsDone = true;
             for (int x = 0; x < memberThreads.size(); x++) {
@@ -167,9 +186,9 @@ public class ClientThread extends Thread implements IClientThread {
         if (!info.contains(uniqueId) && !info.startsWith(Constants.STAR)) {
             String[] member = info.split(Constants.DATA_SEPARATOR);
             IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
-                square.getInvite());
+                    square.getInvite());
             String response = client.sendMessage(Constants.MEMBER_COMMAND + Constants.COMMAND_DATA_SEPARATOR + uniqueId,
-                false);
+                    false);
             if (!response.equals(Constants.EMPTY_STRING)) {
                 findNewMembers(response, file);
             }
@@ -180,11 +199,39 @@ public class ClientThread extends Thread implements IClientThread {
         if (!info.contains(uniqueId) && !info.startsWith(Constants.STAR)) {
             String[] member = info.split(Constants.DATA_SEPARATOR);
             IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
-                square.getInvite());
-            String response = client.sendMessage(Constants.READ_ALIAS_COMMAND + Constants.COMMAND_DATA_SEPARATOR + uniqueId,
-                false);
+                    square.getInvite());
+            String response = client
+                    .sendMessage(Constants.READ_ALIAS_COMMAND + Constants.COMMAND_DATA_SEPARATOR + uniqueId, false);
             if (!response.equals(Constants.EMPTY_STRING)) {
-                //
+                String[] responseInfo = response.split(Constants.COLON);
+                if (responseInfo[0].equals(Constants.OK_RESULT)) {
+                    processAliasFileReturn(responseInfo[1]);
+                }
+            }
+        }
+    }
+
+    private void processAliasFileReturn(String response) {
+        String[] responseInfo = response.split(Constants.COMMAND_DATA_SEPARATOR);
+        ISquareKeyPair tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
+        tempKeys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
+        String password = tempKeys.decryptFromBase64(responseInfo[0]);
+        String data = utility.decrypt(responseInfo[1], password);
+        if (!data.equals(Constants.EMPTY_STRING)) {
+            String[] aliases = data.split(Constants.COMMAND_DATA_SEPARATOR);
+            ISquareController squareController = square.getController();
+            for (String alias : aliases) {
+                String[] temp = alias.split(Constants.QUESTION_MARK_SPLIT);
+                String[] addresses = temp[1].split(Constants.FORWARD_SLASH);
+                for (String address : addresses) {
+                    String[] temp2 = address.split(Constants.COLON);
+                    String request = Constants.UNENCRYPTED_FLAG + Constants.COMMAND_DATA_SEPARATOR + square.getInvite()
+                            + Constants.COMMAND_DATA_SEPARATOR + Constants.REGISTER_ALIAS_COMMAND
+                            + Constants.COMMAND_DATA_SEPARATOR + Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR
+                            + temp2[0] + Constants.FILE_DATA_SEPARATOR + temp2[1] + Constants.FILE_DATA_SEPARATOR
+                            + temp[0];
+                    squareController.processRequest(request);
+                }
             }
         }
     }
