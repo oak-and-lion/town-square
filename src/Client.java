@@ -42,7 +42,7 @@ public class Client implements IClient {
             OutputStream output = socket.getOutputStream();
             PrintWriter writer = new PrintWriter(output, true);
 
-            String encryptFlag = "u";
+            String encryptFlag = Constants.UNENCRYPTED_FLAG;
             if (encrypt) {
                 encryptFlag = "e";
             }

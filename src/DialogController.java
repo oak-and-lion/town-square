@@ -90,9 +90,6 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     private TextField alias;
 
     @FXML
-    private TextField aliasServers;
-
-    @FXML
     private MenuItem mnuAbout;
 
     @FXML
@@ -103,19 +100,10 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         if (parent != null) {
             parent.sendDefaultName(defaultName.getText());
             parent.sendPort(port.getText());
-            String s = alias.getText();
-            if (s.trim().equals(Constants.EMPTY_STRING)) {
-                s = remoteIP.getSelectionModel().getSelectedItem().getDisplay();
-            }
-            parent.sendAlias(s);
             updateDefaultNameInMemberFiles(defaultName.getText());
             updatePortInMemberFiles(port.getText(), uniqueId.getText());
+            updateAliases(alias.getText());
         }
-    }
-
-    @FXML
-    private void handleRegisterAlias(ActionEvent event) {
-        // whole new thing
     }
 
     @FXML
@@ -640,6 +628,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             utility.writeFile(squareSafeName + Constants.SQUARE_FILE_EXT, info);
             setTabSquare(square);
 
+            byte[] data1 = utility.readBinaryFile(Constants.MY_SQUARE_DEFAULT + Constants.ALIAS_FILE_EXT);
+            utility.writeBinaryFile(squareSafeName + Constants.ALIAS_FILE_EXT, data1);
+
             return true;
         }
 
@@ -996,6 +987,27 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             String newMemberInfo = String.join(Constants.NEWLINE, lines);
             utility.deleteFile(file);
             utility.writeFile(file, newMemberInfo);
+        }
+    }
+
+    private void updateAliases(String aliasList) {
+        String[] aliases = aliasList.trim().toLowerCase().split(Constants.SEMI_COLON);
+        for (ISquare square : squares) {
+            processAlias(square, aliases);
+        }
+    }
+
+    private void processAlias(ISquare square, String[] aliases) {
+        for (String a : aliases) {
+            if (a.equals(Constants.EMPTY_STRING)) {
+                continue;
+            }
+            String request = Constants.UNENCRYPTED_FLAG + Constants.COMMAND_DATA_SEPARATOR + square.getInvite()
+                    + Constants.COMMAND_DATA_SEPARATOR + Constants.REGISTER_ALIAS_COMMAND
+                    + Constants.COMMAND_DATA_SEPARATOR + Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR + a
+                    + Constants.FILE_DATA_SEPARATOR + port.getText() + Constants.FILE_DATA_SEPARATOR
+                    + uniqueId.getText();
+            square.getController().processRequest(request);
         }
     }
 }

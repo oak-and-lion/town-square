@@ -31,4 +31,5 @@ public interface IFactory {
     ITownSquareButton createTownSquareButton(int type, String buttonText, ISquare square,
             TextField postsTextField);
     IModalViewer createModalViewer(int type);
+    IMemberAliasUpdateThread createMemberAliasUpdateThread(int type, String info, String uniqueId, ISquare square, IUtility utility);
 }

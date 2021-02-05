@@ -23,4 +23,5 @@ public interface ISquare {
     void setTab(Tab tab);
     Tab getTab();
     void runClientFunctions(int maxRuns);
+    ISquareController getController();
 }
