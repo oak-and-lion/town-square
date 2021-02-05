@@ -209,4 +209,10 @@ public class Constants {
     public static final int INFINITE_LOOP_FLAG = -1;
     public static final int REALLY_LOW_NUMBER = -999;
     public static final String SERVER_HIDING_TITLE = " (hiding)";
+    public static final String ID_FILE_EXT = ".id";
+    public static final String JAR_FILE_EXT = ".jar";
+    public static final String TXT_FILE_EXT = ".txt";
+    public static final String SH_FILE_EXT = ".sh";
+    public static final String BAT_FILE_EXT = ".bat";
+    public static final String ZIP_FILE_EXT = ".zip";
 }

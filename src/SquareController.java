@@ -11,7 +11,8 @@ public class SquareController implements ISquareController {
     private ILogIt logger;
     private IFactory factory;
 
-    public SquareController(IUtility mainUtility, IDialogController controller, ILogIt logger, ISquareKeyPair keyPair, IFactory factory) {
+    public SquareController(IUtility mainUtility, IDialogController controller, ILogIt logger, ISquareKeyPair keyPair,
+            IFactory factory) {
         utility = mainUtility;
         sampleController = controller;
         keys = keyPair;
@@ -287,19 +288,19 @@ public class SquareController implements ISquareController {
             return Constants.EMPTY_STRING;
         }
 
-        if (split[3].trim().toLowerCase().endsWith(Constants.KEY_FILE_EXT)) {
-            return Constants.GO_AWAY;
-        }
-
-        if (split[3].trim().toLowerCase().endsWith(Constants.BLOCK_FILE_EXT)) {
-            return Constants.GO_AWAY;
-        }
-
-        if (split[3].trim().toLowerCase().endsWith(Constants.ALIAS_FILE_EXT)) {
-            return Constants.GO_AWAY;
-        }
-
-        if (split[3].trim().toLowerCase().endsWith(Constants.MEMBERS_FILE_EXT)) {
+        String fileRequest = split[3].trim().toLowerCase();
+        if (fileRequest.endsWith(Constants.KEY_FILE_EXT)
+                || fileRequest.endsWith(Constants.BLOCK_FILE_EXT)
+                || fileRequest.endsWith(Constants.ALIAS_FILE_EXT)
+                || fileRequest.endsWith(Constants.MEMBERS_FILE_EXT)
+                || fileRequest.endsWith(Constants.POSTS_FILE_EXT)
+                || fileRequest.endsWith(Constants.LOG_FILE_EXT)
+                || fileRequest.endsWith(Constants.ID_FILE_EXT)
+                || fileRequest.endsWith(Constants.JAR_FILE_EXT)
+                || fileRequest.endsWith(Constants.TXT_FILE_EXT)
+                || fileRequest.endsWith(Constants.SH_FILE_EXT)
+                || fileRequest.endsWith(Constants.BAT_FILE_EXT)
+                || fileRequest.endsWith(Constants.SQUARE_FILE_EXT)) {
             return Constants.GO_AWAY;
         }
 
@@ -363,13 +364,15 @@ public class SquareController implements ISquareController {
         String memberId = split[3];
 
         if (checkSquareAccess(square, memberId)) {
-            String[] member = utility.searchFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT, memberId, Constants.SEARCH_CONTAINS);
+            String[] member = utility.searchFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT, memberId,
+                    Constants.SEARCH_CONTAINS);
             String[] memberInfo = member[0].split(Constants.FILE_DATA_SEPARATOR);
             ISquareKeyPair tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
             tempKeys.setPublicKeyFromBase64(memberInfo[1]);
             String password = utility.generateRandomString(16);
             StringBuilder temp = new StringBuilder();
-            temp.append(utility.encrypt(utility.readFile(square.getSafeLowerName() + Constants.ALIAS_FILE_EXT), password));
+            temp.append(
+                    utility.encrypt(utility.readFile(square.getSafeLowerName() + Constants.ALIAS_FILE_EXT), password));
             return tempKeys.encryptToBase64(password) + Constants.COMMAND_DATA_SEPARATOR + temp.toString();
         }
 
@@ -421,8 +424,7 @@ public class SquareController implements ISquareController {
     private String processAlias(String[] info, ArrayList<String> memberAliases, String file) {
         // command arguments
         // 3 == member id
-        String alias = info[3] + Constants.QUESTION_MARK + info[1] + Constants.COLON
-                + info[2];
+        String alias = info[3] + Constants.QUESTION_MARK + info[1] + Constants.COLON + info[2];
 
         boolean found = false;
         int count = 0;
@@ -458,7 +460,7 @@ public class SquareController implements ISquareController {
 
         return "registered";
     }
-    
+
     public boolean isHiding() {
         return sampleController.getParent().isHidingServer();
     }
