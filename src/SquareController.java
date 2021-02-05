@@ -393,6 +393,8 @@ public class SquareController implements ISquareController {
     }
 
     private String registerAlias(ISquare square, String[] split) {
+        // command arguments
+        // 3 == member info
         String[] info = split[3].split(Constants.FILE_DATA_SEPARATOR);
         if (!checkSquareAccess(square, info[3])) {
             return Constants.MALFORMED_REQUEST_MESSAGE;
@@ -408,10 +410,17 @@ public class SquareController implements ISquareController {
             }
         }
 
+        // info order
+        // 0 == null
+        // 1 == ip address
+        // 2 == port
+        // 3 == member id
         return processAlias(info, memberAliases, file);
     }
 
     private String processAlias(String[] info, ArrayList<String> memberAliases, String file) {
+        // command arguments
+        // 3 == member id
         String alias = info[3] + Constants.QUESTION_MARK + info[1] + Constants.COLON
                 + info[2];
 
