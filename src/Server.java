@@ -10,10 +10,11 @@ public class Server extends Thread implements IServer {
     private ISquareController squareController;
     private ILogIt logger;
     private IFactory factory;
+    private IApp parent;
 
-    public static IServer create(int port, ISquareController controller, ILogIt logger, IFactory factory) {
+    public static IServer create(int port, ISquareController controller, ILogIt logger, IFactory factory, IApp parent) {
         if (iserver == null) {
-            iserver = new Server(port, controller, logger, factory);
+            iserver = new Server(port, controller, logger, factory, parent);
         }
         return iserver;
     }
@@ -22,12 +23,13 @@ public class Server extends Thread implements IServer {
         return port;
     }
 
-    private Server(int port, ISquareController controller, ILogIt logger, IFactory factory) {
+    private Server(int port, ISquareController controller, ILogIt logger, IFactory factory, IApp parent) {
         running = false;
         this.port = port;
         this.squareController = controller;
         this.logger = logger;
         this.factory = factory;
+        this.parent = parent;
     }
 
     public void teardown() {
@@ -61,9 +63,14 @@ public class Server extends Thread implements IServer {
             String clientIP = socket.getInetAddress().getHostAddress();
             logger.logInfo("New client connected: " + clientIP);
 
+            if (parent.isHidingServer()) {
+                logger.logInfo("Not serving requests right now.");
+            }
+            
             serverThread = factory.createServerThread(Constants.BASE_SERVER_THREAD, socket, squareController, logger,
                     factory.createUtility(Constants.BASE_UTILITY));
             serverThread.start();
+
         } catch (Exception e) {
             e.printStackTrace();
             result = false;

@@ -47,7 +47,7 @@ public class xxMockFactory implements IFactory {
         return null;
     }
 
-    public IServer createServer(int type, int port, ISquareController squareController, ILogIt logger) {
+    public IServer createServer(int type, int port, ISquareController squareController, ILogIt logger, IApp app) {
         return null;
     }
 

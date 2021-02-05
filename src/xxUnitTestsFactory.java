@@ -109,7 +109,7 @@ public class xxUnitTestsFactory extends xxUnitTestsBaseClass {
     @TestMethod
     public void testCreateServerPass() {
         final String METHOD_NAME = "testCreateServerPass";
-        IServer test = factory.createServer(Constants.BASE_SQUARE_CONTROLLER, 1, new xxMockSquareController(), new xxMockILogIt());
+        IServer test = factory.createServer(Constants.BASE_SQUARE_CONTROLLER, 1, new xxMockSquareController(), new xxMockILogIt(), new xxMockIApp());
 
         checkNotEquals(test, null, METHOD_NAME);
         checkClass(test.getClass(), SquareController.class, METHOD_NAME);
@@ -117,7 +117,7 @@ public class xxUnitTestsFactory extends xxUnitTestsBaseClass {
 
     @TestMethod
     public void testCreateServerFail() {
-        IServer test = factory.createServer(Constants.NULL_OBJECT_TYPE, 1, new xxMockSquareController(), new xxMockILogIt());
+        IServer test = factory.createServer(Constants.NULL_OBJECT_TYPE, 1, new xxMockSquareController(), new xxMockILogIt(), new xxMockIApp());
 
         checkEquals(test, null, "testCreateServerFail");
     }

@@ -17,7 +17,7 @@ public interface IFactory {
     ICommandController createCommandController(int type, IUtility utility, IDialogController controller);
     ISquareController createSquareController(int type, IUtility mainUtility, IDialogController controller,
             ILogIt logger, ISquareKeyPair keyPair);
-    IServer createServer(int type, int port, ISquareController squareController, ILogIt logger);
+    IServer createServer(int type, int port, ISquareController squareController, ILogIt logger, IApp app);
     ISquare createSquare(int type, String defaultSquareInfo, String port, String ip,
         ISquareController squareController, IUtility utility, IDialogController controller, String uniqueId);
     IVersionChecker createVersionChecker(int type, IUtility utility, String uniqueId);

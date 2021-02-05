@@ -212,7 +212,7 @@ public class App extends Application implements IApp {
     private void initializeSquareController(ISquareController squareController, String port) {
         if (squareController != null) {
             server = factory.createServer(Constants.BASE_SERVER, Integer.parseInt(port), squareController,
-                    factory.createLogger(Constants.FILE_LOGGER, Constants.SERVER_LOG_FILE, utility));
+                    factory.createLogger(Constants.FILE_LOGGER, Constants.SERVER_LOG_FILE, utility), this);
             server.start();
         }
     }
@@ -313,7 +313,7 @@ public class App extends Application implements IApp {
         }
     }
 
-    public void updateSquare(Square square) {
+    public void updateSquare(ISquare square) {
         String name = square.getSafeLowerName() + Constants.SQUARE_FILE_EXT;
         utility.deleteFile(name);
         utility.writeFile(name, square.toString());

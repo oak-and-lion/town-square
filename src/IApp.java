@@ -1,7 +1,7 @@
 public interface IApp {
     void sendDefaultName(String defaultName);
     void sendPort(String port);
-    void updateSquare(Square square);
+    void updateSquare(ISquare square);
     void close(int exitCode);
     String getDefaultName();
     String getPublicKeyBase64();

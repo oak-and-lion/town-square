@@ -46,9 +46,9 @@ public class Factory implements IFactory {
         return null;
     }
 
-    public IServer createServer(int type, int port, ISquareController squareController, ILogIt logger) {
+    public IServer createServer(int type, int port, ISquareController squareController, ILogIt logger, IApp app) {
         if (type == Constants.BASE_SERVER) {
-            return Server.create(port, squareController, logger, this);
+            return Server.create(port, squareController, logger, this, app);
         }
 
         return null;
