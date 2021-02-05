@@ -203,4 +203,7 @@ public class Constants {
     public static final String BLOCKED_VIDEO_FILE = "blocked-video.mp4";
     public static final String CSS_STYLE_HAND = "-fx-cursor: hand;";
     public static final String UNENCRYPTED_FLAG = "u";
+    public static final int TINY_PAUSE = 10;
+    public static final int INFINITE_LOOP_FLAG = -1;
+    public static final int REALLY_LOW_NUMBER = -999;
 }

@@ -17,18 +17,18 @@ public class ClientThread extends Thread implements IClientThread {
     private IFactory factory;
     private int waitTime;
     private int maxRuns;
+    private int aliasFileHash;
 
     public ClientThread(ISquare s, IUtility utility, String uniqueId, IFactory factory) {
-        squareName = s.getName();
-        lastKnownPost = s.getLastKnownPost();
         square = s;
         this.utility = utility;
         process = true;
         squareName = square.getName();
+        lastKnownPost = square.getLastKnownPost();
         this.uniqueId = uniqueId;
         posts = new PostMessageList();
         this.factory = factory;
-        this.maxRuns = -1;
+        this.maxRuns = Constants.INFINITE_LOOP_FLAG;
         getWaitTime();
     }
 
@@ -59,6 +59,8 @@ public class ClientThread extends Thread implements IClientThread {
             String file = square.getSafeLowerName() + Constants.POSTS_FILE_EXT;
             String memberFile = square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT;
             String memberAliasFile = square.getSafeLowerName() + Constants.ALIAS_FILE_EXT;
+            aliasFileHash = Arrays.hashCode(utility.readBinaryFile(memberAliasFile));
+            int newHashCode = 0;
             String raw;
             int count = 0;
             while (process) {
@@ -66,6 +68,7 @@ public class ClientThread extends Thread implements IClientThread {
                     Thread.sleep(Constants.PAUSE_WAIT_TIME);
                     continue;
                 }
+
                 raw = utility.readFile(file, lastKnownPost);
                 if (!raw.equals(Constants.EMPTY_STRING)) {
                     processMessages(raw);
@@ -93,11 +96,15 @@ public class ClientThread extends Thread implements IClientThread {
                     memberThreads.add(thread);
                     thread.start();
 
-                    IMemberAliasUpdateThread thread2 = factory.createMemberAliasUpdateThread(
-                            Constants.BASE_MEMBER_ALIAS_UPDATE_THREAD, info, uniqueId, square, utility);
-                    memberAliasThreads.add(thread2);
-                    thread2.start();
+                    if (newHashCode != aliasFileHash) {
+                        IMemberAliasUpdateThread thread2 = factory.createMemberAliasUpdateThread(
+                                Constants.BASE_MEMBER_ALIAS_UPDATE_THREAD, info, uniqueId, square, utility);
+                        memberAliasThreads.add(thread2);
+                        thread2.start();
+                    }
                 }
+
+                newHashCode = checkHashCodes(newHashCode, memberAliasFile);
 
                 performWork(memberThreads, memberAliasThreads);
 
@@ -109,17 +116,33 @@ public class ClientThread extends Thread implements IClientThread {
 
                 Thread.sleep(waitTime);
 
-                count++;
-                if (maxRuns == -1) {
-                    count = -2;
-                } else if (count >= maxRuns) {
-                    process = false;
-                }
+                count = checkCount(count);
             }
         } catch (InterruptedException ie) {
             ie.printStackTrace();
             Thread.currentThread().interrupt();
         }
+    }
+
+    private int checkHashCodes(int newHashCode, String memberAliasFile) {
+        Arrays.hashCode(utility.readBinaryFile(memberAliasFile));
+
+        if (newHashCode != aliasFileHash) {
+            aliasFileHash = newHashCode;
+        }
+
+        return newHashCode;
+    }
+
+    private int checkCount(int count) {
+        count++;
+        if (maxRuns == Constants.INFINITE_LOOP_FLAG) {
+            count = Constants.REALLY_LOW_NUMBER;
+        } else if (count >= maxRuns) {
+            process = false;
+        }
+
+        return count;
     }
 
     private void performWork(ArrayList<IMemberPostsThread> memberThreads,
@@ -145,7 +168,7 @@ public class ClientThread extends Thread implements IClientThread {
                 }
             }
             try {
-                Thread.sleep(10);
+                Thread.sleep(Constants.TINY_PAUSE);
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
                 Thread.currentThread().interrupt();

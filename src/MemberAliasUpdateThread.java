@@ -14,6 +14,7 @@ public class MemberAliasUpdateThread extends Thread implements IMemberAliasUpdat
         this.uniqueId = uniqueId;
         this.square = square;
         this.utility = utility;
+        this.workDone = false;
     }
 
     @Override
@@ -59,7 +60,6 @@ public class MemberAliasUpdateThread extends Thread implements IMemberAliasUpdat
             + Constants.FILE_DATA_SEPARATOR + alias[1] + Constants.FILE_DATA_SEPARATOR
             + uniqueId, password);
         String request = encryptedPassword + Constants.COMMAND_DATA_SEPARATOR + encryptedData;
-        String response = client.sendMessage(request, true);
-        System.out.println(response);
+        client.sendMessage(request, true);
     }
 }

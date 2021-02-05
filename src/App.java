@@ -118,6 +118,7 @@ public class App extends Application implements IApp {
                         defaultName + Constants.DATA_SEPARATOR + keys.getPublicKeyBase64() + Constants.DATA_SEPARATOR
                                 + remoteIP + Constants.DATA_SEPARATOR + port + Constants.DATA_SEPARATOR + uniqueId);
             }
+            alias = getAliases(uniqueId);
 
             primaryStage.addEventHandler(WindowEvent.WINDOW_SHOWN, new EventHandler<WindowEvent>() {
                 @Override
@@ -317,6 +318,29 @@ public class App extends Application implements IApp {
 
     public String getPublicKeyBase64() {
         return keys.getPublicKeyBase64();
+    }
+
+    private String getAliases(String uniqueId) {
+        if (utility.checkFileExists(Constants.MY_SQUARE_DEFAULT + Constants.ALIAS_FILE_EXT)) {
+            String[] temp = utility.searchFile(Constants.MY_SQUARE_DEFAULT + Constants.ALIAS_FILE_EXT, uniqueId, Constants.SEARCH_STARTS_WITH);
+            if (temp.length > 0) {
+                StringBuilder result = new StringBuilder();
+                String[] values = temp[0].split(Constants.QUESTION_MARK_SPLIT);
+                String[] ips = values[1].split(Constants.FORWARD_SLASH);
+                boolean first = true;
+                for (String ip : ips) {
+                    String[] t = ip.split(Constants.COLON);
+                    if (!first) {
+                        result.append(Constants.SEMI_COLON);
+                    }
+                    first = false;
+                    result.append(t[0]);
+                }
+                return result.toString();
+            }
+        }
+
+        return Constants.EMPTY_STRING;
     }
 
     public static void main(String[] args) {
