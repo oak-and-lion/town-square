@@ -33,6 +33,7 @@
               <MenuItem fx:id="mnuAttachImage" mnemonicParsing="false" onAction="#attachImage" text="Attach Image" />
               <MenuItem fx:id="mnuAttachVideo" mnemonicParsing="false" onAction="#attachVideo" text="Attach Video" />
               <MenuItem fx:id="mnuAttachFile" mnemonicParsing="false" onAction="#attachFile" text="Attach File" />
+              <MenuItem fx:id="mnuLinkUrl" mnemonicParsing="false" onAction="#linkUrl" text="Link URL" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">

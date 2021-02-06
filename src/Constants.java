@@ -66,6 +66,7 @@ public class Constants {
     public static final String PERIOD_SPLIT = "\\.";
     public static final int JOIN_TYPE = 1;
     public static final int CREATE_TYPE = 2;
+    public static final int LINK_URL_TYPE = 3;
     public static final String INVITATION_LABEL_TEXT = "Invitation:";
     public static final String INVITE_CODE_LABEL = "Invite Code:";
     public static final String POSTS_LABEL = "Posts";
@@ -217,4 +218,5 @@ public class Constants {
     public static final String SH_FILE_EXT = ".sh";
     public static final String BAT_FILE_EXT = ".bat";
     public static final String ZIP_FILE_EXT = ".zip";
+    public static final String URL_MARKER = "[url]";
 }

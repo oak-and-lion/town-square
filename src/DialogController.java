@@ -3,6 +3,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +94,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     private MenuItem mnuAttachFile;
 
     @FXML
+    private MenuItem mnuLinkUrl;
+
+    @FXML
     private TextField alias;
 
     @FXML
@@ -168,6 +173,15 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     }
 
     @FXML
+    private void linkUrl(ActionEvent event) {
+        // link url
+        ITextDialogBox dialog = factory.createTextDialogBox(Constants.BASE_TEXT_DIALOG_BOX, "URL Address",
+                "Paste URL Address", Constants.EMPTY_STRING, this, Constants.INVITATION_DIALOG_WIDTH,
+                Constants.LINK_URL_TYPE);
+        dialog.show();
+    }
+
+    @FXML
     private void showAbout(ActionEvent event) {
         showAbout();
     }
@@ -220,7 +234,18 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             processInvitation(input);
         } else if (type == Constants.CREATE_TYPE) {
             processCreateSquare(input);
+        } else if (type == Constants.LINK_URL_TYPE) {
+            processLinkUrl(input);
         }
+    }
+
+    public void processLinkUrl(String input) {
+        ISquare square = (ISquare) tabPane.getSelectionModel().getSelectedItem().getUserData();
+        if (square == null) {
+            return;
+        }
+
+        postTheMessage(square, Constants.FILE_MARKER + input);
     }
 
     public void updatePauseNotification(ISquare square, boolean paused) {
@@ -695,7 +720,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         } else if (message.contains(Constants.VIDEO_MARKER)) {
             buildVideoMessage(message, messageList, millis);
         } else if (message.contains(Constants.FILE_MARKER)) {
-            buildZipMessage(message, messageList, scrollPane, millis);
+            buildFileMessage(message, messageList, scrollPane, millis);
+        } else if (message.contains(Constants.URL_MARKER)) {
+            buildURLMessage(message, messageList, scrollPane, millis);
         } else {
             buildTextMessage(message, messageList, scrollPane);
         }
@@ -719,7 +746,51 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         new Thread(task).start();
     }
 
-    private void buildZipMessage(String message, VBox messageList, ScrollPane scrollPane, long millis) {
+    private void buildURLMessage(String message, VBox messageList, ScrollPane scrollPane, long millis) {
+        HBox hbox = createHBox(0, 0, 0, 0);
+        int index = message.indexOf(Constants.COLON + Constants.SPACE) + Constants.COLON.length()
+                + Constants.SPACE.length();
+        Label labelInfo = createLabel(message.substring(0, index), 0, 0, 0, 0);
+        hbox.getChildren().add(labelInfo);
+        Text label = new Text();
+        String address = message.substring(index).replace(Constants.URL_MARKER, Constants.EMPTY_STRING);
+        label.setText(address);
+        label.setStyle(Constants.CSS_STYLE_HAND);
+        label.setFill(Color.color(0.0, 0.29, 0.6));
+        label.setUnderline(true);
+        label.setOnMouseClicked(new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                try {
+                    URI uri = new URI(address);
+                    Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+                    if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                        desktop.browse(uri);
+                    }
+                } catch (NullPointerException npe) {
+                    npe.printStackTrace();
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                } catch (URISyntaxException use) {
+                    use.printStackTrace();
+                }
+            }
+        });
+        if (labelInfo.getText().contains(Constants.STAR)) {
+            label.setStrikethrough(true);
+        }
+        setTextMaxWidth(label, scrollPane, getLabelWidth(labelInfo));
+        hbox.getChildren().addAll(label);
+        messageList.getChildren().add(hbox);
+
+        if (postMessageWorkers == null) {
+            postMessageWorkers = new ArrayList<>();
+        }
+
+        postMessageWorkers.add(new MessageWorker(label, scrollPane, labelInfo));
+    }
+
+    private void buildFileMessage(String message, VBox messageList, ScrollPane scrollPane, long millis) {
         HBox hbox = createHBox(0, 0, 0, 0);
         int index = message.indexOf(Constants.COLON + Constants.SPACE) + Constants.COLON.length()
                 + Constants.SPACE.length();
@@ -729,7 +800,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         String file = message.substring(index).replace(Constants.FILE_MARKER, Constants.EMPTY_STRING);
         label.setText(file);
         label.setStyle(Constants.CSS_STYLE_HAND);
-        label.setFill(Color.color(0.0,0.76,0.153));
+        label.setFill(Color.color(0.0, 0.29, 0.6));
         label.setUnderline(true);
         label.setOnMouseClicked(new EventHandler<Event>() {
             @Override
