@@ -18,17 +18,17 @@ Town Square requires JDK 11 and JavaFX 11. There are no other dependencies, and 
 
 If you use Visual Studio Code, you will need to specify a settings.json file in the .vscode folder to point to the JavaFX libraries. 
 
-"java.project.referencedLibraries": [\n
-        "lib/**/*.jar",\n
-        "path-to-javafx/javafx.base.jar",\n
-        "path-to-javafx/javafx.controls.jar",\n
-        "path-to-javafx/javafx.fxml.jar",\n
-        "path-to-javafx/javafx.graphics.jar",\n
-        "path-to-javafx/javafx.media.jar",\n
-        "path-to-javafx/javafx.swing.jar",\n
-        "path-to-javafx/javafx.web.jar",\n
-        "path-to-javafx/javafx-swt.jar"\n
-    ]\n
+"java.project.referencedLibraries": [<br/>
+        "lib/**/*.jar",<br/>
+        "path-to-javafx/javafx.base.jar",<br/>
+        "path-to-javafx/javafx.controls.jar",<br/>
+        "path-to-javafx/javafx.fxml.jar",<br/>
+        "path-to-javafx/javafx.graphics.jar",<br/>
+        "path-to-javafx/javafx.media.jar",<br/>
+        "path-to-javafx/javafx.swing.jar",<br/>
+        "path-to-javafx/javafx.web.jar",<br/>
+        "path-to-javafx/javafx-swt.jar"<br/>
+    ]<br/>
 
 To launch a debug session, you will need to specify a launch.json file and add:
 
