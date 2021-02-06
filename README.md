@@ -6,7 +6,7 @@ All speech must be free, or no speech is free. It is a foundation of liberty.
 
 ## Getting Started
 
-This is developed in the Visual Studio Code IDE. There are no extra project and dependency files to clutter the project
+This project is developed in the Visual Studio Code IDE. There are no extra project and dependency files to clutter the project. There is also no one that can object to use of their dependency packages in this project. Yes, Oracle owns Java. If there is an alternative, cross platform language that supports GUI, I will support a rewrite.
 
 ## Folder Structure
 
@@ -36,8 +36,8 @@ To launch a debug session, you will need to specify a launch.json file and add:
 
 ## Unit Tests
 
-The Unit Tests are executed by specifying the xxUnitTestsUtility as the main project. No extra, fancy unit testing framework is used, because they aren't needed.
+The Unit Tests are executed by specifying the xxUnitTestsUtility as the main project. No extra, fancy unit testing framework is used, because it isn't needed.
 
 ## Contributions
 
-Contributions are not open, at this time. Feel free to fork the project and create your own version.
+Contributions are not open, at this time. Feel free to fork the project and create your own version. It's nothing personal, but I don't know you or your motives.
