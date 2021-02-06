@@ -1,14 +1,43 @@
+## Background
+
+Because of the state of Big Tech and deplatforming of individuals and groups, it is clear that "renters have no rights". This is neither good nor bad. Private companies can do what they want. However, we don't have to be at their mercy to have them regulate speech as they see fit. The deplatforming goes as deep as the infrastructure providers, so "just make your own product" is not an adequate answer to losing the ability to communicate. The hardware we all own is our personal computers. By creating a network of "servers" and "clients", there is no central entity that controls us. Encryption protects communication in transit. 
+
+All speech must be free, or no speech is free. It is a foundation of liberty.
+
 ## Getting Started
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+This is developed in the Visual Studio Code IDE. There are no extra project and dependency files to clutter the project
 
 ## Folder Structure
 
-The workspace contains two folders by default, where:
-
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+- `src`: the folder to maintain source Java files
 
 ## Dependency Management
 
-The `JAVA DEPENDENCIES` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-pack/blob/master/release-notes/v0.9.0.md#work-with-jar-files-directly).
+Town Square requires JDK 11 and JavaFX 11. There are no other dependencies, and that's by design.
+
+If you use Visual Studio Code, you will need to specify a settings.json file in the .vscode folder to point to the JavaFX libraries. 
+
+"java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "path-to-javafx/javafx.base.jar",
+        "path-to-javafx/javafx.controls.jar",
+        "path-to-javafx/javafx.fxml.jar",
+        "path-to-javafx/javafx.graphics.jar",
+        "path-to-javafx/javafx.media.jar",
+        "path-to-javafx/javafx.swing.jar",
+        "path-to-javafx/javafx.web.jar",
+        "path-to-javafx/javafx-swt.jar"
+    ]
+
+To launch a debug session, you will need to specify a launch.json file and add:
+
+- "vmArgs": "--module-path [path-to-javafx] --add-modules javafx.controls,javafx.fxml,javafx.media",
+
+## Unit Tests
+
+The Unit Tests are executed by specifying the xxUnitTestsUtility as the main project. No extra, fancy unit testing framework is used, because they aren't needed.
+
+## Contributions
+
+Contributions are not open, at this time. Feel free to fork the project and create your own version.

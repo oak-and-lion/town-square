@@ -222,7 +222,7 @@ public class Constants {
     public static final String ZIP_FILE_EXT = ".zip";
     public static final String URL_MARKER = "[url]";
     public static final Color LINK_COLOR = Color.color(0.0, 0.29, 0.6);
-    public static final String DEVELOPER_ONE_NAME = "John T Law";
+    public static final String DEVELOPER_ONE_NAME = "oak-and-lion";
     public static final String DEVELOPED_BY = "Developed by: ";
     public static final String GITHUB_REPO = "https://github.com/oak-and-lion/town-square";
     public static final String URL_HEADER = "URL Address";
