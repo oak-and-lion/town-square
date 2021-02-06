@@ -225,4 +225,6 @@ public class Constants {
     public static final String DEVELOPER_ONE_NAME = "John T Law";
     public static final String DEVELOPED_BY = "Developed by: ";
     public static final String GITHUB_REPO = "https://github.com/oak-and-lion/town-square";
+    public static final String URL_HEADER = "URL Address";
+    public static final String URL_CONTENT = "Enter URL Address";
 }

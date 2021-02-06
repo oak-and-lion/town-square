@@ -174,8 +174,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     @FXML
     private void linkUrl(ActionEvent event) {
         // link url
-        ITextDialogBox dialog = factory.createTextDialogBox(Constants.BASE_TEXT_DIALOG_BOX, "URL Address",
-                "Paste URL Address", Constants.EMPTY_STRING, this, Constants.INVITATION_DIALOG_WIDTH,
+        ITextDialogBox dialog = factory.createTextDialogBox(Constants.BASE_TEXT_DIALOG_BOX, Constants.URL_HEADER,
+                Constants.URL_CONTENT, Constants.EMPTY_STRING, this, Constants.INVITATION_DIALOG_WIDTH,
                 Constants.LINK_URL_TYPE);
         dialog.show();
     }
