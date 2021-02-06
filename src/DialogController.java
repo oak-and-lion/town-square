@@ -34,7 +34,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -198,8 +197,11 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     public void showAbout() {
         IAlertBox alertBox = factory.createAlertBox(Constants.BASE_ALERT_BOX);
-        alertBox.createAlert(Constants.ABOUT_TITLE, Constants.ABOUT_HEADER,
-                Constants.VERSION_TEXT_PREFIX + Constants.VERSION, AlertType.INFORMATION);
+        alertBox.createAlert(
+                Constants.ABOUT_TITLE, Constants.ABOUT_HEADER, Constants.VERSION_TEXT_PREFIX + Constants.VERSION
+                        + Constants.NEWLINE + Constants.DEVELOPED_BY + Constants.DEVELOPER_ONE_NAME + Constants.NEWLINE
+                        + Constants.GITHUB_REPO,
+                AlertType.INFORMATION);
     }
 
     public void showList(String[] items, String listTitle, String listHeader) {
@@ -756,7 +758,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         String address = message.substring(index).replace(Constants.URL_MARKER, Constants.EMPTY_STRING);
         label.setText(address);
         label.setStyle(Constants.CSS_STYLE_HAND);
-        label.setFill(Color.color(0.0, 0.29, 0.6));
+        label.setFill(Constants.LINK_COLOR);
         label.setUnderline(true);
         label.setOnMouseClicked(new EventHandler<Event>() {
             @Override
@@ -800,7 +802,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         String file = message.substring(index).replace(Constants.FILE_MARKER, Constants.EMPTY_STRING);
         label.setText(file);
         label.setStyle(Constants.CSS_STYLE_HAND);
-        label.setFill(Color.color(0.0, 0.29, 0.6));
+        label.setFill(Constants.LINK_COLOR);
         label.setUnderline(true);
         label.setOnMouseClicked(new EventHandler<Event>() {
             @Override
