@@ -6,5 +6,11 @@ public class xxMockIAlertBox implements IAlertBox {
         IUtility utility = Utility.create();
         utility.writeFile("alert.txt", "alert created");
         return new xxMockIAlert();
-    }    
+    } 
+
+    public IAlert createAlert(String title, String headerText, String content, AlertType type, double width, double height) {
+        IUtility utility = Utility.create();
+        utility.writeFile("alert.txt", "alert created");
+        return new xxMockIAlert();
+    }
 }

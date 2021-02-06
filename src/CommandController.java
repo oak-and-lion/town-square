@@ -16,6 +16,7 @@ public class CommandController implements ICommandController {
         commands.add(Constants.EXPOSE_COMMAND);
         commands.add(Constants.HELP_COMMAND);
         commands.add(Constants.HIDE_COMMAND);
+        commands.add(Constants.LICENSE_COMMAND);
         commands.add(Constants.PAUSE_COMMAND);
         commands.add(Constants.UNBLOCK_COMMAND);
         commands.add(Constants.UNPAUSE_COMMAND);
@@ -55,6 +56,8 @@ public class CommandController implements ICommandController {
             parent.getParent().hideServer();
         } else if (cmd.equals(Constants.EXPOSE_COMMAND)) {
             parent.getParent().exposeServer();
+        } else if (cmd.equals(Constants.LICENSE_COMMAND)) {
+            parent.showLicense();
         } else {
             result.add(false);
         }

@@ -227,4 +227,7 @@ public class Constants {
     public static final String GITHUB_REPO = "https://github.com/oak-and-lion/town-square";
     public static final String URL_HEADER = "URL Address";
     public static final String URL_CONTENT = "Enter URL Address";
+    public static final double DEFAULT_WIDTH = -1;
+    public static final double DEFAULT_HEIGHT = -1;
+    public static final String LICENSE_COMMAND = "license";
 }

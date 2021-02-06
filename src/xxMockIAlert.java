@@ -23,4 +23,12 @@ public class xxMockIAlert implements IAlert {
     public ButtonType getSelectedButton() {
         return ButtonType.OK;
     }
+
+    public void setWidth(double width) {
+        // not needed
+    }
+
+    public void setHeight(double height) {
+        // not needed
+    }
 }

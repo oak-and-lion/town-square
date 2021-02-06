@@ -40,6 +40,7 @@
             <items>
               <MenuItem fx:id="mnuAbout" mnemonicParsing="false" text="About [/about]" onAction="#showAbout" />
               <MenuItem fx:id="mnuCommandList" mnemonicParsing="false" text="List Commands [/help]" onAction="#showCommands" />
+              <MenuItem fx:id="mnuLicense" mnemonicParsing="false" text="License [/license]" onAction="#showLicense" />
             </items>
           </Menu>
         </menus>

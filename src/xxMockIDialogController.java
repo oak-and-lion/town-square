@@ -90,4 +90,8 @@ public class xxMockIDialogController implements IDialogController {
     public IApp getParent() {
         return null;
     }
+
+    public void showLicense() {
+        // not needed
+    }
 }

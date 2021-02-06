@@ -9,4 +9,6 @@ public interface IAlert {
     Optional<ButtonType> showAndWait();
     void setSelectedButton(ButtonType type);
     ButtonType getSelectedButton();
+    void setWidth(double width);
+    void setHeight(double height);
 }

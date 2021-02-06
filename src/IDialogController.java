@@ -29,4 +29,5 @@ public interface IDialogController {
     void processImageAction(int buttonClicked, String file, long millis);
     void setFactory(IFactory factory);
     IApp getParent();
+    void showLicense();
 }

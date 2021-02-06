@@ -105,6 +105,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     private MenuItem mnuClose;
 
     @FXML
+    private MenuItem mnuLicense;
+
+    @FXML
     private void handleSettingsUpdate(ActionEvent event) {
         if (parent != null) {
             parent.sendDefaultName(defaultName.getText());
@@ -191,8 +194,18 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     }
 
     @FXML
+    private void showLicense(ActionEvent event) {
+        showLicense();
+    }
+
+    @FXML
     private void handleClose(ActionEvent event) {
         parent.closeApp(Constants.SYSTEM_EXIT_OK, Constants.GRACEFUL_SHUTDOWN);
+    }
+
+    public void showLicense() { 
+        ModalLicenseViewer l = new ModalLicenseViewer();
+        l.show(License.getLicense());
     }
 
     public void showAbout() {
@@ -577,10 +590,6 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     }
 
     private String determineSquarePrivacy(ISquare square) {
-        if (square != null) {
-            return Constants.ENCRYPTION_FLAG;
-        }
-
         return Constants.ENCRYPTION_FLAG;
     }
 
