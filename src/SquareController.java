@@ -153,7 +153,8 @@ public class SquareController implements ISquareController {
     private String buildClone(ISquare square, String[] args) {
         IDialogController controller = square.getSampleController();
         ICommandController cmdController = controller.getCommandController();
-        BooleanString[] result = cmdController.processCommand(Constants.FORWARD_SLASH + args[2] + Constants.SPACE + args[3], square);
+        BooleanString[] result = cmdController
+                .processCommand(Constants.FORWARD_SLASH + args[2] + Constants.SPACE + args[3], square);
         if (result.length > 0 && result[0].getBoolean()) {
             return buildResult(Constants.OK_RESULT, result[0].getString());
         }
@@ -279,7 +280,7 @@ public class SquareController implements ISquareController {
             if (!memberNames.isEmpty()) {
                 ISquareKeyPair tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
                 tempKeys.setPublicKeyFromBase64(memberIds.get(0));
-                String password = utility.generateRandomString(16);
+                String password = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
                 StringBuilder temp = new StringBuilder();
                 temp.append(utility.encrypt(posts, password));
                 posts = tempKeys.encryptToBase64(password) + Constants.COMMAND_DATA_SEPARATOR + temp.toString();
@@ -310,9 +311,9 @@ public class SquareController implements ISquareController {
         if (fileRequest.endsWith(Constants.KEY_FILE_EXT) || fileRequest.endsWith(Constants.BLOCK_FILE_EXT)
                 || fileRequest.endsWith(Constants.ALIAS_FILE_EXT) || fileRequest.endsWith(Constants.MEMBERS_FILE_EXT)
                 || fileRequest.endsWith(Constants.POSTS_FILE_EXT) || fileRequest.endsWith(Constants.LOG_FILE_EXT)
-                || fileRequest.endsWith(Constants.ID_FILE_EXT) || fileRequest.endsWith(Constants.JAR_FILE_EXT)
-                || fileRequest.endsWith(Constants.TXT_FILE_EXT) || fileRequest.endsWith(Constants.SH_FILE_EXT)
-                || fileRequest.endsWith(Constants.BAT_FILE_EXT) || fileRequest.endsWith(Constants.SQUARE_FILE_EXT)) {
+                || fileRequest.endsWith(Constants.ID_FILE_EXT) || fileRequest.endsWith(Constants.TXT_FILE_EXT)
+                || fileRequest.endsWith(Constants.SH_FILE_EXT) || fileRequest.endsWith(Constants.BAT_FILE_EXT)
+                || fileRequest.endsWith(Constants.SQUARE_FILE_EXT) || fileRequest.endsWith(Constants.CLONE_FILE_EXT)) {
             return Constants.GO_AWAY;
         }
 
@@ -337,7 +338,7 @@ public class SquareController implements ISquareController {
 
             ISquareKeyPair tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
             tempKeys.setPublicKeyFromBase64(memberIds.get(0));
-            String password = utility.generateRandomString(16);
+            String password = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
             StringBuilder temp = new StringBuilder();
             temp.append(utility.encrypt(result, password));
             result = tempKeys.encryptToBase64(password) + Constants.COMMAND_DATA_SEPARATOR + temp.toString();
@@ -381,7 +382,7 @@ public class SquareController implements ISquareController {
             String[] memberInfo = member[0].split(Constants.FILE_DATA_SEPARATOR);
             ISquareKeyPair tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
             tempKeys.setPublicKeyFromBase64(memberInfo[1]);
-            String password = utility.generateRandomString(16);
+            String password = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
             StringBuilder temp = new StringBuilder();
             temp.append(
                     utility.encrypt(utility.readFile(square.getSafeLowerName() + Constants.ALIAS_FILE_EXT), password));

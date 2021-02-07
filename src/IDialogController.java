@@ -32,4 +32,5 @@ public interface IDialogController {
     void showLicense();
     ICommandController getCommandController();
     boolean isGui();
+    void showCloneMessage();
 }

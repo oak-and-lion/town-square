@@ -63,7 +63,7 @@ public class CommandController implements ICommandController {
         } else if (cmd.equals(Constants.HELP_COMMAND)) {
             parent.showList(commands.toArray(new String[commands.size()]), Constants.COMMANDS_TITLE,
                     Constants.COMMANDS_HEADER);
-                    result.add(new BooleanString(true, Constants.EMPTY_STRING));
+            result.add(new BooleanString(true, Constants.EMPTY_STRING));
         } else if (cmd.equals(Constants.HIDE_COMMAND)) {
             parent.getParent().hideServer();
             result.add(new BooleanString(true, Constants.EMPTY_STRING));
@@ -88,8 +88,8 @@ public class CommandController implements ICommandController {
 
     public boolean createDNA(String password, ISquare square) {
         StringBuilder tempPass = new StringBuilder(password);
-        if (password.length() < 16) {
-            for (int x = password.length(); x < 16; x++) {
+        if (password.length() < Constants.ENCRYPTION_KEY_LENGTH) {
+            for (int x = password.length(); x < Constants.ENCRYPTION_KEY_LENGTH; x++) {
                 tempPass.append(Constants.UNDERSCORE);
             }
         }
@@ -103,8 +103,8 @@ public class CommandController implements ICommandController {
 
         // decrypt the dna file using the password
         StringBuilder tempPass = new StringBuilder(password);
-        if (password.length() < 16) {
-            for (int x = password.length(); x < 16; x++) {
+        if (password.length() < Constants.ENCRYPTION_KEY_LENGTH) {
+            for (int x = password.length(); x < Constants.ENCRYPTION_KEY_LENGTH; x++) {
                 tempPass.append(Constants.UNDERSCORE);
             }
         }
@@ -157,10 +157,33 @@ public class CommandController implements ICommandController {
     }
 
     public BooleanString getClone(String[] args, ISquare square) {
-        IClient client = factory.createClient(Constants.BASE_CLIENT, args[1], Integer.valueOf(args[2]), args[0]);
-        client.sendMessage("pkey", false);
+        IClient client = factory.createClient(Constants.BASE_CLIENT, args[1], Integer.valueOf(args[2]), args[3]);
+        String pkey = client.sendMessage(Constants.REQUEST_PUBLIC_KEY_COMMAND, false);
+        SquareResponse resp = new SquareResponse(pkey);
+        if (resp.getCode().equals(Constants.OK_RESULT)) {
+            ISquareKeyPair keyPair = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
+            keyPair.setPublicKeyFromBase64(resp.getMessage());
+            String key = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
+            String e = utility.encrypt(Constants.CLONE_COMMAND + Constants.COMMAND_DATA_SEPARATOR + args[4], key);
+            String f = keyPair.encryptToBase64(key);
+            String result = client.sendMessage(f + Constants.COMMAND_DATA_SEPARATOR + e, true);
+            SquareResponse cloneResponse = new SquareResponse(result);
+            if (cloneResponse.getCode().equals(Constants.OK_RESULT)) {
+                StringBuilder pwdPadded = new StringBuilder(args[4]);
+                for (int x = args[4].length(); x < Constants.ENCRYPTION_KEY_LENGTH; x++) {
+                    pwdPadded.append(Constants.UNDERSCORE);
+                }
+                String b64 = utility.decrypt(cloneResponse.getMessage(), pwdPadded.toString());
+                byte[] data = utility.convertFromBase64(b64);
 
-        return new BooleanString(false, "");
+                utility.deleteFile(square.getSafeLowerName() + Constants.CLONE_FILE_EXT);
+                utility.writeBinaryFile(square.getSafeLowerName() + Constants.CLONE_FILE_EXT, data);
+                parent.showCloneMessage();
+                return new BooleanString(true, square.getSafeLowerName() + Constants.CLONE_FILE_EXT);
+            }
+        }
+
+        return new BooleanString(false, Constants.EMPTY_STRING);
     }
 
     public boolean pauseSquare(ISquare square) {

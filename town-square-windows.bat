@@ -13,4 +13,9 @@ if EXIST "_new_App.jar" (
     del _new_App.jar
 )
 
+if EXIST "my_square.clone" (
+    tar -x -f my_square.clone
+    del my_square.clone
+)
+
 jdk-11.0.9\bin\java --module-path "javafx/lib" --add-modules "javafx.controls,javafx.fxml,javafx.media" -jar App.jar

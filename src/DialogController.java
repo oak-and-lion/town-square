@@ -217,6 +217,13 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                 AlertType.INFORMATION);
     }
 
+    public void showCloneMessage() {
+        IAlertBox alertBox = factory.createAlertBox(Constants.BASE_ALERT_BOX);
+        alertBox.createAlert(
+                Constants.CLONE_MESSAGE_TITLE, Constants.CLONE_MESSAGE_HEADER, Constants.CLONE_MESSAGE,
+                AlertType.INFORMATION);
+    }
+
     public void showList(String[] items, String listTitle, String listHeader) {
         IAlertBox alertBox = factory.createAlertBox(Constants.BASE_ALERT_BOX);
         alertBox.createAlert(listTitle, listHeader, String.join(Constants.NEWLINE, items), AlertType.INFORMATION);
@@ -652,7 +659,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                 + Constants.COMMAND_DATA_SEPARATOR + uniqueId.getText();
 
         if (encrypt) {
-            String password = utility.generateRandomString(16);
+            String password = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
             StringBuilder temp = new StringBuilder();
             temp.append(utility.encrypt(data, password));
             data = tempKeys.encryptToBase64(password) + Constants.COMMAND_DATA_SEPARATOR + temp.toString();
@@ -667,7 +674,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             utility.deleteFile(squareSafeName + Constants.PAUSE_FILE_EXT);
             utility.deleteFile(squareSafeName + Constants.LEAVE_FILE_EXT);
             String temp = Constants.MEMBER_COMMAND + Constants.COMMAND_DATA_SEPARATOR + uniqueId.getText();
-            String password = utility.generateRandomString(16);
+            String password = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
             data = tempKeys.encryptToBase64(password) + Constants.COMMAND_DATA_SEPARATOR
                     + utility.encrypt(temp, password);
             response = processTCPReturn(client.sendMessage(data, encrypt));

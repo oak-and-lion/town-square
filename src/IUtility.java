@@ -27,4 +27,5 @@ public interface IUtility {
     String convertToBase64(byte[] bytes);
     byte[] convertFromBase64(String data);
     void addToZip(String srcFile, ZipOutputStream zipOut);
+    boolean unzip(String fileZip);
 }

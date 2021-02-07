@@ -52,7 +52,7 @@ public class MemberAliasUpdateThread extends Thread implements IMemberAliasUpdat
 
     private void processAliasMembers(String data, IClient client, String uniqueId) {
         String[] alias = data.split(Constants.COLON);
-        String password = utility.generateRandomString(16);
+        String password = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
         String encryptedPassword = keys.encryptToBase64(password); 
         
         String encryptedData = utility.encrypt(Constants.REGISTER_ALIAS_COMMAND

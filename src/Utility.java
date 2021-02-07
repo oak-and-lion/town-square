@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 import java.util.Base64;
 import java.util.Enumeration;
@@ -531,6 +532,49 @@ public class Utility implements IUtility {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public boolean unzip(String fileZip) {
+        File destDir = new File(Constants.EMPTY_STRING);
+
+        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(fileZip))) {
+            ZipEntry zipEntry = zis.getNextEntry();
+            while (zipEntry != null) {
+                File newFile = new File(destDir, zipEntry.getName());
+                if (zipEntry.isDirectory()) {
+                    if (!newFile.isDirectory() && !newFile.mkdirs()) {
+                        throw new IOException("Failed to create directory " + newFile);
+                    }
+                } else {
+                    // fix for Windows-created archives
+                    File parent = newFile.getParentFile();
+                    if (!parent.isDirectory() && !parent.mkdirs()) {
+                        throw new IOException("Failed to create directory " + parent);
+                    }
+
+                    // write file content
+                    writeZipEntry(newFile, zis);
+                }
+                zipEntry = zis.getNextEntry();
+            }
+            zis.closeEntry();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
+    private void writeZipEntry(File newFile, ZipInputStream zis) {
+        try (FileOutputStream fos = new FileOutputStream(newFile)) {
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = zis.read(buffer)) > 0) {
+                fos.write(buffer, 0, len);
+            }
+        } catch (Exception e1) {
+            e1.printStackTrace();
         }
     }
 }

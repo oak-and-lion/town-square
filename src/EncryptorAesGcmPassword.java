@@ -17,18 +17,19 @@ import java.util.Base64;
  * c = content bytes (encrypted content)
  */
 public class EncryptorAesGcmPassword {
+    private EncryptorAesGcmPassword(){}
 
     private static final String ENCRYPT_ALGO = "AES/GCM/NoPadding";
 
     private static final int TAG_LENGTH_BIT = 128; // must be one of {128, 120, 112, 104, 96}
     private static final int IV_LENGTH_BYTE = 12;
-    private static final int SALT_LENGTH_BYTE = 16;
+    private static final int SALT_LENGTH_BYTE = Constants.ENCRYPTION_KEY_LENGTH;
     private static final Charset UTF_8 = StandardCharsets.UTF_8;
 
     // return a base64 encoded AES encrypted text
     public static String encrypt(byte[] pText, String password) throws Exception {
 
-        // 16 bytes salt
+        // Constants.ENCRYPTION_KEY_LENGTH bytes salt
         byte[] salt = CryptoUtils.getRandomNonce(SALT_LENGTH_BYTE);
 
         // GCM recommended 12 bytes iv?
@@ -53,7 +54,6 @@ public class EncryptorAesGcmPassword {
 
         // string representation, base64, send this string to other for decryption.
         return Base64.getEncoder().encodeToString(cipherTextWithIvSalt);
-
     }
 
     // we need the same password, salt and iv to decrypt it

@@ -36,7 +36,7 @@ public class ClientCmdTest {
         SquareResponse keyResp = squareController.processRequest("u%%%a7075b5b-b91d-4448-a0f9-d9b0bec1a726%%%pkey");
 
         keyPair.setPublicKeyFromBase64(keyResp.getMessage());
-        String key = utility.generateRandomString(16);
+        String key = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
         String e = utility.encrypt(cmd, key);
         String f = keyPair.encryptToBase64(key);
         String d = text + f + "%%%" + e;

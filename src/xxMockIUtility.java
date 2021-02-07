@@ -86,4 +86,7 @@ public class xxMockIUtility implements IUtility {
     public void addToZip(String src, ZipOutputStream out){
         // not needed
     }
+    public boolean unzip(String fileZip) {
+        return true;
+    }
 }

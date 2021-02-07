@@ -236,5 +236,10 @@ public class Constants {
     public static final String DNA_FILE_EXT = ".dna";
     public static final String CLONE_FILE_EXT = ".clone";
     public static final String TEMP_FILE_EXT = ".temp";
-    public static final String SEND_CLONE_COMMAND = "getClone";
+    public static final String SEND_CLONE_COMMAND = "getclone";
+    public static final String TEMP_ZIP_FILE = "temp.zip";
+    public static final int ENCRYPTION_KEY_LENGTH = 16;
+    public static final String CLONE_MESSAGE_TITLE = "Clone Information Retrieved";
+    public static final String CLONE_MESSAGE_HEADER = "Clone Information Needs to be Applied";
+    public static final String CLONE_MESSAGE = "You must restart Town Square in order to apply\nthe Clone Information. After you have exited Town Square,\nyou can either unzip the 'my_square.clone' file\nor use the start script packaged to apply it automatically.";
 }

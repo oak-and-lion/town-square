@@ -103,4 +103,8 @@ public class xxMockIDialogController implements IDialogController {
     public ICommandController getCommandController() {
         return commandController;
     }
+    
+    public void showCloneMessage() {
+        // not needed
+    }
 }
