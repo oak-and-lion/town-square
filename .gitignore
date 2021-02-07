@@ -43,3 +43,6 @@ bnb-peter-gabriel-copy.mp4
 phone.jpg
 jdk-11.0.10+9/
 OpenJDK11U-jdk_x64_linux_hotspot_11.0.10_9.tar.gz
+*.dna
+*.clone
+*.temp

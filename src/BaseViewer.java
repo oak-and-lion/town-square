@@ -17,7 +17,7 @@ public class BaseViewer {
         Scene scene = new Scene(root, 500, 400);
         primaryStage.setScene(scene);
         primaryStage.setTitle(title);
-        primaryStage.show();
+        primaryStage.showAndWait();
         primaryStage.setOnCloseRequest(e -> close());
     }
 }

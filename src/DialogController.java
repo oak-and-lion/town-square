@@ -279,6 +279,10 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         squareInvites = new ArrayList<>();
     }
 
+    public boolean isGui() {
+        return true;
+    }
+
     public IApp getParent() {
         return parent;
     }
@@ -289,6 +293,10 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     public void setCommandController(ICommandController value) {
         commandController = value;
+    }
+
+    public ICommandController getCommandController() {
+        return commandController;
     }
 
     public void setFactory(IFactory value) {

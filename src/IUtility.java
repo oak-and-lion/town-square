@@ -1,3 +1,5 @@
+import java.util.zip.ZipOutputStream;
+
 public interface IUtility {
     String createUUID();
     FileWriteResponse writeFile(String file, String data);
@@ -24,4 +26,5 @@ public interface IUtility {
     boolean deleteFiles(String match);
     String convertToBase64(byte[] bytes);
     byte[] convertFromBase64(String data);
+    void addToZip(String srcFile, ZipOutputStream zipOut);
 }

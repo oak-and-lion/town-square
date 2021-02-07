@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import java.util.Base64;
 import java.util.Enumeration;
 
@@ -514,5 +516,21 @@ public class Utility implements IUtility {
 
     private String getFilePath(String file) {
         return System.getProperty(Constants.USER_DIR) + Constants.PATH_DELIMITER + file;
+    }
+
+    public void addToZip(String srcFile, ZipOutputStream zipOut) {
+        File fileToZip = new File(srcFile);
+        try (FileInputStream fis = new FileInputStream(fileToZip)) {
+            ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
+            zipOut.putNextEntry(zipEntry);
+
+            byte[] bytes = new byte[1024];
+            int length;
+            while ((length = fis.read(bytes)) >= 0) {
+                zipOut.write(bytes, 0, length);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

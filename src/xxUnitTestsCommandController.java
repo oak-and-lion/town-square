@@ -68,9 +68,9 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
         final String INVALID_COMMAND_PREFIX = "-command";
         ICommandController commandController = factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
 
-        Boolean[] result = commandController.processCommand(INVALID_COMMAND_PREFIX, new xxMockSquare());
+        BooleanString[] result = commandController.processCommand(INVALID_COMMAND_PREFIX, new xxMockSquare());
 
-        checkEquals(result[0], false, WRONG_RESULT_VALUE_MESSAGE + METHOD_NAME);
+        checkEquals(result[0].getBoolean(), false, WRONG_RESULT_VALUE_MESSAGE + METHOD_NAME);
         checkEquals(result.length, 1, WRONG_RESULT_LENGTH_MESSAGE + METHOD_NAME);
     }
 
@@ -80,9 +80,9 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
         final String INVALID_COMMAND = "/command";
         ICommandController commandController = factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
 
-        Boolean[] result = commandController.processCommand(INVALID_COMMAND, new xxMockSquare());
+        BooleanString[] result = commandController.processCommand(INVALID_COMMAND, new xxMockSquare());
 
-        checkEquals(result[0], false, WRONG_RESULT_VALUE_MESSAGE + METHOD_NAME);
+        checkEquals(result[0].getBoolean(), false, WRONG_RESULT_VALUE_MESSAGE + METHOD_NAME);
         checkEquals(result.length, 1, WRONG_RESULT_LENGTH_MESSAGE + METHOD_NAME);
     }
 
@@ -92,9 +92,9 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
         final String COMMAND = "/block searchFound";
         ICommandController commandController = factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
 
-        Boolean[] result = commandController.processCommand(COMMAND, new xxMockSquare());
+        BooleanString[] result = commandController.processCommand(COMMAND, new xxMockSquare());
 
-        checkEquals(result[0], true, WRONG_RESULT_VALUE_MESSAGE + METHOD_NAME);
+        checkEquals(result[0].getBoolean(), true, WRONG_RESULT_VALUE_MESSAGE + METHOD_NAME);
         checkEquals(result.length, 1, WRONG_RESULT_LENGTH_MESSAGE + METHOD_NAME);
     }
 
@@ -104,9 +104,9 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
         final String COMMAND = "/block searchNotFound";
         ICommandController commandController = factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
 
-        Boolean[] result = commandController.processCommand(COMMAND, new xxMockSquare());
+        BooleanString[] result = commandController.processCommand(COMMAND, new xxMockSquare());
 
-        checkEquals(result[0], false, WRONG_RESULT_VALUE_MESSAGE + METHOD_NAME);
+        checkEquals(result[0].getBoolean(), false, WRONG_RESULT_VALUE_MESSAGE + METHOD_NAME);
         checkEquals(result.length, 1, WRONG_RESULT_LENGTH_MESSAGE + METHOD_NAME);
     }
 }

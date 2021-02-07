@@ -160,7 +160,7 @@ public class Factory implements IFactory {
 
     public ICommandController createCommandController(int type, IUtility utility, IDialogController controller) {
         if (type == Constants.BASE_COMMAND_CONTROLLER) {
-            return new CommandController(utility, controller);
+            return new CommandController(utility, controller, this);
         }
 
         return null;

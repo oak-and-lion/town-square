@@ -1,3 +1,5 @@
+import java.util.zip.ZipOutputStream;
+
 public class xxMockIUtility implements IUtility {
     private static final String SEARCH_VALUE = "searchFound";
 
@@ -80,5 +82,8 @@ public class xxMockIUtility implements IUtility {
     }
     public byte[] convertFromBase64(String data) {
         return new byte[0];
+    }
+    public void addToZip(String src, ZipOutputStream out){
+        // not needed
     }
 }

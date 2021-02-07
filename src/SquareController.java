@@ -104,6 +104,10 @@ public class SquareController implements ISquareController {
             result.setResponse(buildResult(Constants.OK_RESULT, Constants.VERSION));
         } else if (command.equals(Constants.REGISTER_ALIAS_COMMAND)) {
             result.setResponse(buildResult(Constants.OK_RESULT, registerAlias(square, split)));
+        } else if (command.equals(Constants.CLONE_COMMAND)) {
+            result.setResponse(buildClone(square, split));
+        } else if (command.equals(Constants.SEND_CLONE_COMMAND)) {
+            result.setResponse(packageClone(square, split));
         } else if (command.equals(Constants.ACK_COMMAND)) {
             result.setResponse(buildResult(Constants.OK_RESULT, Constants.ACK_BACK));
         } else if (command.equals(Constants.FAILURE_COMMAND)) {
@@ -140,6 +144,20 @@ public class SquareController implements ISquareController {
         }
 
         return result;
+    }
+
+    private String packageClone(ISquare square, String[] args) {
+        return Constants.EMPTY_STRING;
+    }
+
+    private String buildClone(ISquare square, String[] args) {
+        IDialogController controller = square.getSampleController();
+        ICommandController cmdController = controller.getCommandController();
+        BooleanString[] result = cmdController.processCommand(Constants.FORWARD_SLASH + args[2] + Constants.SPACE + args[3], square);
+        if (result.length > 0 && result[0].getBoolean()) {
+            return buildResult(Constants.OK_RESULT, result[0].getString());
+        }
+        return buildResult(Constants.MALFORMED_REQUEST_RESULT, Constants.MALFORMED_REQUEST_MESSAGE);
     }
 
     private String processJoinRequest(String[] args, ISquare square) {
@@ -289,18 +307,12 @@ public class SquareController implements ISquareController {
         }
 
         String fileRequest = split[3].trim().toLowerCase();
-        if (fileRequest.endsWith(Constants.KEY_FILE_EXT)
-                || fileRequest.endsWith(Constants.BLOCK_FILE_EXT)
-                || fileRequest.endsWith(Constants.ALIAS_FILE_EXT)
-                || fileRequest.endsWith(Constants.MEMBERS_FILE_EXT)
-                || fileRequest.endsWith(Constants.POSTS_FILE_EXT)
-                || fileRequest.endsWith(Constants.LOG_FILE_EXT)
-                || fileRequest.endsWith(Constants.ID_FILE_EXT)
-                || fileRequest.endsWith(Constants.JAR_FILE_EXT)
-                || fileRequest.endsWith(Constants.TXT_FILE_EXT)
-                || fileRequest.endsWith(Constants.SH_FILE_EXT)
-                || fileRequest.endsWith(Constants.BAT_FILE_EXT)
-                || fileRequest.endsWith(Constants.SQUARE_FILE_EXT)) {
+        if (fileRequest.endsWith(Constants.KEY_FILE_EXT) || fileRequest.endsWith(Constants.BLOCK_FILE_EXT)
+                || fileRequest.endsWith(Constants.ALIAS_FILE_EXT) || fileRequest.endsWith(Constants.MEMBERS_FILE_EXT)
+                || fileRequest.endsWith(Constants.POSTS_FILE_EXT) || fileRequest.endsWith(Constants.LOG_FILE_EXT)
+                || fileRequest.endsWith(Constants.ID_FILE_EXT) || fileRequest.endsWith(Constants.JAR_FILE_EXT)
+                || fileRequest.endsWith(Constants.TXT_FILE_EXT) || fileRequest.endsWith(Constants.SH_FILE_EXT)
+                || fileRequest.endsWith(Constants.BAT_FILE_EXT) || fileRequest.endsWith(Constants.SQUARE_FILE_EXT)) {
             return Constants.GO_AWAY;
         }
 

@@ -30,4 +30,6 @@ public interface IDialogController {
     void setFactory(IFactory factory);
     IApp getParent();
     void showLicense();
+    ICommandController getCommandController();
+    boolean isGui();
 }

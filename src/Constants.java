@@ -230,4 +230,11 @@ public class Constants {
     public static final double DEFAULT_WIDTH = -1;
     public static final double DEFAULT_HEIGHT = -1;
     public static final String LICENSE_COMMAND = "license";
+    public static final String CLONE_COMMAND = "clone";
+    public static final String DNA_COMMAND = "dna";
+    public static final String CLONE_CHALLENGE = "clone dna unlock";
+    public static final String DNA_FILE_EXT = ".dna";
+    public static final String CLONE_FILE_EXT = ".clone";
+    public static final String TEMP_FILE_EXT = ".temp";
+    public static final String SEND_CLONE_COMMAND = "getClone";
 }

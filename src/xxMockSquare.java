@@ -3,6 +3,14 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.VBox;
 
 public class xxMockSquare implements ISquare {
+    private IDialogController controller;
+    public xxMockSquare() {
+
+    }
+
+    public xxMockSquare(IDialogController controller) {
+        this.controller = controller;
+    }
     public String getIP(){
         return Constants.EMPTY_STRING;
     }
@@ -43,7 +51,7 @@ public class xxMockSquare implements ISquare {
         return null;
     }
     public IDialogController getSampleController(){
-        return null;
+        return this.controller;
     }
     public int getLastKnownPost() {
         return -1;

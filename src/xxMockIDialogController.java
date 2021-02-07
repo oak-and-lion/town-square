@@ -4,8 +4,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class xxMockIDialogController implements IDialogController {
+    ICommandController commandController;
     public ISquare getSquareByInvite(String id){
-        return new xxMockSquare();
+        return new xxMockSquare(this);
+    }
+
+    public boolean isGui() {
+        return false;
     }
     public String getDefaultName() {
         return Constants.EMPTY_STRING;
@@ -64,7 +69,7 @@ public class xxMockIDialogController implements IDialogController {
     }
 
     public void setCommandController(ICommandController value) {
-        // not needed
+        commandController = value;
     }
 
     public void showAbout() {
@@ -93,5 +98,9 @@ public class xxMockIDialogController implements IDialogController {
 
     public void showLicense() {
         // not needed
+    }
+
+    public ICommandController getCommandController() {
+        return commandController;
     }
 }
