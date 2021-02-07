@@ -15,7 +15,7 @@ rm staging/ClientCmdTest.class
 echo copying sample.xml
 cp sample.fxml staging/sample.fxml
 echo copying manifest files
-cp manifest.txt staging/manifest.txt
+cp Manifest.txt staging/Manifest.txt
 
 cd staging
 
@@ -27,7 +27,7 @@ cp ../../../javafx-mac.zip javafx-mac.zip
 cp ../../../openjdk-11.0.2_osx-x64_bin.tar.gz openjdk-11.0.2_osx-x64_bin.tar.gz
 cp ../../../town-square-mac.sh town-square-mac.sh
 
-jar -c -v -m ../manifest.txt -f App.jar ../*.class ../sample.fxml
+jar -c -v -m ../Manifest.txt -f App.jar ../*.class ../sample.fxml
 
 mkdir package
 
