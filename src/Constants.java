@@ -3,7 +3,7 @@ import javafx.scene.paint.Color;
 public class Constants {
     private Constants() {}
 
-    public static final String VERSION = "0.0.3";
+    public static final String VERSION = "0.0.4";
     public static final int BASE_CRYPTO_UTILS = 1;
     public static final int BASE_SQUARE_KEY_PAIR = 1;
     public static final int UTILITY_SQUARE_KEY_PAIR = 2;
@@ -242,4 +242,5 @@ public class Constants {
     public static final String CLONE_MESSAGE_TITLE = "Clone Information Retrieved";
     public static final String CLONE_MESSAGE_HEADER = "Clone Information Needs to be Applied";
     public static final String CLONE_MESSAGE = "You must restart Town Square in order to apply\nthe Clone Information. After you have exited Town Square,\nyou can either unzip the 'my_square.clone' file\nor use the start script packaged to apply it automatically.";
+    public static final String GET_APP_JAR_COMMAND = "appfile";
 }

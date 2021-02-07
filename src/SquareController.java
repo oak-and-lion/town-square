@@ -77,7 +77,13 @@ public class SquareController implements ISquareController {
     private SquareResponse processRequestCommand(String[] split) {
         SquareResponse result = new SquareResponse();
 
-        ISquare square = sampleController.getSquareByInvite(split[1]);
+        ISquare square;
+
+        if (split[2].equals(Constants.CHECK_VERSION_COMMAND)) {
+            square = new xxMockSquare();
+        } else {
+            square = sampleController.getSquareByInvite(split[1]);
+        }
 
         if (square == null) {
             result.setResponse(buildResult(Constants.MALFORMED_REQUEST_RESULT, Constants.MALFORMED_REQUEST_MESSAGE));
