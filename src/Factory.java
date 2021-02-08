@@ -233,4 +233,14 @@ public class Factory implements IFactory {
 
         return null;
     }
+
+    public ICommandWorker createCommandWorker(String cmd, IUtility utility, ISquare square, IDialogController dialogController) {
+        if (cmd.equals(Constants.NICKNAME_COMMAND)) {
+            return new CommandWorkerNickName(utility, square, dialogController);
+        } else if (cmd.equals(Constants.PAUSE_COMMAND)) {
+            return new CommandWorkerPause(utility, square, dialogController);
+        }
+
+        return null;
+    }
 }

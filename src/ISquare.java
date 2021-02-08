@@ -24,4 +24,5 @@ public interface ISquare {
     Tab getTab();
     void runClientFunctions(int maxRuns);
     ISquareController getController();
+    String getTrueName();
 }

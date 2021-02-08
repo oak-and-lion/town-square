@@ -27,7 +27,10 @@ public class xxMockSquare implements ISquare {
         return null;
     }
     public String getName(){
-        return "My Square";
+        return getTrueName();
+    }
+    public String getTrueName() {
+        return Constants.DEFAULT_SQUARE_NAME;
     }
     public String getId(){
         return "123";

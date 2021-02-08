@@ -107,4 +107,8 @@ public class xxMockIDialogController implements IDialogController {
     public void showCloneMessage() {
         // not needed
     }
+
+    public void setTabName(ISquare square, String oldName, String newName) {
+        // not needed
+    }
 }

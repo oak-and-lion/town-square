@@ -188,6 +188,7 @@ public class Constants {
     public static final String EXPOSE_COMMAND = "expose";
     public static final String PAUSE_COMMAND = "pause";
     public static final String UNPAUSE_COMMAND = "unpause";
+    public static final String NICKNAME_COMMAND = "nickname";
     public static final String COMMANDS_TITLE = "List of Commands";
     public static final String SEMI_COLON = ";";
     public static final int PAUSE_WAIT_TIME = 10000;
@@ -247,4 +248,5 @@ public class Constants {
     public static final String GET_APP_JAR_COMMAND = "appfile";
     public static final String NEW_APP_VER_FILE = "_new_App.ver";
     public static final String MEMBER_BUTTON_TEXT = "Members";
+    public static final String NICKNAME_FILE_EXT = ".nickname";
 }

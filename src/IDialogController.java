@@ -33,4 +33,5 @@ public interface IDialogController {
     ICommandController getCommandController();
     boolean isGui();
     void showCloneMessage();
+    void setTabName(ISquare square, String oldName, String newName);
 }

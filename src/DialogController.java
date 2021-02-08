@@ -142,7 +142,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         ButtonType bt = alert.getSelectedButton();
         if (bt.equals(ButtonType.OK)) {
             ISquare square = (ISquare) tabPane.getSelectionModel().getSelectedItem().getUserData();
-            if (square == null || square.getName().equals(Constants.DEFAULT_SQUARE_NAME)) {
+            if (square == null || square.getTrueName().equals(Constants.DEFAULT_SQUARE_NAME)) {
                 return;
             }
             utility.writeFile(square.getSafeLowerName() + Constants.PAUSE_FILE_EXT, Constants.PAUSE_FILE_CONTENTS);
@@ -276,6 +276,11 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         } else {
             tab.setText(tab.getText().replace(Constants.PAUSED_TAB_NOTIFICATION, Constants.EMPTY_STRING));
         }
+    }
+
+    public void setTabName(ISquare square, String oldName, String newName) {
+        Tab tab = square.getTab();
+        tab.setText(tab.getText().replace(oldName, newName));
     }
 
     public DialogController() {

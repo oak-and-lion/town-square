@@ -110,4 +110,8 @@ public class xxMockFactory implements IFactory {
     public IShowSquareMembers createShowSquareMembers(int type) {
         return null;
     }
+
+    public ICommandWorker createCommandWorker(String cmd, IUtility utility, ISquare square, IDialogController dialogController) {
+        return null;
+    }
 }

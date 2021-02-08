@@ -25,6 +25,7 @@ public class CommandController implements ICommandController {
         commands.add(Constants.HELP_COMMAND);
         commands.add(Constants.HIDE_COMMAND);
         commands.add(Constants.LICENSE_COMMAND);
+        commands.add(Constants.NICKNAME_COMMAND);
         commands.add(Constants.PAUSE_COMMAND);
         commands.add(Constants.UNBLOCK_COMMAND);
         commands.add(Constants.UNPAUSE_COMMAND);
@@ -37,50 +38,59 @@ public class CommandController implements ICommandController {
 
         command = command.replace(Constants.COMMAND_PREFIX, Constants.EMPTY_STRING);
         String[] commandBreakdown = command.split(Constants.SPACE);
+        String[] commandArgs = command.split(Constants.SPACE, 2);
+        String args = Constants.EMPTY_STRING;
+        if (commandArgs.length > 1) {
+            args = commandArgs[1];
+        }
 
         String cmd = commandBreakdown[0].replace(Constants.SPACE, Constants.EMPTY_STRING).toLowerCase().trim();
 
         ArrayList<BooleanString> result = new ArrayList<>();
-        if (cmd.equals(Constants.BLOCK_COMMAND)) {
-            String[] users = commandBreakdown[1].split(Constants.SEMI_COLON);
-            for (String user : users) {
-                result.add(new BooleanString(blockUser(user, square), Constants.EMPTY_STRING));
-            }
-        } else if (cmd.equals(Constants.PAUSE_COMMAND)) {
-            pauseSquare(square);
-            result.add(new BooleanString(true, Constants.EMPTY_STRING));
-        } else if (cmd.equals(Constants.UNPAUSE_COMMAND)) {
-            unPauseSquare(square);
-            result.add(new BooleanString(true, Constants.EMPTY_STRING));
-        } else if (cmd.equals(Constants.ABOUT_COMMAND)) {
-            parent.showAbout();
-            result.add(new BooleanString(true, Constants.EMPTY_STRING));
-        } else if (cmd.equals(Constants.UNBLOCK_COMMAND)) {
-            String[] users = commandBreakdown[1].split(Constants.SEMI_COLON);
-            for (String user : users) {
-                result.add(new BooleanString(unblockUser(user, square), Constants.EMPTY_STRING));
-            }
-        } else if (cmd.equals(Constants.HELP_COMMAND)) {
-            parent.showList(commands.toArray(new String[commands.size()]), Constants.COMMANDS_TITLE,
-                    Constants.COMMANDS_HEADER);
-            result.add(new BooleanString(true, Constants.EMPTY_STRING));
-        } else if (cmd.equals(Constants.HIDE_COMMAND)) {
-            parent.getParent().hideServer();
-            result.add(new BooleanString(true, Constants.EMPTY_STRING));
-        } else if (cmd.equals(Constants.EXPOSE_COMMAND)) {
-            parent.getParent().exposeServer();
-            result.add(new BooleanString(true, Constants.EMPTY_STRING));
-        } else if (cmd.equals(Constants.LICENSE_COMMAND)) {
-            parent.showLicense();
-            result.add(new BooleanString(true, Constants.EMPTY_STRING));
-        } else if (cmd.equals(Constants.DNA_COMMAND)) {
-            result.add(new BooleanString(createDNA(commandBreakdown[1], square), Constants.EMPTY_STRING));
-        } else if (cmd.equals(Constants.CLONE_COMMAND)) {
-            result.add(createClone(commandBreakdown[1], square));
-        } else if (cmd.equals(Constants.SEND_CLONE_COMMAND)) {
-            result.add(getClone(commandBreakdown, square));
+
+        ICommandWorker worker = factory.createCommandWorker(cmd, utility, square, parent);
+
+        if (worker != null) {
+            result.add(worker.doWork(args));
         } else {
-            result.add(new BooleanString(false, Constants.EMPTY_STRING));
+            if (cmd.equals(Constants.BLOCK_COMMAND)) {
+                String[] users = commandBreakdown[1].split(Constants.SEMI_COLON);
+                for (String user : users) {
+                    result.add(new BooleanString(blockUser(user, square), Constants.EMPTY_STRING));
+                }
+            } else if (cmd.equals(Constants.UNPAUSE_COMMAND)) {
+                unPauseSquare(square);
+                result.add(new BooleanString(true, Constants.EMPTY_STRING));
+            } else if (cmd.equals(Constants.ABOUT_COMMAND)) {
+                parent.showAbout();
+                result.add(new BooleanString(true, Constants.EMPTY_STRING));
+            } else if (cmd.equals(Constants.UNBLOCK_COMMAND)) {
+                String[] users = commandBreakdown[1].split(Constants.SEMI_COLON);
+                for (String user : users) {
+                    result.add(new BooleanString(unblockUser(user, square), Constants.EMPTY_STRING));
+                }
+            } else if (cmd.equals(Constants.HELP_COMMAND)) {
+                parent.showList(commands.toArray(new String[commands.size()]), Constants.COMMANDS_TITLE,
+                        Constants.COMMANDS_HEADER);
+                result.add(new BooleanString(true, Constants.EMPTY_STRING));
+            } else if (cmd.equals(Constants.HIDE_COMMAND)) {
+                parent.getParent().hideServer();
+                result.add(new BooleanString(true, Constants.EMPTY_STRING));
+            } else if (cmd.equals(Constants.EXPOSE_COMMAND)) {
+                parent.getParent().exposeServer();
+                result.add(new BooleanString(true, Constants.EMPTY_STRING));
+            } else if (cmd.equals(Constants.LICENSE_COMMAND)) {
+                parent.showLicense();
+                result.add(new BooleanString(true, Constants.EMPTY_STRING));
+            } else if (cmd.equals(Constants.DNA_COMMAND)) {
+                result.add(new BooleanString(createDNA(commandBreakdown[1], square), Constants.EMPTY_STRING));
+            } else if (cmd.equals(Constants.CLONE_COMMAND)) {
+                result.add(createClone(commandBreakdown[1], square));
+            } else if (cmd.equals(Constants.SEND_CLONE_COMMAND)) {
+                result.add(getClone(commandBreakdown, square));
+            } else {
+                result.add(new BooleanString(false, Constants.EMPTY_STRING));
+            }
         }
 
         return result.toArray(new BooleanString[result.size()]);
@@ -116,7 +126,7 @@ public class CommandController implements ICommandController {
 
             if (!alreadyPaused) {
                 // pause the square while creating the clone package
-                pauseSquare(square);
+                //pauseSquare(square);
             }
 
             utility.deleteFile(square.getSafeLowerName() + Constants.CLONE_FILE_EXT);
@@ -191,30 +201,6 @@ public class CommandController implements ICommandController {
         }
 
         return new BooleanString(false, Constants.EMPTY_STRING);
-    }
-
-    public boolean pauseSquare(ISquare square) {
-        if (square == null) {
-            return false;
-        }
-
-        FileWriteResponse result = utility.writeFile(square.getSafeLowerName() + Constants.PAUSE_FILE_EXT,
-                Constants.PAUSE_FILE_CONTENTS);
-
-        if (result.isSuccessful() && parent.isGui()) {
-            try {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        parent.updatePauseNotification(square, true);
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        return result.isSuccessful();
     }
 
     public boolean unPauseSquare(ISquare square) {

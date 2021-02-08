@@ -91,6 +91,13 @@ public class Square implements ISquare {
     }
 
     public String getName() {
+        if (utility.checkFileExists(getSafeLowerName() + Constants.NICKNAME_FILE_EXT)) {
+            return utility.readFile(getSafeLowerName() + Constants.NICKNAME_FILE_EXT);
+        }
+        return getTrueName();
+    }
+
+    public String getTrueName() {
         return name;
     }
 
