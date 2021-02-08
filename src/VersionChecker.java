@@ -80,27 +80,18 @@ public class VersionChecker extends Thread implements IVersionChecker {
 
         if (resultVersion.length == currentVersion.length && resultVersion.length == 3
                 && !isVersionEqual(resultVersion, currentVersion)) {
-            String response = client.sendMessage(Constants.REQUEST_FILE_COMMAND + Constants.COMMAND_DATA_SEPARATOR
+            String response = client.sendMessage(Constants.GET_APP_JAR_COMMAND + Constants.COMMAND_DATA_SEPARATOR
                     + Constants.JAR_FILE + Constants.COMMAND_DATA_SEPARATOR + uniqueId, false);
 
             SquareResponse responseData = new SquareResponse(response);
 
-            if (responseData.getMessage().equals(Constants.EMPTY_STRING)) {
+            if (!responseData.getCode().equals(Constants.OK_RESULT)) {
                 return;
             }
 
-            ISquareKeyPair keys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
-            keys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
+            byte[] data = utility.convertFromBase64(responseData.getMessage());
 
-            String[] fileData = responseData.getMessage().split(Constants.COMMAND_DATA_SEPARATOR);
-
-            String key = keys.decryptFromBase64(fileData[0]);
-
-            String f = utility.decrypt(fileData[1], key);
-
-            byte[] imageFile = utility.convertFromBase64(f);
-
-            utility.writeBinaryFile(Constants.TEMP_JAR_FILE, imageFile);
+            utility.writeBinaryFile(Constants.TEMP_JAR_FILE, data);
         }
     }
 
