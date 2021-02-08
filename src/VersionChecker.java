@@ -76,7 +76,7 @@ public class VersionChecker extends Thread implements IVersionChecker {
 
         String[] resultVersion = versionResponse.getMessage().split(Constants.PERIOD_SPLIT);
 
-        String[] currentVersion = Constants.VERSION.split(Constants.PERIOD_SPLIT);
+        String[] currentVersion = getKnownVersion().split(Constants.PERIOD_SPLIT);
 
         if (resultVersion.length == currentVersion.length && resultVersion.length == 3
                 && !isVersionEqual(resultVersion, currentVersion)) {
@@ -92,6 +92,8 @@ public class VersionChecker extends Thread implements IVersionChecker {
             byte[] data = utility.convertFromBase64(responseData.getMessage());
 
             utility.writeBinaryFile(Constants.TEMP_JAR_FILE, data);
+
+            utility.writeFile(Constants.NEW_APP_VER_FILE, versionResponse.getMessage());
         }
     }
 
@@ -109,5 +111,13 @@ public class VersionChecker extends Thread implements IVersionChecker {
         }
 
         return result;
+    }
+
+    private String getKnownVersion() {
+        if (utility.checkFileExists(Constants.NEW_APP_VER_FILE)) {
+            return utility.readFile(Constants.NEW_APP_VER_FILE);
+        }
+
+        return Constants.VERSION;
     }
 }
