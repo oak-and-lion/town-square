@@ -94,4 +94,12 @@ public class xxMockFactory implements IFactory {
     public IMemberAliasUpdateThread createMemberAliasUpdateThread(int type, String info, String uniqueId, ISquare square, IUtility utility) {
         return null;
     }
+
+    public ISquareWorker createSquareWorker(String command, IUtility utility, IDialogController dialogController, ILogIt logger) {
+        return null;
+    }
+
+    public ISquare findSquareByCommand(String command, String inviteId, IDialogController dialogController) {
+        return null;
+    }
 }

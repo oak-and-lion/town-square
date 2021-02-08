@@ -28,6 +28,10 @@ public class SquareResponse {
         setResponse(value);
     }
 
+    public SquareResponse(String responseCode, String responseMessage) {
+        setResponse(responseCode + Constants.COLON + responseMessage);
+    }
+
     public void setResponse(String value) {
         response = value;
         setResponseValues();

@@ -182,4 +182,39 @@ public class Factory implements IFactory {
 
         return null;
     }
+
+    public ISquareWorker createSquareWorker(String command, IUtility utility, IDialogController dialogController, ILogIt logger) {
+        if (command.equals(Constants.GET_APP_JAR_COMMAND)) {
+            return new SquareWorkerAppJar(utility, command);
+        } else if (command.equals(Constants.ACK_COMMAND)) {
+            return new SquareWorkerAck(utility, command);
+        } else if (command.equals(Constants.REQUEST_PUBLIC_KEY_COMMAND)) {
+            return new SquareWorkerPublicKeyRequest(utility, command);
+        } else if (command.equals(Constants.JOIN_COMMAND)) {
+            return new SquareWorkerJoin(utility, dialogController, command);
+        } else if (command.equals(Constants.READ_COMMAND)) {
+            return new SquareWorkerRead(utility, this, logger, command);
+        } else if (command.equals(Constants.FAILURE_COMMAND)) {
+            return new SquareWorkerFailure(utility, command);
+        } else if (command.equals(Constants.CLONE_COMMAND)) {
+            return new SquareWorkerClone(utility, command);
+        } else if (command.equals(Constants.REQUEST_FILE_COMMAND)) {
+            return new SquareWorkerGetFile(utility, command, this);
+        } else if (command.equals(Constants.READ_ALIAS_COMMAND)) {
+            return new SquareWorkerReadAlias(utility, command, this);
+        } 
+
+        return new SquareWorkerEmpty(utility, command);
+    }
+
+    public ISquare findSquareByCommand(String command, String inviteId, IDialogController dialogController) {
+        ISquare square;
+        if (command.equals(Constants.CHECK_VERSION_COMMAND) || command.equals(Constants.GET_APP_JAR_COMMAND)) {
+            square = new xxMockSquare();
+        } else {
+            square = dialogController.getSquareByInvite(inviteId);
+        }
+
+        return square;
+    }
 }

@@ -32,4 +32,6 @@ public interface IFactory {
             TextField postsTextField);
     IModalViewer createModalViewer(int type);
     IMemberAliasUpdateThread createMemberAliasUpdateThread(int type, String info, String uniqueId, ISquare square, IUtility utility);
+    ISquareWorker createSquareWorker(String command, IUtility utility, IDialogController dialogController, ILogIt logger);
+    ISquare findSquareByCommand(String command, String inviteId, IDialogController dialogController);
 }
