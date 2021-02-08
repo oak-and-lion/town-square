@@ -4,6 +4,8 @@ public class SquareWorkerAppJar extends SquareWorkerBase implements ISquareWorke
     }
 
     public SquareResponse doWork(ISquare square, String[] args) {
-        return new SquareResponse();
+        byte[] data = utility.readBinaryFile(Constants.JAR_FILE);
+        
+        return new SquareResponse(Constants.OK_RESULT, utility.convertToBase64(data));
     }
 }

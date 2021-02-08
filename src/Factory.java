@@ -202,6 +202,8 @@ public class Factory implements IFactory {
             return new SquareWorkerGetFile(utility, command, this);
         } else if (command.equals(Constants.READ_ALIAS_COMMAND)) {
             return new SquareWorkerReadAlias(utility, command, this);
+        } else if (command.equals(Constants.CHECK_VERSION_COMMAND)) {
+            return new SquareWorkerCheckVersion(utility, command);
         } 
 
         return new SquareWorkerEmpty(utility, command);
