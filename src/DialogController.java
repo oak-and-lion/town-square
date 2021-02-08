@@ -203,24 +203,22 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         parent.closeApp(Constants.SYSTEM_EXIT_OK, Constants.GRACEFUL_SHUTDOWN);
     }
 
-    public void showLicense() { 
+    public void showLicense() {
         ModalLicenseViewer l = new ModalLicenseViewer();
         l.show(License.getLicense());
     }
 
     public void showAbout() {
         IAlertBox alertBox = factory.createAlertBox(Constants.BASE_ALERT_BOX);
-        alertBox.createAlert(
-                Constants.ABOUT_TITLE, Constants.ABOUT_HEADER, Constants.VERSION_TEXT_PREFIX + Constants.VERSION
-                        + Constants.NEWLINE + Constants.DEVELOPED_BY + Constants.DEVELOPER_ONE_NAME + Constants.NEWLINE
-                        + Constants.GITHUB_REPO,
+        alertBox.createAlert(Constants.ABOUT_TITLE, Constants.ABOUT_HEADER,
+                Constants.VERSION_TEXT_PREFIX + Constants.VERSION + Constants.NEWLINE + Constants.DEVELOPED_BY
+                        + Constants.DEVELOPER_ONE_NAME + Constants.NEWLINE + Constants.GITHUB_REPO,
                 AlertType.INFORMATION);
     }
 
     public void showCloneMessage() {
         IAlertBox alertBox = factory.createAlertBox(Constants.BASE_ALERT_BOX);
-        alertBox.createAlert(
-                Constants.CLONE_MESSAGE_TITLE, Constants.CLONE_MESSAGE_HEADER, Constants.CLONE_MESSAGE,
+        alertBox.createAlert(Constants.CLONE_MESSAGE_TITLE, Constants.CLONE_MESSAGE_HEADER, Constants.CLONE_MESSAGE,
                 AlertType.INFORMATION);
     }
 
@@ -447,6 +445,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     }
 
     private VBox createGeneratePostControls(ISquare square) {
+        Label spacer = createLabel(Constants.EMPTY_STRING, 0, 5, 0, 5);
         VBox generatePostControls = createVBox(0, 10, 0, 10);
         generatePostControls.setMinHeight(281);
         generatePostControls.setStyle("-fx-padding: 10;-fx-border-style: solid inside;-fx-border-width: 2;"
@@ -459,8 +458,14 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         postControls.add(generatePostControls);
 
         HBox postsLabelHBox = createHBox(0, 0, 0, 0);
-        Label postsLabel = createLabel(Constants.POSTS_LABEL, 0, 0, 0, 0);
-        postsLabelHBox.getChildren().add(postsLabel);
+        Label postsLabel = createLabel(Constants.POSTS_LABEL, 5, 5, 0, 0);
+        ITownSquareButton membersButton = factory.createTownSquareButton(Constants.BASE_TOWN_SQUARE_BUTTON,
+                Constants.MEMBER_BUTTON_TEXT, square, null);
+        membersButton.setOnAction(event -> {
+            IShowSquareMembers showMembers = factory.createShowSquareMembers(Constants.BASE_SHOW_SQUARE_MEMBERS);
+            showMembers.showMembers(membersButton.getSquare(), factory, utility);
+        });
+        postsLabelHBox.getChildren().addAll(postsLabel, (TownSquareButton) membersButton);
 
         HBox postsHBox = createHBox(10, 0, 10, 0);
 
@@ -502,8 +507,6 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         }
 
         postTextFields.add(postsTextField);
-
-        Label spacer = createLabel(Constants.EMPTY_STRING, 0, 5, 0, 5);
 
         postsButtonHBox.getChildren().addAll((TownSquareButton) postsButton, spacer, postsTextField);
 

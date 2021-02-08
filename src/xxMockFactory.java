@@ -91,6 +91,10 @@ public class xxMockFactory implements IFactory {
         return null;
     }
 
+    public IModalViewer createModalViewer(int type, IUtility utility, ISquare square) {
+        return null;
+    }
+
     public IMemberAliasUpdateThread createMemberAliasUpdateThread(int type, String info, String uniqueId, ISquare square, IUtility utility) {
         return null;
     }
@@ -100,6 +104,10 @@ public class xxMockFactory implements IFactory {
     }
 
     public ISquare findSquareByCommand(String command, String inviteId, IDialogController dialogController) {
+        return null;
+    }
+
+    public IShowSquareMembers createShowSquareMembers(int type) {
         return null;
     }
 }

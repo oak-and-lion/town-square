@@ -31,7 +31,9 @@ public interface IFactory {
     ITownSquareButton createTownSquareButton(int type, String buttonText, ISquare square,
             TextField postsTextField);
     IModalViewer createModalViewer(int type);
+    IModalViewer createModalViewer(int type, IUtility utility, ISquare square);
     IMemberAliasUpdateThread createMemberAliasUpdateThread(int type, String info, String uniqueId, ISquare square, IUtility utility);
     ISquareWorker createSquareWorker(String command, IUtility utility, IDialogController dialogController, ILogIt logger);
     ISquare findSquareByCommand(String command, String inviteId, IDialogController dialogController);
+    IShowSquareMembers createShowSquareMembers(int type);
 }

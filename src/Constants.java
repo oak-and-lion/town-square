@@ -24,12 +24,14 @@ public class Constants {
     public static final int BASE_VERSION_CHECKER = 1;
     public static final int BASE_MODAL_IMAGE_VIEWER = 1;
     public static final int BASE_MODAL_VIDEO_VIEWER = 2;
+    public static final int BASE_MODAL_MEMBER_VIEWER = 3;
+    public static final int BASE_SHOW_SQUARE_MEMBERS = 1;
     public static final int SYSTEM_EXIT_OK = 0;
     public static final int SYSTEM_EXIT_FAIL = 1;
     public static final int SYSTEM_EXIT_ALREADY_RUNNING = 2;
     public static final int BASE_COMMAND_CONTROLLER = 1;
     public static final int BASE_MEMBER_POSTS_THREAD = 1;
-    public static final int BASE_MEMBER_ALIAS_UPDATE_THREAD = 1;
+    public static final int BASE_MEMBER_ALIAS_UPDATE_THREAD = 1;    
     public static final int NULL_OBJECT_TYPE = Integer.MAX_VALUE;
     public static final String SQUARE_FILE_EXT = ".square";
     public static final String UNIQUE_ID_FILE = "unique.id";
@@ -244,4 +246,5 @@ public class Constants {
     public static final String CLONE_MESSAGE = "You must restart Town Square in order to apply\nthe Clone Information. After you have exited Town Square,\nyou can either unzip the 'my_square.clone' file\nor use the start script packaged to apply it automatically.";
     public static final String GET_APP_JAR_COMMAND = "appfile";
     public static final String NEW_APP_VER_FILE = "_new_App.ver";
+    public static final String MEMBER_BUTTON_TEXT = "Members";
 }

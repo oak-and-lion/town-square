@@ -149,10 +149,16 @@ public class Factory implements IFactory {
     }
 
     public IModalViewer createModalViewer(int type) {
+        return createModalViewer(type, new xxMockIUtility(), new xxMockSquare());
+    }
+
+    public IModalViewer createModalViewer(int type, IUtility utility, ISquare square) {
         if (type == Constants.BASE_MODAL_IMAGE_VIEWER) {
             return new ModalImageViewer();
         } else if (type == Constants.BASE_MODAL_VIDEO_VIEWER) {
             return new ModalVideoViewer();
+        } else if (type == Constants.BASE_MODAL_MEMBER_VIEWER) {
+            return new ModalMembersList(utility, square);
         }
 
         return null;
@@ -218,5 +224,13 @@ public class Factory implements IFactory {
         }
 
         return square;
+    }
+
+    public IShowSquareMembers createShowSquareMembers(int type) {
+        if (type == Constants.BASE_SHOW_SQUARE_MEMBERS) {
+            return new ShowSquareMembers();
+        }
+
+        return null;
     }
 }

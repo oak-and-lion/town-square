@@ -112,8 +112,12 @@ public class CommandController implements ICommandController {
                 tempPass.toString());
         // if successful:
         if (data.equals(Constants.CLONE_CHALLENGE)) {
-            // pause the square while creating the clone package
-            pauseSquare(square);
+            boolean alreadyPaused = utility.checkFileExists(square.getSafeLowerName() + Constants.PAUSE_FILE_EXT);
+
+            if (!alreadyPaused) {
+                // pause the square while creating the clone package
+                pauseSquare(square);
+            }
 
             utility.deleteFile(square.getSafeLowerName() + Constants.CLONE_FILE_EXT);
             // zip up the files
@@ -147,8 +151,11 @@ public class CommandController implements ICommandController {
             String encrypted = utility.encrypt(zippedB64, tempPass.toString());
 
             result = new BooleanString(true, encrypted);
-            // unpause square
-            unPauseSquare(square);
+
+            if (!alreadyPaused) {
+                // unpause square
+                unPauseSquare(square);
+            }
         }
 
         // if unsuccessful:

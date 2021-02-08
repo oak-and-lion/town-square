@@ -16,10 +16,15 @@ public class TownSquareButton extends Button implements ITownSquareButton {
     }
 
     public String getPostMessage() {
+        if (postMessage == null) {
+            return Constants.EMPTY_STRING;
+        }
         return postMessage.getText();
     }
 
     public void clearPostMessage() {
-        postMessage.setText(Constants.EMPTY_STRING);
+        if (postMessage != null) {
+            postMessage.setText(Constants.EMPTY_STRING);
+        }
     }
 }
