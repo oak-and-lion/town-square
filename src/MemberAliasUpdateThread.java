@@ -40,6 +40,9 @@ public class MemberAliasUpdateThread extends Thread implements IMemberAliasUpdat
                     square.getInvite());
             keys.setPublicKeyFromBase64(member[1]);
             for (String a : aliases) {
+                if (a.equals(Constants.EMPTY_STRING)) {
+                    continue;
+                }
                 String[] datas = a.split(Constants.QUESTION_MARK_SPLIT);
                 String[] addresses = datas[1].split(Constants.FORWARD_SLASH);
                 for (String address : addresses) {

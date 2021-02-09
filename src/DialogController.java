@@ -522,6 +522,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     private void postTheMessage(ISquare newSquare, String msg) {
         if (newSquare == null) {
+            System.out.println("no square to post to");
             return;
         }
         if (msg.startsWith(Constants.COMMAND_PREFIX)) {
