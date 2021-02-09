@@ -11,12 +11,14 @@ public class ServerThread extends Thread implements IServerThread {
     private ISquareController controller;
     private ILogIt logger;
     private IUtility utility;
+    private RequesterInfo requester;
  
-    public ServerThread(Socket socket, ISquareController squareController, ILogIt logger, IUtility utility) {
+    public ServerThread(Socket socket, ISquareController squareController, ILogIt logger, IUtility utility, RequesterInfo requester) {
         this.socket = socket;
         this.controller = squareController;
         this.logger = logger;
         this.utility = utility;
+        this.requester = requester;
     }
  
     @Override
@@ -33,7 +35,7 @@ public class ServerThread extends Thread implements IServerThread {
             do {
                 text = reader.readLine();
                 if (text != null && !text.equals("bye") && !controller.isHiding()) {
-                    SquareResponse response = controller.processRequest(text);
+                    SquareResponse response = controller.processRequest(text, requester);
                     writer.println(response.toString());
                 } else if (controller.isHiding()) {
                     writer.println(utility.generateRandomString(52));

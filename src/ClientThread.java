@@ -235,6 +235,7 @@ public class ClientThread extends Thread implements IClientThread {
     }
 
     private void processAliasFileReturn(String response) {
+        RequesterInfo requester = new RequesterInfo(utility.readFile(Constants.IP_FILE));
         String[] responseInfo = response.split(Constants.COMMAND_DATA_SEPARATOR);
         ISquareKeyPair tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
         tempKeys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
@@ -253,7 +254,7 @@ public class ClientThread extends Thread implements IClientThread {
                             + Constants.COMMAND_DATA_SEPARATOR + Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR
                             + temp2[0] + Constants.FILE_DATA_SEPARATOR + temp2[1] + Constants.FILE_DATA_SEPARATOR
                             + temp[0];
-                    squareController.processRequest(request);
+                    squareController.processRequest(request, requester);
                 }
             }
         }

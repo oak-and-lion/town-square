@@ -33,7 +33,8 @@ public class ClientCmdTest {
 
         //String info, String file, String uniqueId, String[] msg, ISquare square, IUtility utility
 
-        SquareResponse keyResp = squareController.processRequest("u%%%a7075b5b-b91d-4448-a0f9-d9b0bec1a726%%%pkey");
+        RequesterInfo requesterInfo = new RequesterInfo("127.0.0.1");
+        SquareResponse keyResp = squareController.processRequest("u%%%a7075b5b-b91d-4448-a0f9-d9b0bec1a726%%%pkey", requesterInfo);
 
         keyPair.setPublicKeyFromBase64(keyResp.getMessage());
         String key = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
@@ -41,7 +42,7 @@ public class ClientCmdTest {
         String f = keyPair.encryptToBase64(key);
         String d = text + f + "%%%" + e;
 
-        SquareResponse response = squareController.processRequest(d);
+        SquareResponse response = squareController.processRequest(d, requesterInfo);
 
         String temp = "password________";
 

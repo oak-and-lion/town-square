@@ -17,7 +17,7 @@ public class SquareController implements ISquareController {
         this.factory = factory;
     }
 
-    public SquareResponse processRequest(String request) {
+    public SquareResponse processRequest(String request, RequesterInfo requester) {
         SquareResponse result = new SquareResponse(Constants.MALFORMED_REQUEST_RESULT,
                 Constants.MALFORMED_REQUEST_MESSAGE);
         boolean okToProcess = true;
@@ -52,7 +52,7 @@ public class SquareController implements ISquareController {
         String command = split[2].trim();
         String inviteId = split[1].trim();
         String encrypted = split[3];
-        
+
         ArrayList<String> result = new ArrayList<>();
 
         ISquare square = sampleController.getSquareByInvite(inviteId);
@@ -90,5 +90,9 @@ public class SquareController implements ISquareController {
 
     public boolean isHiding() {
         return sampleController.getParent().isHidingServer();
+    }
+
+    public ILogIt getLogger() {
+        return logger;
     }
 }

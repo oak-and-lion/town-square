@@ -7,6 +7,7 @@ import java.util.zip.ZipOutputStream;
 
 public class CommandWorkerCreateClone extends CommandWorkerBase implements ICommandWorker {
     private IFactory factory;
+
     public CommandWorkerCreateClone(IUtility utility, ISquare square, IDialogController parent, IFactory factory) {
         super(utility, square, parent);
         this.factory = factory;
@@ -18,9 +19,14 @@ public class CommandWorkerCreateClone extends CommandWorkerBase implements IComm
         return result;
     }
 
-    private BooleanString createClone(String password) {
+    private BooleanString createClone(String commandArgs) {
+        String[] args = commandArgs.split(Constants.COMMAND_DATA_SEPARATOR);
+        String password = args[0];
+        String address = args[2];
+        String port = args[3];
         ICommandWorker pauseWorker = factory.createCommandWorker(Constants.PAUSE_COMMAND, utility, square, parent);
         ICommandWorker unpauseWorker = factory.createCommandWorker(Constants.UNPAUSE_COMMAND, utility, square, parent);
+        ISquareWorker registerAlias = factory.createSquareWorker(Constants.REGISTER_ALIAS_COMMAND, utility, parent, square.getController().getLogger());
         BooleanString result = new BooleanString(false, Constants.MALFORMED_REQUEST_MESSAGE);
 
         // decrypt the dna file using the password
@@ -40,6 +46,21 @@ public class CommandWorkerCreateClone extends CommandWorkerBase implements IComm
                 // pause the square while creating the clone package
                 pauseWorker.doWork(Constants.EMPTY_STRING);
             }
+
+            ArrayList<String> regAlias = new ArrayList<>();
+            regAlias.add(Constants.UNENCRYPTED_FLAG);
+            regAlias.add(square.getInvite());
+            regAlias.add(Constants.REGISTER_ALIAS_COMMAND);
+            StringBuilder temp = new StringBuilder();
+            temp.append(Constants.NULL_TEXT);
+            temp.append(Constants.FILE_DATA_SEPARATOR);
+            temp.append(address);
+            temp.append(Constants.FILE_DATA_SEPARATOR);
+            temp.append(port);
+            temp.append(Constants.FILE_DATA_SEPARATOR);
+            temp.append(utility.readFile(Constants.UNIQUE_ID_FILE));
+            regAlias.add(temp.toString());
+            registerAlias.doWork(square, regAlias.toArray(new String[regAlias.size()]));
 
             utility.deleteFile(square.getSafeLowerName() + Constants.CLONE_FILE_EXT);
             // zip up the files
