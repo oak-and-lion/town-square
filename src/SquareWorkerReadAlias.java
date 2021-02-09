@@ -6,7 +6,13 @@ public class SquareWorkerReadAlias extends SquareWorkerBase implements ISquareWo
     }
 
     public SquareResponse doWork(ISquare square, String[] args) {
-        return new SquareResponse(buildResult(Constants.OK_RESULT, getAliases(square, args)));
+        String aliases = getAliases(square, args);
+        String returnCode = Constants.OK_RESULT;
+        if (aliases.equals(Constants.EMPTY_STRING)) {
+            aliases = Constants.FORBIDDEN_MESSAGE;
+            returnCode = Constants.FORBIDDEN_RESULT;
+        }
+        return new SquareResponse(buildResult(returnCode, aliases));
     }
 
     private String getAliases(ISquare square, String[] split) {

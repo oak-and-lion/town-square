@@ -1,4 +1,5 @@
 public class SquareWorkerClone extends SquareWorkerBase implements ISquareWorker {
+
     public SquareWorkerClone(IUtility utility, String command) {
         super(utility, command);
     }
@@ -8,10 +9,25 @@ public class SquareWorkerClone extends SquareWorkerBase implements ISquareWorker
     }
 
     private String buildClone(ISquare square, String[] args) {
+        String uniqueId = args[1];
+        String command = args[2];
+        String password = args[3];
+        String ip = args[4];
+        String port = args[5];
         IDialogController controller = square.getSampleController();
         ICommandController cmdController = controller.getCommandController();
-        BooleanString[] result = cmdController
-                .processCommand(Constants.FORWARD_SLASH + args[2] + Constants.SPACE + args[3], square);
+        StringBuilder temp = new StringBuilder();
+        temp.append(Constants.FORWARD_SLASH);
+        temp.append(command);
+        temp.append(Constants.SPACE);
+        temp.append(password);
+        temp.append(Constants.COMMAND_DATA_SEPARATOR);
+        temp.append(uniqueId);
+        temp.append(Constants.COMMAND_DATA_SEPARATOR);
+        temp.append(ip);
+        temp.append(Constants.COMMAND_DATA_SEPARATOR);
+        temp.append(port);
+        BooleanString[] result = cmdController.processCommand(temp.toString(), square);
         if (result.length > 0 && result[0].getBoolean()) {
             return buildResult(Constants.OK_RESULT, result[0].getString());
         }

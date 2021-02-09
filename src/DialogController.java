@@ -1159,6 +1159,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     }
 
     private void processAlias(ISquare square, String[] aliases) {
+        RequesterInfo requesterInfo = new RequesterInfo(utility.readFile(Constants.IP_FILE));
         for (String a : aliases) {
             if (a.equals(Constants.EMPTY_STRING)) {
                 continue;
@@ -1168,7 +1169,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                     + Constants.COMMAND_DATA_SEPARATOR + Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR + a
                     + Constants.FILE_DATA_SEPARATOR + port.getText() + Constants.FILE_DATA_SEPARATOR
                     + uniqueId.getText();
-            square.getController().processRequest(request);
+            square.getController().processRequest(request, requesterInfo);
         }
     }
 }
