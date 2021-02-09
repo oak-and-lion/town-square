@@ -210,7 +210,11 @@ public class Factory implements IFactory {
             return new SquareWorkerReadAlias(utility, command, this);
         } else if (command.equals(Constants.CHECK_VERSION_COMMAND)) {
             return new SquareWorkerCheckVersion(utility, command);
-        } 
+        } else if (command.equals(Constants.MEMBER_COMMAND)) {
+            return new SquareWorkerMember(utility, command);
+        } else if (command.equals(Constants.REGISTER_ALIAS_COMMAND)) {
+            return new SquareWorkerRegisterAlias(utility, command);
+        }
 
         return new SquareWorkerEmpty(utility, command);
     }
