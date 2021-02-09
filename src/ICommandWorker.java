@@ -1,3 +1,5 @@
+import java.util.List;
+
 public interface ICommandWorker {
-    BooleanString doWork(String commandArgs);
+    List<BooleanString> doWork(String commandArgs);
 }

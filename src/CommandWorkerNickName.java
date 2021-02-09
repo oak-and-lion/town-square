@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.application.Platform;
 
 public class CommandWorkerNickName extends CommandWorkerBase implements ICommandWorker {
@@ -5,7 +8,7 @@ public class CommandWorkerNickName extends CommandWorkerBase implements ICommand
         super(utility, square, parent);
     }
 
-    public BooleanString doWork(String commandArgs) {
+    public List<BooleanString> doWork(String commandArgs) {
         String file = square.getSafeLowerName() + Constants.NICKNAME_FILE_EXT;
 
         boolean result = false;
@@ -33,6 +36,8 @@ public class CommandWorkerNickName extends CommandWorkerBase implements ICommand
             }
         }
 
-        return new BooleanString(result, file);
+        ArrayList<BooleanString> list = new ArrayList<>();
+        list.add(new BooleanString(result, file));
+        return list;
     }
 }

@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.application.Platform;
 
 public class CommandWorkerPause extends CommandWorkerBase implements ICommandWorker {
@@ -5,8 +8,10 @@ public class CommandWorkerPause extends CommandWorkerBase implements ICommandWor
         super(utility, square, parent);
     }
 
-    public BooleanString doWork(String commandArgs) {
-        return new BooleanString(pauseSquare(square), Constants.EMPTY_STRING);
+    public List<BooleanString> doWork(String commandArgs) {
+        ArrayList<BooleanString> list = new ArrayList<>();
+        list.add(new BooleanString(pauseSquare(square), Constants.EMPTY_STRING));
+        return list;
     }
 
     @Override

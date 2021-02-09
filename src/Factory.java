@@ -239,6 +239,28 @@ public class Factory implements IFactory {
             return new CommandWorkerNickName(utility, square, dialogController);
         } else if (cmd.equals(Constants.PAUSE_COMMAND)) {
             return new CommandWorkerPause(utility, square, dialogController);
+        } else if (cmd.equals(Constants.BLOCK_COMMAND)) {
+            return new CommandWorkerBlock(utility, square, dialogController);
+        } else if (cmd.equals(Constants.ABOUT_COMMAND)) {
+            return new CommandWorkerAbout(utility, square, dialogController);
+        } else if (cmd.equals(Constants.UNPAUSE_COMMAND)) {
+            return new CommandWorkerUnpause(utility, square, dialogController);
+        } else if (cmd.equals(Constants.CLONE_COMMAND)) {
+            return new CommandWorkerCreateClone(utility, square, dialogController, this);
+        } else if (cmd.equals(Constants.DNA_COMMAND)) {
+            return new CommandWorkerDNA(utility, square, dialogController);
+        } else if (cmd.equals(Constants.SEND_CLONE_COMMAND)) {
+            return new CommandWorkerGetClone(utility, square, dialogController, this);
+        } else if (cmd.equals(Constants.LICENSE_COMMAND)) {
+            return new CommandWorkerLicense(utility, square, dialogController);
+        } else if (cmd.equals(Constants.EXPOSE_COMMAND)) {
+            return new CommandWorkerExpose(utility, square, dialogController);
+        } else if (cmd.equals(Constants.HIDE_COMMAND)) {
+            return new CommandWorkerHide(utility, square, dialogController);
+        } else if (cmd.equals(Constants.HELP_COMMAND)) {
+            return new CommandWorkerHelp(utility, square, dialogController);
+        } else if (cmd.equals(Constants.UNBLOCK_COMMAND)) {
+            return new CommandWorkerUnblock(utility, square, dialogController);
         }
 
         return null;

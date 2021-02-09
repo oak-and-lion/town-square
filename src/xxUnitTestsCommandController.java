@@ -10,56 +10,12 @@ public class xxUnitTestsCommandController extends xxUnitTestsBaseClass {
     }
 
     public void go() {
-        testBlockCommandPass();
-        testBlockCommandFail();
-        testBlockCommandNullFail();
-        testBlockCommandEmptyFail();
         testProcessCommandInvalidPrefixFail();
         testProcessCommandInvalidCommandFail();
         testProcessCommandValidBlockPass();
         testProcessCommandInvalidBlockPass();
 
         finish();
-    }
-
-    @TestMethod
-    private void testBlockCommandPass() {
-        final String METHOD_NAME = "testBlockCommandPass";
-        ICommandController commandController = factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
-
-        boolean result = commandController.blockUser("searchFound", new xxMockSquare());
-
-        checkEquals(result, true, METHOD_NAME);
-    }
-
-    @TestMethod
-    private void testBlockCommandFail() {
-        final String METHOD_NAME = "testBlockCommandFail";
-        ICommandController commandController = factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
-
-        boolean result = commandController.blockUser("searchNotFound", new xxMockSquare());
-
-        checkEquals(result, false, METHOD_NAME);
-    }
-
-    @TestMethod
-    private void testBlockCommandNullFail() {
-        final String METHOD_NAME = "testBlockCommandNullFail";
-        ICommandController commandController = factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
-
-        boolean result = commandController.blockUser(null, new xxMockSquare());
-
-        checkEquals(result, false, METHOD_NAME);
-    }
-
-    @TestMethod
-    private void testBlockCommandEmptyFail() {
-        final String METHOD_NAME = "testBlockCommandEmptyFail";
-        ICommandController commandController = factory.createCommandController(1, new xxMockIUtility(), new xxMockIDialogController());
-
-        boolean result = commandController.blockUser("", new xxMockSquare());
-
-        checkEquals(result, false, METHOD_NAME);
     }
 
     @TestMethod
