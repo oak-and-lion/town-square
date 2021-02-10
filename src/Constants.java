@@ -249,4 +249,6 @@ public class Constants {
     public static final String NEW_APP_VER_FILE = "_new_App.ver";
     public static final String MEMBER_BUTTON_TEXT = "Members";
     public static final String NICKNAME_FILE_EXT = ".nickname";
+    public static final String SINGLE_QUOTE = "'";
+    public static final String DELETE_COMMAND = "delete";
 }

@@ -29,11 +29,11 @@ public class CommandWorkerGetClone extends CommandWorkerBase implements ICommand
             ISquareKeyPair keyPair = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
             keyPair.setPublicKeyFromBase64(resp.getMessage());
             String key = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
-            String e = utility.encrypt(Constants.CLONE_COMMAND + Constants.COMMAND_DATA_SEPARATOR + password
-                    + Constants.COMMAND_DATA_SEPARATOR + utility.readFile(Constants.IP_FILE)
-                    + Constants.COMMAND_DATA_SEPARATOR + utility.readFile(Constants.PORT_FILE), key);
+            String e = utility.encrypt(utility.concatStrings(Constants.CLONE_COMMAND, Constants.COMMAND_DATA_SEPARATOR, password
+                    , Constants.COMMAND_DATA_SEPARATOR, utility.readFile(Constants.IP_FILE)
+                    , Constants.COMMAND_DATA_SEPARATOR, utility.readFile(Constants.PORT_FILE)), key);
             String f = keyPair.encryptToBase64(key);
-            String result = client.sendMessage(f + Constants.COMMAND_DATA_SEPARATOR + e, true);
+            String result = client.sendMessage(utility.concatStrings(f, Constants.COMMAND_DATA_SEPARATOR, e), true);
             SquareResponse cloneResponse = new SquareResponse(result);
             if (cloneResponse.getCode().equals(Constants.OK_RESULT)) {
                 StringBuilder pwdPadded = new StringBuilder(password);
@@ -43,10 +43,10 @@ public class CommandWorkerGetClone extends CommandWorkerBase implements ICommand
                 String b64 = utility.decrypt(cloneResponse.getMessage(), pwdPadded.toString());
                 byte[] data = utility.convertFromBase64(b64);
 
-                utility.deleteFile(square.getSafeLowerName() + Constants.CLONE_FILE_EXT);
-                utility.writeBinaryFile(square.getSafeLowerName() + Constants.CLONE_FILE_EXT, data);
+                utility.deleteFile(utility.concatStrings(square.getSafeLowerName(), Constants.CLONE_FILE_EXT));
+                utility.writeBinaryFile(utility.concatStrings(square.getSafeLowerName(), Constants.CLONE_FILE_EXT), data);
                 parent.showCloneMessage();
-                return new BooleanString(true, square.getSafeLowerName() + Constants.CLONE_FILE_EXT);
+                return new BooleanString(true, utility.concatStrings(square.getSafeLowerName(), Constants.CLONE_FILE_EXT));
             }
         }
 

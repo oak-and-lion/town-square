@@ -27,8 +27,8 @@ public class SquareWorkerRead extends SquareWorkerBase implements ISquareWorker 
         String memberId = split[4];
 
         if (checkSquareAccess(square, memberId)) {
-            String file = square.getSafeLowerName() + Constants.POSTS_FILE_EXT;
-            String memberFile = square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT;
+            String file = utility.concatStrings(square.getSafeLowerName(), Constants.POSTS_FILE_EXT);
+            String memberFile = utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT);
             boolean getEntireFile = Long.valueOf(start) > -1 ? Constants.NOT_FOUND_RETURN_ZERO
                     : !Constants.NOT_FOUND_RETURN_ZERO;
             if (getEntireFile != Constants.NOT_FOUND_RETURN_ZERO) {
@@ -56,7 +56,8 @@ public class SquareWorkerRead extends SquareWorkerBase implements ISquareWorker 
                 String password = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
                 StringBuilder temp = new StringBuilder();
                 temp.append(utility.encrypt(posts, password));
-                posts = tempKeys.encryptToBase64(password) + Constants.COMMAND_DATA_SEPARATOR + temp.toString();
+                posts = utility.concatStrings(tempKeys.encryptToBase64(password), Constants.COMMAND_DATA_SEPARATOR,
+                        temp.toString());
                 return posts;
             }
 

@@ -9,12 +9,12 @@ public class CommandWorkerNickName extends CommandWorkerBase implements ICommand
     }
 
     public List<BooleanString> doWork(String commandArgs) {
-        String file = square.getSafeLowerName() + Constants.NICKNAME_FILE_EXT;
+        String file = utility.concatStrings(square.getSafeLowerName(), Constants.NICKNAME_FILE_EXT);
 
         boolean result = false;
         String oldName = square.getName();
 
-        if (commandArgs.equals("delete")) {
+        if (commandArgs.equals(Constants.DELETE_COMMAND)) {
             result = utility.deleteFile(file);
             
         } else {

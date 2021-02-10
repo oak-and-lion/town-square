@@ -14,6 +14,7 @@ public class Client implements IClient {
     private String hostName;
     private String squareId;
     private ILogIt logger;
+    private IUtility utility;
 
     private static final String CLIENT_PREFIX = "Client '";
 
@@ -22,6 +23,7 @@ public class Client implements IClient {
         this.port = port;
         this.squareId = squareId;
         createLogger(factory);
+        this.utility = factory.createUtility(Constants.BASE_UTILITY);
     }
 
     public Client(Square square, IFactory factory) {
@@ -32,11 +34,14 @@ public class Client implements IClient {
     }
 
     private void createLogger(IFactory factory) {
-        logger = factory.createLogger(Constants.FILE_LOGGER, Constants.CLIENT_LOG_PREFIX + squareId + Constants.LOG_FILE_EXT, factory.createUtility(Constants.BASE_UTILITY));
+        logger = factory.createLogger(Constants.FILE_LOGGER,
+                utility.concatStrings(Constants.CLIENT_LOG_PREFIX, squareId, Constants.LOG_FILE_EXT),
+                factory.createUtility(Constants.BASE_UTILITY));
     }
 
-    public String sendMessage(String text, boolean encrypt) {        
-        logger.logInfo("Sending client request: [" + hostName + Constants.COLON + Integer.toString(port) + "] " + text);
+    public String sendMessage(String text, boolean encrypt) {
+        logger.logInfo(utility.concatStrings("Sending client request: [", hostName, Constants.COLON,
+                Integer.toString(port), "] ", text));
         try (Socket socket = new Socket()) {
             socket.connect(new InetSocketAddress(hostName, port), 1000);
             OutputStream output = socket.getOutputStream();
@@ -47,22 +52,25 @@ public class Client implements IClient {
                 encryptFlag = "e";
             }
 
-            return communicateWithServer(
-                    encryptFlag + Constants.COMMAND_DATA_SEPARATOR + squareId + Constants.COMMAND_DATA_SEPARATOR + text, writer, socket);
+            return communicateWithServer(utility.concatStrings(encryptFlag, Constants.COMMAND_DATA_SEPARATOR, squareId,
+                    Constants.COMMAND_DATA_SEPARATOR, text), writer, socket);
         } catch (SocketException se) {
             if (se.getMessage().equals("Connection refused: connect")) {
-                logger.logInfo(CLIENT_PREFIX + squareId + "' not available");
+                logger.logInfo(utility.concatStrings(CLIENT_PREFIX, squareId, "' not available"));
             } else if (se.getMessage().equals("Connection timed out: connect")) {
-                logger.logInfo(CLIENT_PREFIX + hostName + Constants.COLON + Integer.toString(port) + "' not available");
+                logger.logInfo(utility.concatStrings(CLIENT_PREFIX, hostName, Constants.COLON, Integer.toString(port),
+                        "' not available"));
             } else {
-                logger.logInfo(CLIENT_PREFIX + hostName + Constants.COLON + Integer.toString(port) + "' " + se.getMessage());
+                logger.logInfo(utility.concatStrings(CLIENT_PREFIX, hostName, Constants.COLON, Integer.toString(port),
+                        Constants.SINGLE_QUOTE, Constants.SPACE, se.getMessage()));
             }
         } catch (UnknownHostException ex) {
-            logger.logInfo("Server not found: " + ex.getMessage());
+            logger.logInfo(utility.concatStrings("Server not found: ", ex.getMessage()));
         } catch (IOException ex) {
-            logger.logInfo("I/O error: " + ex.getMessage());
+            logger.logInfo(utility.concatStrings("I/O error: ", ex.getMessage()));
         } catch (Exception e) {
-            logger.logInfo(CLIENT_PREFIX + hostName + Constants.COLON + Integer.toString(port) + "' " + e.getMessage());
+            logger.logInfo(utility.concatStrings(CLIENT_PREFIX, hostName, Constants.COLON, Integer.toString(port),
+                    Constants.SINGLE_QUOTE, Constants.SPACE, e.getMessage()));
         }
 
         return Constants.EMPTY_STRING;
@@ -86,7 +94,8 @@ public class Client implements IClient {
             InputStream input = socket.getInputStream();
             return readServerReply(input);
         } catch (Exception e) {
-            logger.logInfo(CLIENT_PREFIX + hostName + Constants.COLON + Integer.toString(port) + "' " + e.getMessage());
+            logger.logInfo(utility.concatStrings(CLIENT_PREFIX, hostName, Constants.COLON, Integer.toString(port),
+                    Constants.SINGLE_QUOTE, Constants.SPACE, e.getMessage()));
         }
 
         return Constants.EMPTY_STRING;
@@ -96,7 +105,8 @@ public class Client implements IClient {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
             return reader.readLine();
         } catch (IOException ioe) {
-            logger.logInfo(CLIENT_PREFIX + hostName + Constants.COLON + Integer.toString(port) + "' " + ioe.getMessage());
+            logger.logInfo(utility.concatStrings(CLIENT_PREFIX, hostName, Constants.COLON, Integer.toString(port),
+                    Constants.SINGLE_QUOTE, Constants.SPACE, ioe.getMessage()));
         }
 
         return Constants.EMPTY_STRING;

@@ -89,4 +89,24 @@ public class xxMockIUtility implements IUtility {
     public boolean unzip(String fileZip) {
         return true;
     }
+    
+    public String concatStrings(String... strings) {
+        StringBuilder result = new StringBuilder();
+
+        for (String string : strings) {
+            result.append(string);
+        }
+
+        return result.toString();
+    }
+
+    public int add(int... ints) {
+        int result = 0;
+
+        for(int i : ints) {
+            result += i;
+        }
+
+        return result;
+    }
 }

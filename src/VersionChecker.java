@@ -80,8 +80,8 @@ public class VersionChecker extends Thread implements IVersionChecker {
 
         if (resultVersion.length == currentVersion.length && resultVersion.length == 3
                 && !isVersionEqual(resultVersion, currentVersion)) {
-            String response = client.sendMessage(Constants.GET_APP_JAR_COMMAND + Constants.COMMAND_DATA_SEPARATOR
-                    + Constants.JAR_FILE + Constants.COMMAND_DATA_SEPARATOR + uniqueId, false);
+            String response = client.sendMessage(utility.concatStrings(Constants.GET_APP_JAR_COMMAND, Constants.COMMAND_DATA_SEPARATOR
+                    , Constants.JAR_FILE, Constants.COMMAND_DATA_SEPARATOR, uniqueId), false);
 
             SquareResponse responseData = new SquareResponse(response);
 

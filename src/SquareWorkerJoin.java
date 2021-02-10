@@ -19,7 +19,7 @@ public class SquareWorkerJoin extends SquareWorkerBase implements ISquareWorker 
         // 7 == unique id of member
 
         if (args.length == 8) {
-            String file = square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT;
+            String file = utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT);
             String[] sameNames = utility.searchFile(file, args[3], Constants.SEARCH_STARTS_WITH);
             String[] sameIds = utility.searchFile(file, args[7], Constants.SEARCH_CONTAINS);
             boolean previousLeave = checkPreviousLeave(sameIds);
@@ -27,18 +27,18 @@ public class SquareWorkerJoin extends SquareWorkerBase implements ISquareWorker 
             String registeredName = args[3];
             if (sameIds.length < 1 || previousLeave) {
                 if (sameNames.length > 0) {
-                    registeredName += Constants.PERCENT + Integer.toString(sameNames.length);
+                    registeredName += utility.concatStrings(Constants.PERCENT, Integer.toString(sameNames.length));
                 }
 
-                String data = args[4] + Constants.DATA_SEPARATOR + args[5] + Constants.DATA_SEPARATOR + args[6]
-                        + Constants.DATA_SEPARATOR + args[7];
+                String data = utility.concatStrings(args[4], Constants.DATA_SEPARATOR, args[5],
+                        Constants.DATA_SEPARATOR, args[6], Constants.DATA_SEPARATOR, args[7]);
 
                 return processCommand(registeredName, data, file, square);
             } else {
                 return buildResult(Constants.ALREADY_REGISTERED_RESULT,
-                        Constants.ALREADY_REGISTERED_MESSAGE + Constants.COLON + Constants.DASH + Constants.COLON
-                                + sampleController.getDefaultName() + Constants.UNDERSCORE + square.getSafeLowerName()
-                                + Constants.COLON + Constants.NO_ROWS);
+                        utility.concatStrings(Constants.ALREADY_REGISTERED_MESSAGE, Constants.COLON, Constants.DASH,
+                                Constants.COLON, sampleController.getDefaultName(), Constants.UNDERSCORE,
+                                square.getSafeLowerName(), Constants.COLON, Constants.NO_ROWS));
             }
         }
 
@@ -77,16 +77,17 @@ public class SquareWorkerJoin extends SquareWorkerBase implements ISquareWorker 
             FileWriteResponse b;
 
             if (utility.checkFileExists(file)) {
-                b = utility.appendToFile(file, Constants.NEWLINE + data + Constants.DATA_SEPARATOR + memberId);
+                b = utility.appendToFile(file,
+                        utility.concatStrings(Constants.NEWLINE, data, Constants.DATA_SEPARATOR, memberId));
             } else {
-                b = utility.writeFile(file, data + Constants.DATA_SEPARATOR + memberId);
+                b = utility.writeFile(file, utility.concatStrings(data, Constants.DATA_SEPARATOR, memberId));
             }
 
             if (b.isSuccessful()) {
                 result = buildResult(Constants.OK_RESULT,
-                        Constants.ADDED_MESSAGE + Constants.COLON + data + Constants.COLON
-                                + sampleController.getDefaultName() + Constants.UNDERSCORE + square.getSafeLowerName()
-                                + Constants.COLON + Integer.toString(b.getLineCount()));
+                        utility.concatStrings(Constants.ADDED_MESSAGE, Constants.COLON, data, Constants.COLON,
+                                sampleController.getDefaultName(), Constants.UNDERSCORE, square.getSafeLowerName(),
+                                Constants.COLON, Integer.toString(b.getLineCount())));
             } else {
                 result = buildResult(Constants.INTERNAL_ERROR_RESULT, Constants.ADDING_MEMBER_MESSAGE);
             }

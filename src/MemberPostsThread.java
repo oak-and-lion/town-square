@@ -10,7 +10,8 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
     private ArrayList<PostMessage> allPosts;
     private IFactory factory;
 
-    public MemberPostsThread(String info, String uniqueId, String[] msg, ISquare square, IUtility utility, IFactory factory) {
+    public MemberPostsThread(String info, String uniqueId, String[] msg, ISquare square, IUtility utility,
+            IFactory factory) {
         this.info = info;
         this.uniqueId = uniqueId;
         this.msg = msg;
@@ -40,8 +41,8 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
             String[] member = info.split(Constants.DATA_SEPARATOR);
             IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
                     square.getInvite());
-            String response = client.sendMessage(Constants.READ_COMMAND + Constants.COMMAND_DATA_SEPARATOR + msg[0]
-                    + Constants.COMMAND_DATA_SEPARATOR + uniqueId, false);
+            String response = client.sendMessage(utility.concatStrings(Constants.READ_COMMAND,
+                    Constants.COMMAND_DATA_SEPARATOR, msg[0], Constants.COMMAND_DATA_SEPARATOR, uniqueId), false);
             if (!response.equals(Constants.EMPTY_STRING)) {
                 String[] responseSplit = response.split(Constants.COLON);
                 if (responseSplit.length == 2 && responseSplit[0].equals(Constants.OK_RESULT)
@@ -81,8 +82,8 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
 
     private void processGetImageFile(String data, String[] member) {
         String[] message = data.split(Constants.DATA_SEPARATOR);
-        String fileName = message[1]
-                .substring(message[1].indexOf(Constants.END_SQUARE_BRACKET) + Constants.END_SQUARE_BRACKET.length());
+        String fileName = message[1].substring(message[1].indexOf(Constants.END_SQUARE_BRACKET),
+                Constants.END_SQUARE_BRACKET.length());
 
         if (utility.checkFileExists(fileName)) {
             return;
@@ -91,8 +92,8 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
         IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
                 square.getInvite());
 
-        String response = client.sendMessage(Constants.REQUEST_FILE_COMMAND + Constants.COMMAND_DATA_SEPARATOR
-                + fileName + Constants.COMMAND_DATA_SEPARATOR + uniqueId, false);
+        String response = client.sendMessage(utility.concatStrings(Constants.REQUEST_FILE_COMMAND,
+                Constants.COMMAND_DATA_SEPARATOR, fileName, Constants.COMMAND_DATA_SEPARATOR, uniqueId), false);
 
         SquareResponse responseData = new SquareResponse(response);
 

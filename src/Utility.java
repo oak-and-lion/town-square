@@ -94,7 +94,7 @@ public class Utility implements IUtility {
     public String[] getFiles(String match) {
         String finalString = match.toLowerCase().trim();
         // Creating a File object for directory
-        File directoryPath = new File(System.getProperty(Constants.USER_DIR) + Constants.PATH_DELIMITER);
+        File directoryPath = new File(concatStrings(System.getProperty(Constants.USER_DIR), Constants.PATH_DELIMITER));
         FilenameFilter textFilefilter = new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 String lowercaseName = name.toLowerCase();
@@ -205,7 +205,7 @@ public class Utility implements IUtility {
                 writeToFile(file, data);
             }
             Charset charset = StandardCharsets.UTF_8;
-            String path = System.getProperty(Constants.USER_DIR) + Constants.PATH_DELIMITER + file;
+            String path = concatStrings(System.getProperty(Constants.USER_DIR), Constants.PATH_DELIMITER, file);
             List<String> s = Files.readAllLines(Paths.get(path), charset);
             result.setLineCount(s.size());
             result.setSuccessful(true);
@@ -223,7 +223,7 @@ public class Utility implements IUtility {
         if (!checkFileExists(file)) {
             result = writeFile(file, data);
         } else {
-            String path = System.getProperty(Constants.USER_DIR) + Constants.PATH_DELIMITER + file;
+            String path = concatStrings(System.getProperty(Constants.USER_DIR), Constants.PATH_DELIMITER, file);
 
             try {
                 Charset charset = StandardCharsets.UTF_8;
@@ -510,13 +510,13 @@ public class Utility implements IUtility {
         int leftLimit = Constants.ASCII_ZERO; // numeral '0'
         int rightLimit = Constants.ASCII_LOWER_Z; // letter 'z'
 
-        return random.ints(leftLimit, rightLimit + 1).filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+        return random.ints(leftLimit, add(rightLimit, 1)).filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
                 .limit(targetStringLength)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
     }
 
     private String getFilePath(String file) {
-        return System.getProperty(Constants.USER_DIR) + Constants.PATH_DELIMITER + file;
+        return concatStrings(System.getProperty(Constants.USER_DIR), Constants.PATH_DELIMITER, file);
     }
 
     public void addToZip(String srcFile, ZipOutputStream zipOut) {
@@ -544,13 +544,13 @@ public class Utility implements IUtility {
                 File newFile = new File(destDir, zipEntry.getName());
                 if (zipEntry.isDirectory()) {
                     if (!newFile.isDirectory() && !newFile.mkdirs()) {
-                        throw new IOException("Failed to create directory " + newFile);
+                        throw new IOException(concatStrings("Failed to create directory ", newFile.toString()));
                     }
                 } else {
                     // fix for Windows-created archives
                     File parent = newFile.getParentFile();
                     if (!parent.isDirectory() && !parent.mkdirs()) {
-                        throw new IOException("Failed to create directory " + parent);
+                        throw new IOException(concatStrings("Failed to create directory ", parent.toString()));
                     }
 
                     // write file content
@@ -576,5 +576,25 @@ public class Utility implements IUtility {
         } catch (Exception e1) {
             e1.printStackTrace();
         }
+    }
+
+    public String concatStrings(String... strings) {
+        StringBuilder result = new StringBuilder();
+
+        for (String string : strings) {
+            result.append(string);
+        }
+
+        return result.toString();
+    }
+
+    public int add(int... ints) {
+        int result = 0;
+
+        for (int i : ints) {
+            result += i;
+        }
+
+        return result;
     }
 }

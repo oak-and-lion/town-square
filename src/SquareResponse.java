@@ -21,7 +21,7 @@ public class SquareResponse {
     }
 
     public SquareResponse() {
-        setResponse(Constants.UNKNOWN_REQUEST + Constants.COLON + Constants.UNKNOWN_REQUEST_MESSAGE);
+        setResponse(concatStrings(Constants.UNKNOWN_REQUEST, Constants.COLON, Constants.UNKNOWN_REQUEST_MESSAGE));
     }
 
     public SquareResponse(String value) {
@@ -29,7 +29,7 @@ public class SquareResponse {
     }
 
     public SquareResponse(String responseCode, String responseMessage) {
-        setResponse(responseCode + Constants.COLON + responseMessage);
+        setResponse(concatStrings(responseCode, Constants.COLON, responseMessage));
     }
 
     public void setResponse(String value) {
@@ -47,5 +47,15 @@ public class SquareResponse {
 
     public String[] getResponseSplit() {
         return responseSplit;
+    }
+
+    public String concatStrings(String... strings) {
+        StringBuilder result = new StringBuilder();
+
+        for (String string : strings) {
+            result.append(string);
+        }
+
+        return result.toString();
     }
 }

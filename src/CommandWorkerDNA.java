@@ -20,7 +20,7 @@ public class CommandWorkerDNA extends CommandWorkerBase implements ICommandWorke
             }
         }
         String data = utility.encrypt(Constants.CLONE_CHALLENGE, tempPass.toString());
-        FileWriteResponse result = utility.writeFile(square.getSafeLowerName() + Constants.DNA_FILE_EXT, data);
+        FileWriteResponse result = utility.writeFile(utility.concatStrings(square.getSafeLowerName(), Constants.DNA_FILE_EXT), data);
         return result.isSuccessful();
     }
 }

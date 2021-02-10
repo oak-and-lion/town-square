@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class SquareWorkerGetFile extends SquareWorkerBase implements ISquareWorker {
     private IFactory factory;
+
     public SquareWorkerGetFile(IUtility utility, String command, IFactory factory) {
         super(utility, command);
         this.factory = factory;
@@ -34,7 +35,7 @@ public class SquareWorkerGetFile extends SquareWorkerBase implements ISquareWork
         }
 
         String result = Constants.EMPTY_STRING;
-        String memberFile = square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT;
+        String memberFile = utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT);
 
         try (InputStream stream = new FileInputStream(split[3])) {
             result = utility.convertToBase64(stream.readAllBytes());
@@ -57,7 +58,8 @@ public class SquareWorkerGetFile extends SquareWorkerBase implements ISquareWork
             String password = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
             StringBuilder temp = new StringBuilder();
             temp.append(utility.encrypt(result, password));
-            result = tempKeys.encryptToBase64(password) + Constants.COMMAND_DATA_SEPARATOR + temp.toString();
+            result = utility.concatStrings(tempKeys.encryptToBase64(password), Constants.COMMAND_DATA_SEPARATOR,
+                    temp.toString());
         } catch (IOException ioe) {
             ioe.printStackTrace();
         } catch (Exception e) {

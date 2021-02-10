@@ -20,7 +20,7 @@ public class CommandWorkerUnpause extends CommandWorkerBase implements ICommandW
             return false;
         }
 
-        boolean result = utility.deleteFile(square.getSafeLowerName() + Constants.PAUSE_FILE_EXT);
+        boolean result = utility.deleteFile(utility.concatStrings(square.getSafeLowerName(), Constants.PAUSE_FILE_EXT));
 
         if (result && parent.isGui()) {
             Platform.runLater(new Runnable() {

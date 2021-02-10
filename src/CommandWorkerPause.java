@@ -20,7 +20,8 @@ public class CommandWorkerPause extends CommandWorkerBase implements ICommandWor
             return false;
         }
 
-        FileWriteResponse result = utility.writeFile(square.getSafeLowerName() + Constants.PAUSE_FILE_EXT,
+        FileWriteResponse result = utility.writeFile(
+                utility.concatStrings(square.getSafeLowerName(), Constants.PAUSE_FILE_EXT),
                 Constants.PAUSE_FILE_CONTENTS);
 
         if (result.isSuccessful() && parent.isGui()) {

@@ -146,14 +146,17 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             if (square == null || square.getTrueName().equals(Constants.DEFAULT_SQUARE_NAME)) {
                 return;
             }
-            utility.writeFile(square.getSafeLowerName() + Constants.PAUSE_FILE_EXT, Constants.PAUSE_FILE_CONTENTS);
-            utility.writeFile(square.getSafeLowerName() + Constants.LEAVE_FILE_EXT, Constants.LEAVE_FILE_CONTENTS);
-            utility.deleteFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT);
-            utility.deleteFile(square.getSafeLowerName() + Constants.POSTS_FILE_EXT);
-            utility.writeFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT,
-                    Constants.EXIT_SQUARE_TEXT + Constants.FILE_DATA_SEPARATOR + Constants.NULL_TEXT
-                            + Constants.FILE_DATA_SEPARATOR + Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR
-                            + Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR + uniqueId.getText());
+            utility.writeFile(utility.concatStrings(square.getSafeLowerName(), Constants.PAUSE_FILE_EXT),
+                    Constants.PAUSE_FILE_CONTENTS);
+            utility.writeFile(utility.concatStrings(square.getSafeLowerName(), Constants.LEAVE_FILE_EXT),
+                    Constants.LEAVE_FILE_CONTENTS);
+            utility.deleteFile(utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT));
+            utility.deleteFile(utility.concatStrings(square.getSafeLowerName(), Constants.POSTS_FILE_EXT));
+            utility.writeFile(utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT),
+                    utility.concatStrings(Constants.EXIT_SQUARE_TEXT, Constants.FILE_DATA_SEPARATOR,
+                            Constants.NULL_TEXT, Constants.FILE_DATA_SEPARATOR, Constants.NULL_TEXT,
+                            Constants.FILE_DATA_SEPARATOR, Constants.NULL_TEXT, Constants.FILE_DATA_SEPARATOR,
+                            uniqueId.getText()));
             Tab tab = tabPane.getSelectionModel().getSelectedItem();
             tabPane.getTabs().remove(tab);
         }
@@ -191,7 +194,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     @FXML
     private void showCommands(ActionEvent event) {
-        commandController.processCommand(Constants.FORWARD_SLASH + Constants.HELP_COMMAND, null);
+        commandController.processCommand(utility.concatStrings(Constants.FORWARD_SLASH, Constants.HELP_COMMAND), null);
     }
 
     @FXML
@@ -206,14 +209,14 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     public void showLicense() {
         ModalLicenseViewer l = new ModalLicenseViewer();
-        l.show(License.getLicense());
+        l.show(License.getLicense(utility));
     }
 
     public void showAbout() {
         IAlertBox alertBox = factory.createAlertBox(Constants.BASE_ALERT_BOX);
         alertBox.createAlert(Constants.ABOUT_TITLE, Constants.ABOUT_HEADER,
-                Constants.VERSION_TEXT_PREFIX + Constants.VERSION + Constants.NEWLINE + Constants.DEVELOPED_BY
-                        + Constants.DEVELOPER_ONE_NAME + Constants.NEWLINE + Constants.GITHUB_REPO,
+                utility.concatStrings(Constants.VERSION_TEXT_PREFIX, Constants.VERSION, Constants.NEWLINE,
+                        Constants.DEVELOPED_BY, Constants.DEVELOPER_ONE_NAME, Constants.NEWLINE, Constants.GITHUB_REPO),
                 AlertType.INFORMATION);
     }
 
@@ -244,7 +247,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             if (!utility.checkFileExists(target.getName())) {
                 Files.copy(file.toPath(), target.toPath());
             }
-            postTheMessage(square, marker + target.getName());
+            postTheMessage(square, utility.concatStrings(marker, target.getName()));
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
@@ -266,14 +269,14 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             return;
         }
 
-        postTheMessage(square, Constants.FILE_MARKER + input);
+        postTheMessage(square, utility.concatStrings(Constants.FILE_MARKER, input));
     }
 
     public void updatePauseNotification(ISquare square, boolean paused) {
         Tab tab = square.getTab();
 
         if (paused) {
-            tab.setText(tab.getText() + Constants.PAUSED_TAB_NOTIFICATION);
+            tab.setText(utility.concatStrings(tab.getText(), Constants.PAUSED_TAB_NOTIFICATION));
         } else {
             tab.setText(tab.getText().replace(Constants.PAUSED_TAB_NOTIFICATION, Constants.EMPTY_STRING));
         }
@@ -422,7 +425,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             squares.add(square);
             squareNames.add(square.getName());
             squareInvites.add(square.getInvite());
-            if (!utility.checkFileExists(square.getSafeLowerName() + Constants.LEAVE_FILE_EXT)) {
+            if (!utility.checkFileExists(utility.concatStrings(square.getSafeLowerName(), Constants.LEAVE_FILE_EXT))) {
                 createTab(square, squares.size() - 1);
             }
         }
@@ -432,8 +435,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         VBox main = new VBox();
         Tab tab = new Tab();
         tab.setText(square.getName());
-        if (utility.checkFileExists(square.getSafeLowerName() + Constants.PAUSE_FILE_EXT)) {
-            tab.setText(tab.getText() + Constants.PAUSED_TAB_NOTIFICATION);
+        if (utility.checkFileExists(utility.concatStrings(square.getSafeLowerName(), Constants.PAUSE_FILE_EXT))) {
+            tab.setText(utility.concatStrings(tab.getText(), Constants.PAUSED_TAB_NOTIFICATION));
         }
         tab.setId(square.getId());
         tab.setUserData(square);
@@ -459,8 +462,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         Label spacer = createLabel(Constants.EMPTY_STRING, 0, 5, 0, 5);
         VBox generatePostControls = createVBox(0, 10, 0, 10);
         generatePostControls.setMinHeight(281);
-        generatePostControls.setStyle("-fx-padding: 10;-fx-border-style: solid inside;-fx-border-width: 2;"
-                + "-fx-border-insets: 5;-fx-border-radius: 5;-fx-border-color: #333;");
+        generatePostControls.setStyle(utility.concatStrings("-fx-padding: 10;-fx-border-style: solid inside;-fx-border-width: 2;"
+                , "-fx-border-insets: 5;-fx-border-radius: 5;-fx-border-color: #333;"));
 
         if (postControls == null) {
             postControls = new ArrayList<>();
@@ -535,8 +538,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             commandController.processCommand(msg, newSquare);
         } else {
             long currentMillis = System.currentTimeMillis();
-            String data = Long.toString(currentMillis) + Constants.FILE_DATA_SEPARATOR + msg
-                    + Constants.FILE_DATA_SEPARATOR + uniqueId.getText();
+            String data = utility.concatStrings(Long.toString(currentMillis), Constants.FILE_DATA_SEPARATOR, msg,
+                    Constants.FILE_DATA_SEPARATOR, uniqueId.getText());
             newSquare.addPostMessage(new PostMessage(currentMillis, data));
         }
     }
@@ -615,8 +618,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     }
 
     private String buildInviteCode(ISquare square, String encrypt) {
-        return encrypt + Constants.TILDE + square.getIP() + Constants.TILDE + square.getPort() + Constants.TILDE
-                + square.getInvite();
+        return utility.concatStrings(encrypt, Constants.TILDE, square.getIP(), Constants.TILDE, square.getPort(),
+                Constants.TILDE, square.getInvite());
     }
 
     private String determineSquarePrivacy(ISquare square) {
@@ -658,7 +661,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
         String remotePublicKey = client.sendMessage(Constants.REQUEST_PUBLIC_KEY_COMMAND, false);
         if (remotePublicKey.equals(Constants.EMPTY_STRING)) {
-            utility.writeFile(Constants.INVITE_FILE_PREFIX + split[3] + Constants.INVITE_FILE_EXT, invite);
+            utility.writeFile(utility.concatStrings(Constants.INVITE_FILE_PREFIX, split[3], Constants.INVITE_FILE_EXT),
+                    invite);
             return false;
         }
         SquareResponse response = processTCPReturn(remotePublicKey);
@@ -668,16 +672,15 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
         tempKeys.setPublicKeyFromBase64(response.getMessage());
 
-        String data = Constants.JOIN_COMMAND + Constants.COMMAND_DATA_SEPARATOR + defaultName.getText()
-                + Constants.COMMAND_DATA_SEPARATOR + publicKey + Constants.COMMAND_DATA_SEPARATOR
-                + remoteIP.getValue().getDisplay() + Constants.COMMAND_DATA_SEPARATOR + port.getText()
-                + Constants.COMMAND_DATA_SEPARATOR + uniqueId.getText();
+        String data = utility.concatStrings(Constants.JOIN_COMMAND, Constants.COMMAND_DATA_SEPARATOR,
+                defaultName.getText(), Constants.COMMAND_DATA_SEPARATOR, publicKey, Constants.COMMAND_DATA_SEPARATOR,
+                remoteIP.getValue().getDisplay(), Constants.COMMAND_DATA_SEPARATOR, port.getText(),
+                Constants.COMMAND_DATA_SEPARATOR, uniqueId.getText());
 
         if (encrypt) {
             String password = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
-            StringBuilder temp = new StringBuilder();
-            temp.append(utility.encrypt(data, password));
-            data = tempKeys.encryptToBase64(password) + Constants.COMMAND_DATA_SEPARATOR + temp.toString();
+            data = utility.concatStrings(tempKeys.encryptToBase64(password), Constants.COMMAND_DATA_SEPARATOR,
+                    utility.encrypt(data, password));
         }
 
         response = processTCPReturn(client.sendMessage(data, encrypt));
@@ -686,30 +689,31 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                 || response.getCode().equals(Constants.ALREADY_REGISTERED_RESULT)) {
             String[] responseData = response.getResponseSplit();
             String squareSafeName = safeString(responseData[3]);
-            utility.deleteFile(squareSafeName + Constants.PAUSE_FILE_EXT);
-            utility.deleteFile(squareSafeName + Constants.LEAVE_FILE_EXT);
-            String temp = Constants.MEMBER_COMMAND + Constants.COMMAND_DATA_SEPARATOR + uniqueId.getText();
+            utility.deleteFile(utility.concatStrings(squareSafeName, Constants.PAUSE_FILE_EXT));
+            utility.deleteFile(utility.concatStrings(squareSafeName, Constants.LEAVE_FILE_EXT));
+            String temp = utility.concatStrings(Constants.MEMBER_COMMAND, Constants.COMMAND_DATA_SEPARATOR,
+                    uniqueId.getText());
             String password = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
-            data = tempKeys.encryptToBase64(password) + Constants.COMMAND_DATA_SEPARATOR
-                    + utility.encrypt(temp, password);
+            data = utility.concatStrings(tempKeys.encryptToBase64(password), Constants.COMMAND_DATA_SEPARATOR,
+                    utility.encrypt(temp, password));
             response = processTCPReturn(client.sendMessage(data, encrypt));
-            utility.writeFile(squareSafeName + Constants.MEMBERS_FILE_EXT,
+            utility.writeFile(utility.concatStrings(squareSafeName, Constants.MEMBERS_FILE_EXT),
                     response.getMessage().replace(Constants.COMMAND_DATA_SEPARATOR, Constants.NEWLINE));
-            String info = responseData[3] + Constants.COMMA + client.getSquareId() + Constants.COMMA
-                    + Constants.TAB_PREFIX + squareSafeName + Constants.COMMA + Constants.ZERO
-                    + Constants.NO_PASSWORD_VALUE;
+            String info = utility.concatStrings(responseData[3], Constants.COMMA, client.getSquareId(), Constants.COMMA,
+                    Constants.TAB_PREFIX, squareSafeName, Constants.COMMA, Constants.ZERO, Constants.NO_PASSWORD_VALUE);
             ISquare square = factory.createSquare(Constants.BASE_SQUARE, info, port.getText(),
                     remoteIP.getValue().getDisplay(),
                     factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
-                            factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT,
-                                    utility),
+                            factory.createLogger(Constants.FILE_LOGGER,
+                                    utility.concatStrings(uniqueId.getText(), Constants.LOG_FILE_EXT), utility),
                             factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
                     utility, this, uniqueId.getText());
-            utility.writeFile(squareSafeName + Constants.SQUARE_FILE_EXT, info);
+            utility.writeFile(utility.concatStrings(squareSafeName, Constants.SQUARE_FILE_EXT), info);
             setTabSquare(square);
 
-            byte[] data1 = utility.readBinaryFile(Constants.MY_SQUARE_DEFAULT + Constants.ALIAS_FILE_EXT);
-            utility.writeBinaryFile(squareSafeName + Constants.ALIAS_FILE_EXT, data1);
+            byte[] data1 = utility
+                    .readBinaryFile(utility.concatStrings(Constants.MY_SQUARE_DEFAULT, Constants.ALIAS_FILE_EXT));
+            utility.writeBinaryFile(utility.concatStrings(squareSafeName, Constants.ALIAS_FILE_EXT), data1);
 
             return true;
         }
@@ -720,14 +724,14 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     public void buildSquares() {
         String[] files = utility.getFiles(Constants.SQUARE_FILE_EXT);
         for (String file : files) {
-            if (file.equals(Constants.MY_SQUARE_DEFAULT + Constants.SQUARE_FILE_EXT)) {
+            if (file.equals(utility.concatStrings(Constants.MY_SQUARE_DEFAULT, Constants.SQUARE_FILE_EXT))) {
                 continue;
             }
             String contents = utility.readFile(file);
             setTabSquare(new Square(contents, port.getText(), remoteIP.getValue().getDisplay(),
                     factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
-                            factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT,
-                                    utility),
+                            factory.createLogger(Constants.FILE_LOGGER,
+                                    utility.concatStrings(uniqueId.getText(), Constants.LOG_FILE_EXT), utility),
                             factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
                     utility, this, uniqueId.getText(), factory));
         }
@@ -739,7 +743,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     public void addPostMessages(ISquare square, VBox messageList, ScrollPane scrollPane, String message, long millis,
             String memberId) {
-        String[] alreadyBlocked = utility.searchFile(square.getSafeLowerName() + Constants.BLOCK_FILE_EXT, memberId,
+        String[] alreadyBlocked = utility.searchFile(
+                utility.concatStrings(square.getSafeLowerName(), Constants.BLOCK_FILE_EXT), memberId,
                 Constants.SEARCH_STARTS_WITH);
         if (alreadyBlocked.length > 0) {
             return;
@@ -789,8 +794,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     private void buildURLMessage(String message, VBox messageList, ScrollPane scrollPane, long millis) {
         HBox hbox = createHBox(0, 0, 0, 0);
-        int index = message.indexOf(Constants.COLON + Constants.SPACE) + Constants.COLON.length()
-                + Constants.SPACE.length();
+        int index = utility.add(message.indexOf(utility.concatStrings(Constants.COLON, Constants.SPACE)),
+                Constants.COLON.length(), Constants.SPACE.length());
         Label labelInfo = createLabel(message.substring(0, index), 0, 0, 0, 0);
         hbox.getChildren().add(labelInfo);
         Text label = new Text();
@@ -833,8 +838,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     private void buildFileMessage(String message, VBox messageList, ScrollPane scrollPane, long millis) {
         HBox hbox = createHBox(0, 0, 0, 0);
-        int index = message.indexOf(Constants.COLON + Constants.SPACE) + Constants.COLON.length()
-                + Constants.SPACE.length();
+        int index = utility.add(message.indexOf(utility.concatStrings(Constants.COLON, Constants.SPACE)),
+                Constants.COLON.length(), Constants.SPACE.length());
         Label labelInfo = createLabel(message.substring(0, index), 0, 0, 0, 0);
         hbox.getChildren().add(labelInfo);
         Text label = new Text();
@@ -872,8 +877,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     private void buildTextMessage(String message, VBox messageList, ScrollPane scrollPane) {
         HBox hbox = createHBox(0, 0, 0, 0);
-        int index = message.indexOf(Constants.COLON + Constants.SPACE) + Constants.COLON.length()
-                + Constants.SPACE.length();
+        int index = utility.add(message.indexOf(utility.concatStrings(Constants.COLON, Constants.SPACE)),
+                Constants.COLON.length(), Constants.SPACE.length());
         Label labelInfo = createLabel(message.substring(0, index), 0, 0, 0, 0);
         hbox.getChildren().add(labelInfo);
         Text label = new Text();
@@ -894,7 +899,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     private void buildImageMessage(String message, VBox messageList, long millis) {
         HBox hbox = createHBox(10, 0, 0, 0);
-        int index = message.indexOf(Constants.END_SQUARE_BRACKET) + Constants.END_SQUARE_BRACKET.length();
+        int index = utility.add(message.indexOf(Constants.END_SQUARE_BRACKET), Constants.END_SQUARE_BRACKET.length());
         String file = message.substring(index, message.length());
         try (InputStream stream = new FileInputStream(file)) {
             Image image = new Image(stream);
@@ -924,7 +929,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                     processImageAction(button, file, millis);
                 }
             });
-            index = message.indexOf(Constants.COLON + Constants.SPACE);
+            index = message.indexOf(utility.concatStrings(Constants.COLON, Constants.SPACE));
             Label label = createLabel(message.substring(0, index), 25, 0, 0, 0);
             hbox.getChildren().addAll(label, imageView);
             messageList.getChildren().addAll(hbox);
@@ -973,7 +978,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     private void buildVideoMessage(String message, VBox messageList, long millis) {
         HBox hbox = createHBox(10, 0, 0, 0);
-        int index = message.indexOf(Constants.END_SQUARE_BRACKET) + Constants.END_SQUARE_BRACKET.length();
+        int index = utility.add(message.indexOf(Constants.END_SQUARE_BRACKET), Constants.END_SQUARE_BRACKET.length());
         String file = message.substring(index, message.length());
         if (!utility.checkFileExists(file)) {
             return;
@@ -1011,7 +1016,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             videos = new ArrayList<>();
         }
         videos.add(mediaView);
-        index = message.indexOf(Constants.COLON + Constants.SPACE);
+        index = message.indexOf(utility.concatStrings(Constants.COLON, Constants.SPACE));
         Label label = createLabel(message.substring(0, index), 25, 0, 0, 0);
         hbox.getChildren().addAll(label, mediaView);
         messageList.getChildren().addAll(hbox);
@@ -1058,22 +1063,21 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     }
 
     private void processCreateSquare(String input) {
-        String memberInfo = defaultName.getText() + Constants.FILE_DATA_SEPARATOR + publicKey
-                + Constants.FILE_DATA_SEPARATOR + remoteIP.getValue().getDisplay() + Constants.FILE_DATA_SEPARATOR
-                + port.getText() + Constants.FILE_DATA_SEPARATOR + uniqueId.getText();
-        utility.writeFile(
-                input.replace(Constants.SPACE, Constants.UNDERSCORE).toLowerCase() + Constants.MEMBERS_FILE_EXT,
-                memberInfo);
+        String memberInfo = utility.concatStrings(defaultName.getText(), Constants.FILE_DATA_SEPARATOR, publicKey,
+                Constants.FILE_DATA_SEPARATOR, remoteIP.getValue().getDisplay(), Constants.FILE_DATA_SEPARATOR,
+                port.getText(), Constants.FILE_DATA_SEPARATOR, uniqueId.getText());
+        utility.writeFile(utility.concatStrings(input.replace(Constants.SPACE, Constants.UNDERSCORE).toLowerCase(),
+                Constants.MEMBERS_FILE_EXT), memberInfo);
         // My Square,a7075b5b-b91d-4448-a0f9-d9b0bec1a726,tabDefaultSquare,0,~~~~~~~
         String uuid = utility.createUUID();
         String safeName = input.replace(Constants.SPACE, Constants.UNDERSCORE).toLowerCase();
-        String contents = input + Constants.COMMA + uuid + Constants.COMMA + Constants.TAB_PREFIX + safeName
-                + Constants.COMMA + Constants.ZERO + Constants.NO_PASSWORD_VALUE;
-        utility.writeFile(safeName + Constants.SQUARE_FILE_EXT, contents);
+        String contents = utility.concatStrings(input, Constants.COMMA, uuid, Constants.COMMA,
+                Constants.TAB_PREFIX, safeName, Constants.COMMA, Constants.ZERO, Constants.NO_PASSWORD_VALUE);
+        utility.writeFile(utility.concatStrings(safeName, Constants.SQUARE_FILE_EXT), contents);
         setTabSquare(new Square(contents, port.getText(), remoteIP.getValue().getDisplay(),
                 factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
-                        factory.createLogger(Constants.FILE_LOGGER, uniqueId.getText() + Constants.LOG_FILE_EXT,
-                                utility),
+                        factory.createLogger(Constants.FILE_LOGGER,
+                                utility.concatStrings(uniqueId.getText(), Constants.LOG_FILE_EXT), utility),
                         factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
                 utility, this, uniqueId.getText(), factory));
     }
@@ -1100,7 +1104,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                 String[] lineData = line.split(Constants.FILE_DATA_SEPARATOR, 2);
                 String ipData = lineData[1];
                 if (ipData.contains(uniqueId.getText())) {
-                    lines[i] = name + Constants.FILE_DATA_SEPARATOR + ipData;
+                    lines[i] = utility.concatStrings(name, Constants.FILE_DATA_SEPARATOR, ipData);
                     String newMemberInfo = String.join(Constants.NEWLINE, lines);
                     utility.deleteFile(file);
                     utility.writeFile(file, newMemberInfo);
@@ -1121,9 +1125,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             for (String line : lines) {
                 if (line.contains(uniqueId)) {
                     String[] lineData = line.split(Constants.FILE_DATA_SEPARATOR);
-                    lines[i] = lineData[0] + Constants.FILE_DATA_SEPARATOR + lineData[1] + Constants.FILE_DATA_SEPARATOR
-                            + lineData[2] + Constants.FILE_DATA_SEPARATOR + port + Constants.FILE_DATA_SEPARATOR
-                            + lineData[4];
+                    lines[i] = utility.concatStrings(lineData[0], Constants.FILE_DATA_SEPARATOR, lineData[1],
+                            Constants.FILE_DATA_SEPARATOR, lineData[2], Constants.FILE_DATA_SEPARATOR, port,
+                            Constants.FILE_DATA_SEPARATOR, lineData[4]);
                     break;
                 }
                 i++;
@@ -1144,9 +1148,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             for (String line : lines) {
                 if (line.contains(uniqueId)) {
                     String[] lineData = line.split(Constants.FILE_DATA_SEPARATOR);
-                    lines[i] = lineData[0] + Constants.FILE_DATA_SEPARATOR + lineData[1] + Constants.FILE_DATA_SEPARATOR
-                            + ip + Constants.FILE_DATA_SEPARATOR + lineData[3] + Constants.FILE_DATA_SEPARATOR
-                            + lineData[4];
+                    lines[i] = utility.concatStrings(lineData[0], Constants.FILE_DATA_SEPARATOR, lineData[1],
+                            Constants.FILE_DATA_SEPARATOR, ip, Constants.FILE_DATA_SEPARATOR, lineData[3],
+                            Constants.FILE_DATA_SEPARATOR, lineData[4]);
                     break;
                 }
                 i++;
@@ -1170,11 +1174,10 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             if (a.equals(Constants.EMPTY_STRING)) {
                 continue;
             }
-            String request = Constants.UNENCRYPTED_FLAG + Constants.COMMAND_DATA_SEPARATOR + square.getInvite()
-                    + Constants.COMMAND_DATA_SEPARATOR + Constants.REGISTER_ALIAS_COMMAND
-                    + Constants.COMMAND_DATA_SEPARATOR + Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR + a
-                    + Constants.FILE_DATA_SEPARATOR + port.getText() + Constants.FILE_DATA_SEPARATOR
-                    + uniqueId.getText();
+            String request = utility.concatStrings(Constants.UNENCRYPTED_FLAG, Constants.COMMAND_DATA_SEPARATOR,
+                    square.getInvite(), Constants.COMMAND_DATA_SEPARATOR, Constants.REGISTER_ALIAS_COMMAND,
+                    Constants.COMMAND_DATA_SEPARATOR, Constants.NULL_TEXT, Constants.FILE_DATA_SEPARATOR, a,
+                    Constants.FILE_DATA_SEPARATOR, port.getText(), Constants.FILE_DATA_SEPARATOR, uniqueId.getText());
             square.getController().processRequest(request, requesterInfo);
         }
     }

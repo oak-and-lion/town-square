@@ -11,6 +11,7 @@ public class Server extends Thread implements IServer {
     private ILogIt logger;
     private IFactory factory;
     private IApp parent;
+    private IUtility utility;
 
     public static IServer create(int port, ISquareController controller, ILogIt logger, IFactory factory, IApp parent) {
         if (iserver == null) {
@@ -30,6 +31,7 @@ public class Server extends Thread implements IServer {
         this.logger = logger;
         this.factory = factory;
         this.parent = parent;
+        this.utility = factory.createUtility(Constants.BASE_UTILITY);
     }
 
     public void teardown() {
@@ -44,7 +46,7 @@ public class Server extends Thread implements IServer {
         running = true;
         try (ServerSocket serverSocket = new ServerSocket(port)) {
 
-            logger.logInfo("Listening: " + Integer.toString(port));
+            logger.logInfo(utility.concatStrings("Listening: ", Integer.toString(port)));
 
             while (running) {
                 running = startServer(serverSocket);
@@ -61,7 +63,7 @@ public class Server extends Thread implements IServer {
         try {
             Socket socket = serverSocket.accept();
             String clientIP = socket.getInetAddress().getHostAddress();
-            logger.logInfo("New client connected: " + clientIP);
+            logger.logInfo(utility.concatStrings("New client connected: ", clientIP));
 
             RequesterInfo requester = new RequesterInfo(clientIP);
 

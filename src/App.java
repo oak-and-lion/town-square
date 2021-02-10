@@ -104,9 +104,9 @@ public class App extends Application implements IApp {
             if (utility.checkFileExists(Constants.DEFAULT_SQUARE_FILE)) {
                 defaultSquareInfo = utility.readFile(Constants.DEFAULT_SQUARE_FILE);
             } else {
-                defaultSquareInfo = Constants.DEFAULT_SQUARE_NAME + Constants.COMMA + utility.createUUID()
-                        + Constants.COMMA + Constants.DEFAULT_SQUARE_TAB_NAME + Constants.COMMA + Constants.NOT_PRIVATE
-                        + Constants.COMMA + Constants.NO_PASSWORD_VALUE;
+                defaultSquareInfo = utility.concatStrings(Constants.DEFAULT_SQUARE_NAME, Constants.COMMA, utility.createUUID()
+                        , Constants.COMMA, Constants.DEFAULT_SQUARE_TAB_NAME, Constants.COMMA, Constants.NOT_PRIVATE
+                        , Constants.COMMA, Constants.NO_PASSWORD_VALUE);
                 utility.writeFile(Constants.DEFAULT_SQUARE_FILE, defaultSquareInfo);
             }
             if (utility.checkFileExists(Constants.PUBLIC_KEY_FILE)
@@ -120,8 +120,8 @@ public class App extends Application implements IApp {
             }
             if (!utility.checkFileExists(Constants.DEFAULT_SQUARE_ME_FILE)) {
                 utility.writeFile(Constants.DEFAULT_SQUARE_ME_FILE,
-                        defaultName + Constants.DATA_SEPARATOR + keys.getPublicKeyBase64() + Constants.DATA_SEPARATOR
-                                + remoteIP + Constants.DATA_SEPARATOR + port + Constants.DATA_SEPARATOR + uniqueId);
+                utility.concatStrings(defaultName, Constants.DATA_SEPARATOR, keys.getPublicKeyBase64(), Constants.DATA_SEPARATOR
+                                , remoteIP, Constants.DATA_SEPARATOR, port, Constants.DATA_SEPARATOR, uniqueId));
             }
             alias = getAliases(uniqueId);
 
@@ -282,15 +282,15 @@ public class App extends Application implements IApp {
         this.stageTitle = setTitle();
         
         if (this.isHidingServer()) {
-            this.theStage.setTitle(stageTitle + Constants.SERVER_HIDING_TITLE);
+            this.theStage.setTitle(utility.concatStrings(stageTitle, Constants.SERVER_HIDING_TITLE));
         } else {
             this.theStage.setTitle(stageTitle);
         }
     }
 
     private String setTitle() {
-        return Constants.APP_TITLE + Constants.SPACE + Constants.OPEN_PARENS + defaultName
-                    + Constants.CLOSE_PARENS;
+        return utility.concatStrings(Constants.APP_TITLE, Constants.SPACE, Constants.OPEN_PARENS, defaultName
+                    , Constants.CLOSE_PARENS);
     }
 
     public void sendPort(String port) {
@@ -326,7 +326,7 @@ public class App extends Application implements IApp {
     }
 
     public void updateSquare(ISquare square) {
-        String name = square.getSafeLowerName() + Constants.SQUARE_FILE_EXT;
+        String name = utility.concatStrings(square.getSafeLowerName(), Constants.SQUARE_FILE_EXT);
         utility.deleteFile(name);
         utility.writeFile(name, square.toString());
     }
@@ -341,7 +341,7 @@ public class App extends Application implements IApp {
 
     public void hideServer() {
         hidingServer = true;
-        this.theStage.setTitle(stageTitle + Constants.SERVER_HIDING_TITLE);
+        this.theStage.setTitle(utility.concatStrings(stageTitle, Constants.SERVER_HIDING_TITLE));
     }
 
     public void exposeServer() {
@@ -356,8 +356,8 @@ public class App extends Application implements IApp {
     }
 
     private String getAliases(String uniqueId) {
-        if (utility.checkFileExists(Constants.MY_SQUARE_DEFAULT + Constants.ALIAS_FILE_EXT)) {
-            String[] temp = utility.searchFile(Constants.MY_SQUARE_DEFAULT + Constants.ALIAS_FILE_EXT, uniqueId,
+        if (utility.checkFileExists(utility.concatStrings(Constants.MY_SQUARE_DEFAULT, Constants.ALIAS_FILE_EXT))) {
+            String[] temp = utility.searchFile(utility.concatStrings(Constants.MY_SQUARE_DEFAULT, Constants.ALIAS_FILE_EXT), uniqueId,
                     Constants.SEARCH_STARTS_WITH);
             if (temp.length > 0) {
                 StringBuilder result = new StringBuilder();

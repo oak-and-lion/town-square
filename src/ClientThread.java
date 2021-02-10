@@ -56,15 +56,16 @@ public class ClientThread extends Thread implements IClientThread {
     @Override
     public void run() {
         try {
-            String file = square.getSafeLowerName() + Constants.POSTS_FILE_EXT;
-            String memberFile = square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT;
-            String memberAliasFile = square.getSafeLowerName() + Constants.ALIAS_FILE_EXT;
+            String file = utility.concatStrings(square.getSafeLowerName(), Constants.POSTS_FILE_EXT);
+            String memberFile = utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT);
+            String memberAliasFile = utility.concatStrings(square.getSafeLowerName(), Constants.ALIAS_FILE_EXT);
             aliasFileHash = Arrays.hashCode(utility.readBinaryFile(memberAliasFile));
             int newHashCode = 0;
             String raw;
             int count = 0;
             while (process) {
-                if (utility.checkFileExists(square.getSafeLowerName() + Constants.PAUSE_FILE_EXT)) {
+                if (utility
+                        .checkFileExists(utility.concatStrings(square.getSafeLowerName(), Constants.PAUSE_FILE_EXT))) {
                     Thread.sleep(Constants.PAUSE_WAIT_TIME);
                     continue;
                 }
@@ -196,8 +197,9 @@ public class ClientThread extends Thread implements IClientThread {
                     String[] aliases = aliasSplit[1].split(Constants.FORWARD_SLASH);
                     for (String a : aliases) {
                         String[] a1 = a.split(Constants.COLON);
-                        memberWork.add(member[0] + Constants.DATA_SEPARATOR + member[1] + Constants.DATA_SEPARATOR
-                                + a1[0] + Constants.DATA_SEPARATOR + a1[1] + Constants.DATA_SEPARATOR + aliasSplit[0]);
+                        memberWork.add(utility.concatStrings(member[0], Constants.DATA_SEPARATOR, member[1],
+                                Constants.DATA_SEPARATOR, a1[0], Constants.DATA_SEPARATOR, a1[1],
+                                Constants.DATA_SEPARATOR, aliasSplit[0]));
                     }
                 }
             }
@@ -210,8 +212,8 @@ public class ClientThread extends Thread implements IClientThread {
             String[] member = info.split(Constants.DATA_SEPARATOR);
             IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
                     square.getInvite());
-            String response = client.sendMessage(Constants.MEMBER_COMMAND + Constants.COMMAND_DATA_SEPARATOR + uniqueId,
-                    false);
+            String response = client.sendMessage(
+                    utility.concatStrings(Constants.MEMBER_COMMAND, Constants.COMMAND_DATA_SEPARATOR, uniqueId), false);
             if (!response.equals(Constants.EMPTY_STRING)) {
                 findNewMembers(response, file);
             }
@@ -223,8 +225,9 @@ public class ClientThread extends Thread implements IClientThread {
             String[] member = info.split(Constants.DATA_SEPARATOR);
             IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
                     square.getInvite());
-            String response = client
-                    .sendMessage(Constants.READ_ALIAS_COMMAND + Constants.COMMAND_DATA_SEPARATOR + uniqueId, false);
+            String response = client.sendMessage(
+                    utility.concatStrings(Constants.READ_ALIAS_COMMAND, utility.concatStrings(Constants.COMMAND_DATA_SEPARATOR, uniqueId)),
+                    false);
             if (!response.equals(Constants.EMPTY_STRING)) {
                 String[] responseInfo = response.split(Constants.COLON);
                 if (responseInfo[0].equals(Constants.OK_RESULT)) {
@@ -249,11 +252,10 @@ public class ClientThread extends Thread implements IClientThread {
                 String[] addresses = temp[1].split(Constants.FORWARD_SLASH);
                 for (String address : addresses) {
                     String[] temp2 = address.split(Constants.COLON);
-                    String request = Constants.UNENCRYPTED_FLAG + Constants.COMMAND_DATA_SEPARATOR + square.getInvite()
-                            + Constants.COMMAND_DATA_SEPARATOR + Constants.REGISTER_ALIAS_COMMAND
-                            + Constants.COMMAND_DATA_SEPARATOR + Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR
-                            + temp2[0] + Constants.FILE_DATA_SEPARATOR + temp2[1] + Constants.FILE_DATA_SEPARATOR
-                            + temp[0];
+                    String request = utility.concatStrings(Constants.UNENCRYPTED_FLAG, Constants.COMMAND_DATA_SEPARATOR,
+                            square.getInvite(), Constants.COMMAND_DATA_SEPARATOR, Constants.REGISTER_ALIAS_COMMAND,
+                            Constants.COMMAND_DATA_SEPARATOR, Constants.NULL_TEXT, Constants.FILE_DATA_SEPARATOR,
+                            temp2[0], Constants.FILE_DATA_SEPARATOR, temp2[1], Constants.FILE_DATA_SEPARATOR, temp[0]);
                     squareController.processRequest(request, requester);
                 }
             }
@@ -273,7 +275,7 @@ public class ClientThread extends Thread implements IClientThread {
                 String[] memberInfo = memberLoop.split(Constants.DATA_SEPARATOR);
                 String[] memberSearch = utility.searchFile(file, memberInfo[4], Constants.SEARCH_CONTAINS);
                 if (memberSearch.length == 0) {
-                    utility.appendToFile(file, newLine + memberLoop);
+                    utility.appendToFile(file, utility.concatStrings(newLine, memberLoop));
                     newLine = Constants.NEWLINE;
                 } else if (memberInfo[0].equals(Constants.EXIT_SQUARE_TEXT)) {
                     removeMember(file, memberInfo[4]);
@@ -294,9 +296,9 @@ public class ClientThread extends Thread implements IClientThread {
             if (!cm[4].equals(memberId)) {
                 result.append(currentMember);
             } else {
-                result.append(Constants.STAR + cm[0] + Constants.FILE_DATA_SEPARATOR + Constants.NULL_TEXT
-                        + Constants.FILE_DATA_SEPARATOR + Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR
-                        + Constants.NULL_TEXT + Constants.FILE_DATA_SEPARATOR + cm[4]);
+                result.append(utility.concatStrings(Constants.STAR, cm[0], Constants.FILE_DATA_SEPARATOR,
+                        Constants.NULL_TEXT, Constants.FILE_DATA_SEPARATOR, Constants.NULL_TEXT,
+                        Constants.FILE_DATA_SEPARATOR, Constants.NULL_TEXT, Constants.FILE_DATA_SEPARATOR, cm[4]));
             }
             count++;
         }
@@ -316,12 +318,14 @@ public class ClientThread extends Thread implements IClientThread {
             }
             String[] post = postInfo.split(Constants.DATA_SEPARATOR);
             posts.add(new PostMessage(Long.parseLong(post[0]), postInfo));
-            String[] members = utility.searchFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT, post[2],
-                    false);
+            String[] members = utility.searchFile(
+                    utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT), post[2], false);
             if (members.length > 0 && members[0] != null) {
                 String[] memberName = members[0].split(Constants.DATA_SEPARATOR);
                 SimpleDateFormat sdf = new SimpleDateFormat();
-                String message = sdf.format(new Date(Long.valueOf(post[0]))) + " (" + memberName[0] + ") : " + post[1];
+                String message = utility.concatStrings(sdf.format(new Date(Long.valueOf(post[0]))), Constants.SPACE,
+                        Constants.OPEN_PARENS, memberName[0], Constants.CLOSE_PARENS, Constants.SPACE, Constants.COLON,
+                        Constants.SPACE, post[1]);
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {

@@ -18,10 +18,10 @@ public class LogItFile implements ILogIt {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
 
-        msg = dtf.format(now) + Constants.COLON + Constants.SPACE + msg;
+        msg = utility.concatStrings(dtf.format(now), Constants.COLON, Constants.SPACE, msg);
 
         if (!msg.startsWith(Constants.NEWLINE)) {
-            msg = Constants.NEWLINE + msg;
+            msg = utility.concatStrings(Constants.NEWLINE, msg);
         }
 
         utility.appendToFile(file, msg);

@@ -60,8 +60,9 @@ public class Square implements ISquare {
     private void initializeClientThread() {
         clientThread = factory.createClientThread(Constants.BASE_CLIENT_THREAD, this, utility, uniqueId);
 
-        if (utility.checkFileExists(getSafeLowerName() + Constants.POSTS_FILE_EXT)) {
-            lastKnownPost = utility.countLinesInFile(getSafeLowerName() + Constants.POSTS_FILE_EXT);
+        if (utility.checkFileExists(utility.concatStrings(getSafeLowerName(), Constants.POSTS_FILE_EXT))) {
+            lastKnownPost = utility
+                    .countLinesInFile(utility.concatStrings(getSafeLowerName(), Constants.POSTS_FILE_EXT));
         }
 
         try {
@@ -86,13 +87,13 @@ public class Square implements ISquare {
         if (this.isPrivate()) {
             isPrivate = "1";
         }
-        return this.name + Constants.COMMA + this.invite + Constants.COMMA + this.id + Constants.COMMA + isPrivate
-                + Constants.COMMA + password;
+        return utility.concatStrings(this.name, Constants.COMMA, this.invite, Constants.COMMA, this.id, Constants.COMMA,
+                isPrivate, Constants.COMMA, password);
     }
 
     public String getName() {
-        if (utility.checkFileExists(getSafeLowerName() + Constants.NICKNAME_FILE_EXT)) {
-            return utility.readFile(getSafeLowerName() + Constants.NICKNAME_FILE_EXT);
+        if (utility.checkFileExists(utility.concatStrings(getSafeLowerName(), Constants.NICKNAME_FILE_EXT))) {
+            return utility.readFile(utility.concatStrings(getSafeLowerName(), Constants.NICKNAME_FILE_EXT));
         }
         return getTrueName();
     }

@@ -28,4 +28,6 @@ public interface IUtility {
     byte[] convertFromBase64(String data);
     void addToZip(String srcFile, ZipOutputStream zipOut);
     boolean unzip(String fileZip);
+    String concatStrings(String... strings);
+    int add(int... ints);
 }

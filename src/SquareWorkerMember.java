@@ -17,7 +17,7 @@ public class SquareWorkerMember extends SquareWorkerBase implements ISquareWorke
         String memberId = split[3];
 
         if (checkSquareAccess(square, memberId)) {
-            return utility.readFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT);
+            return utility.readFile(utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT));
         }
 
         return Constants.EMPTY_STRING;

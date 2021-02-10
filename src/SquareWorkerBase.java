@@ -8,7 +8,7 @@ public class SquareWorkerBase {
     }
 
     boolean checkSquareAccess(ISquare square, String memberId) {
-        String file = square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT;
+        String file = utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT);
         int first = utility.findFirstOccurence(file, memberId, Constants.SEARCH_CONTAINS,
                 Constants.NOT_FOUND_RETURN_NEG_ONE);
 
@@ -20,6 +20,6 @@ public class SquareWorkerBase {
     }
 
     String buildResult(String code, String msg) {
-        return code + Constants.COLON + msg;
+        return utility.concatStrings(code, Constants.COLON, msg);
     }
 }

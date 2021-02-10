@@ -49,6 +49,6 @@ public class ModalMembersList extends BaseViewer implements IModalViewer {
         // setting group and scene
         Group root = new Group();
         root.getChildren().add(scrollPane);
-        showStage(root, square.getName() + " Members");
+        showStage(root, utility.concatStrings(square.getName(), " Members"));
     }
 }

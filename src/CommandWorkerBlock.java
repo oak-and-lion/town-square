@@ -27,20 +27,20 @@ public class CommandWorkerBlock extends CommandWorkerBase implements ICommandWor
         if (user.equals(Constants.EMPTY_STRING)) {
             return false;
         }
-        String[] results = utility.searchFile(square.getSafeLowerName() + Constants.MEMBERS_FILE_EXT, user,
+        String[] results = utility.searchFile(utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT), user,
                 Constants.SEARCH_STARTS_WITH);
         if (results.length > 0) {
             String[] memberInfo = results[0].split(Constants.FILE_DATA_SEPARATOR);
-            String[] alreadyBlocked = utility.searchFile(square.getSafeLowerName() + Constants.BLOCK_FILE_EXT,
+            String[] alreadyBlocked = utility.searchFile(utility.concatStrings(square.getSafeLowerName(), Constants.BLOCK_FILE_EXT),
                     memberInfo[4], Constants.SEARCH_CONTAINS);
             if (alreadyBlocked.length < 1) {
-                int lines = utility.countLinesInFile(square.getSafeLowerName() + Constants.BLOCK_FILE_EXT);
+                int lines = utility.countLinesInFile(utility.concatStrings(square.getSafeLowerName(), Constants.BLOCK_FILE_EXT));
                 String newLine = Constants.EMPTY_STRING;
                 if (lines > 0) {
                     newLine = Constants.NEWLINE;
                 }
-                FileWriteResponse response = utility.appendToFile(square.getSafeLowerName() + Constants.BLOCK_FILE_EXT,
-                        newLine + memberInfo[4]);
+                FileWriteResponse response = utility.appendToFile(utility.concatStrings(square.getSafeLowerName(), Constants.BLOCK_FILE_EXT),
+                utility.concatStrings(newLine, memberInfo[4]));
                 return response.isSuccessful();
             }
             return false;
