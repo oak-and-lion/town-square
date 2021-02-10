@@ -22,14 +22,15 @@ public class Client implements IClient {
         this.hostName = hostName;
         this.port = port;
         this.squareId = squareId;
-        createLogger(factory);
         this.utility = factory.createUtility(Constants.BASE_UTILITY);
+        createLogger(factory);
     }
 
     public Client(Square square, IFactory factory) {
         port = Integer.valueOf(square.getPort());
         hostName = square.getIP();
         squareId = square.getId();
+        this.utility = factory.createUtility(Constants.BASE_UTILITY);
         createLogger(factory);
     }
 
