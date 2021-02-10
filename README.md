@@ -14,7 +14,7 @@ This project is developed in the Visual Studio Code IDE. There are no extra proj
 
 ## Dependency Management
 
-Town Square requires JDK 11 and JavaFX 11. There are no other dependencies, and that's by design.
+Town Square requires JDK 11 and JavaFX 11. There are no other dependencies, and that's by design. Creators and maintainers of open source libraries have demanded their code be removed from certain projects based on ideological reasons. This project will not be subject to the whims of others.
 
 If you use Visual Studio Code, you will need to specify a settings.json file in the .vscode folder to point to the JavaFX libraries. 
 
