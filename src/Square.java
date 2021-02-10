@@ -129,6 +129,10 @@ public class Square implements ISquare {
         return port;
     }
 
+    public void setPort(String value) {
+        port = value;
+    }
+
     public boolean isPrivate() {
         return squarePrivate;
     }

@@ -115,6 +115,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             updateDefaultNameInMemberFiles(defaultName.getText());
             updatePortInMemberFiles(port.getText(), uniqueId.getText());
             updateAliases(alias.getText());
+            updateInvitations(remoteIP.getSelectionModel().getSelectedItem().getDisplay(), port.getText());
         }
     }
 
@@ -362,11 +363,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
             remoteIP.valueProperty().addListener((obs, oldValue, newValue) -> {
                 parent.sendIP(newValue.getDisplay(), oldValue.getDisplay(), uniqueId.getText());
-                for (ISquare square : squares) {
-                    square.setIP(newValue.getDisplay());
-                    String invite = buildInviteCode(square, determineSquarePrivacy(square));
-                    ((TextField) square.getTemp()).setText(invite);
-                }
+                updateInvitations(newValue.getDisplay(), port.getText());
                 updateIPAddressInMemberFiles(newValue.getDisplay(), uniqueId.getText());
             });
             remoteIP.setConverter(new StringConverter<IPAddress>() {
@@ -380,6 +377,15 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                     return new IPAddress(string, string);
                 }
             });
+        }
+    }
+
+    private void updateInvitations(String ip, String port) {
+        for (ISquare square : squares) {
+            square.setIP(ip);
+            square.setPort(port);
+            String invite = buildInviteCode(square, determineSquarePrivacy(square));
+            ((TextField) square.getTemp()).setText(invite);
         }
     }
 

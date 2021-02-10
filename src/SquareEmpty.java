@@ -4,12 +4,14 @@ import javafx.scene.layout.VBox;
 
 public class SquareEmpty implements ISquare {
     private IDialogController controller;
+    private String port;
     public SquareEmpty() {
-
+        this.port = "44123";
     }
 
     public SquareEmpty(IDialogController controller) {
         this.controller = controller;
+        this.port = "44123";
     }
     public String getIP(){
         return Constants.EMPTY_STRING;
@@ -18,7 +20,10 @@ public class SquareEmpty implements ISquare {
         // not needed
     }
     public String getPort() {
-        return "44123";
+        return port;
+    }
+    public void setPort(String value) {
+        port = value;
     }
     public String getInvite(){
         return "invite123";

@@ -4,12 +4,14 @@ import javafx.scene.layout.VBox;
 
 public class xxMockSquare implements ISquare {
     private IDialogController controller;
+    String port;
     public xxMockSquare() {
-
+        this.port = "44123";
     }
 
     public xxMockSquare(IDialogController controller) {
         this.controller = controller;
+        this.port = "44123";
     }
     public String getIP(){
         return Constants.EMPTY_STRING;
@@ -18,7 +20,10 @@ public class xxMockSquare implements ISquare {
         // not needed
     }
     public String getPort() {
-        return "44123";
+        return port;
+    }
+    public void setPort(String value) {
+        port = value;
     }
     public String getInvite(){
         return "invite123";
