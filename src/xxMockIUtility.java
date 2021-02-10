@@ -109,4 +109,8 @@ public class xxMockIUtility implements IUtility {
 
         return result;
     }
+
+    public String memberEncrypt(IFactory factory, String memberPublicKey, String data) {
+        return Constants.EMPTY_STRING;
+    }
 }

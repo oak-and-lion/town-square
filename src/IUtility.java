@@ -30,4 +30,5 @@ public interface IUtility {
     boolean unzip(String fileZip);
     String concatStrings(String... strings);
     int add(int... ints);
+    String memberEncrypt(IFactory factory, String memberPublicKey, String data);
 }

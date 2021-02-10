@@ -49,7 +49,7 @@ public class Client implements IClient {
 
             String encryptFlag = Constants.UNENCRYPTED_FLAG;
             if (encrypt) {
-                encryptFlag = "e";
+                encryptFlag = Constants.ENCRYPTED_FLAG;
             }
 
             return communicateWithServer(utility.concatStrings(encryptFlag, Constants.COMMAND_DATA_SEPARATOR, squareId,

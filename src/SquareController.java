@@ -30,7 +30,7 @@ public class SquareController implements ISquareController {
         String[] split = request.split(Constants.COMMAND_DATA_SEPARATOR);
         if (split.length > 2) {
             String[] newSplit;
-            if (split[0].equals(Constants.ENCRYPTION_FLAG)) {
+            if (split[0].equals(Constants.ENCRYPTED_FLAG)) {
                 newSplit = decryptArray(split);
                 if (newSplit.length == 0) {
                     okToProcess = false;

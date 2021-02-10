@@ -62,7 +62,6 @@ public class Constants {
     public static final String NEWLINE = "\n";
     public static final String ZERO = "0";
     public static final String TAB_PREFIX = "tab";
-    public static final String ENCRYPTION_FLAG = "e";
     public static final String UNDERSCORE = "_";
     public static final String DASH = "-";
     public static final String SPACE = " ";
@@ -213,6 +212,9 @@ public class Constants {
     public static final String BLOCKED_VIDEO_FILE = "blocked-video.mp4";
     public static final String CSS_STYLE_HAND = "-fx-cursor: hand;";
     public static final String UNENCRYPTED_FLAG = "u";
+    public static final String ENCRYPTED_FLAG = "e";
+    public static final boolean DO_NOT_ENCRYPT_CLIENT_TRANSFER = false;
+    public static final boolean ENCRYPT_CLIENT_TRANSFER = true;
     public static final int TINY_PAUSE = 10;
     public static final int INFINITE_LOOP_FLAG = -1;
     public static final int REALLY_LOW_NUMBER = -999;

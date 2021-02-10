@@ -623,7 +623,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     }
 
     private String determineSquarePrivacy(ISquare square) {
-        return Constants.ENCRYPTION_FLAG;
+        return Constants.ENCRYPTED_FLAG;
     }
 
     public ISquare getSquareByInvite(String id) {
@@ -655,11 +655,11 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         boolean encrypt = false;
         ISquareKeyPair tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
 
-        if (split[0].equals(Constants.ENCRYPTION_FLAG)) {
+        if (split[0].equals(Constants.ENCRYPTED_FLAG)) {
             encrypt = true;
         }
 
-        String remotePublicKey = client.sendMessage(Constants.REQUEST_PUBLIC_KEY_COMMAND, false);
+        String remotePublicKey = client.sendMessage(Constants.REQUEST_PUBLIC_KEY_COMMAND, Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER);
         if (remotePublicKey.equals(Constants.EMPTY_STRING)) {
             utility.writeFile(utility.concatStrings(Constants.INVITE_FILE_PREFIX, split[3], Constants.INVITE_FILE_EXT),
                     invite);

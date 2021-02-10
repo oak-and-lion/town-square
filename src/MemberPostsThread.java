@@ -42,7 +42,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
             IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
                     square.getInvite());
             String response = client.sendMessage(utility.concatStrings(Constants.READ_COMMAND,
-                    Constants.COMMAND_DATA_SEPARATOR, msg[0], Constants.COMMAND_DATA_SEPARATOR, uniqueId), false);
+                    Constants.COMMAND_DATA_SEPARATOR, msg[0], Constants.COMMAND_DATA_SEPARATOR, uniqueId), Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER);
             if (!response.equals(Constants.EMPTY_STRING)) {
                 String[] responseSplit = response.split(Constants.COLON);
                 if (responseSplit.length == 2 && responseSplit[0].equals(Constants.OK_RESULT)
@@ -93,7 +93,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
                 square.getInvite());
 
         String response = client.sendMessage(utility.concatStrings(Constants.REQUEST_FILE_COMMAND,
-                Constants.COMMAND_DATA_SEPARATOR, fileName, Constants.COMMAND_DATA_SEPARATOR, uniqueId), false);
+                Constants.COMMAND_DATA_SEPARATOR, fileName, Constants.COMMAND_DATA_SEPARATOR, uniqueId), Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER);
 
         SquareResponse responseData = new SquareResponse(response);
 
