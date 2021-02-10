@@ -133,8 +133,7 @@ public class App extends Application implements IApp {
                 }
             });
 
-            stageTitle = Constants.APP_TITLE + Constants.SPACE + Constants.OPEN_PARENS + defaultName
-                    + Constants.CLOSE_PARENS;
+            stageTitle = setTitle();
 
             primaryStage.setTitle(stageTitle);
             primaryStage.show();
@@ -279,6 +278,19 @@ public class App extends Application implements IApp {
     public void sendDefaultName(String defaultName) {
         utility.deleteFile(Constants.DEFAULT_NAME_FILE);
         utility.writeFile(Constants.DEFAULT_NAME_FILE, defaultName);
+        this.defaultName = defaultName;
+        this.stageTitle = setTitle();
+        
+        if (this.isHidingServer()) {
+            this.theStage.setTitle(stageTitle + Constants.SERVER_HIDING_TITLE);
+        } else {
+            this.theStage.setTitle(stageTitle);
+        }
+    }
+
+    private String setTitle() {
+        return Constants.APP_TITLE + Constants.SPACE + Constants.OPEN_PARENS + defaultName
+                    + Constants.CLOSE_PARENS;
     }
 
     public void sendPort(String port) {

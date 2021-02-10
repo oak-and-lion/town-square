@@ -6,6 +6,7 @@ public interface ISquare {
     String getIP();
     void setIP(String ip);
     String getPort();
+    void setPort(String port);
     String getInvite();
     Object getTemp();
     String getName();

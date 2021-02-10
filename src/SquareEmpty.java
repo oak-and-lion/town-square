@@ -2,14 +2,14 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.VBox;
 
-public class xxMockSquare implements ISquare {
+public class SquareEmpty implements ISquare {
     private IDialogController controller;
-    String port;
-    public xxMockSquare() {
+    private String port;
+    public SquareEmpty() {
         this.port = "44123";
     }
 
-    public xxMockSquare(IDialogController controller) {
+    public SquareEmpty(IDialogController controller) {
         this.controller = controller;
         this.port = "44123";
     }
