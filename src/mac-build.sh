@@ -23,15 +23,21 @@ mkdir output
 
 cd output
 
+echo copying dependencies
+
 cp ../../../javafx-mac.zip javafx-mac.zip
 cp ../../../openjdk-11.0.2_osx-x64_bin.tar.gz openjdk-11.0.2_osx-x64_bin.tar.gz
 cp ../../../town-square-mac.sh town-square-mac.sh
 
+echo creating JAR file
+
 jar -c -v -m ../Manifest.txt -f App.jar ../*.class ../sample.fxml
+
+echo creating final package
 
 mkdir package
 
-tar -a -c -f package/pkg-town-square_mac.zip town-square-mac.sh App.jar javafx-mac.zip openjdk-11.0.2_osx-x64_bin.tar.gz
+tar -a -c -f package/pkg-town-square_mac.tar.gz town-square-mac.sh App.jar javafx-mac.zip openjdk-11.0.2_osx-x64_bin.tar.gz
 
 cd package
 
