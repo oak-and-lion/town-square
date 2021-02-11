@@ -9,6 +9,8 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
     private boolean workDone;
     private ArrayList<PostMessage> allPosts;
     private IFactory factory;
+    private String port;
+    private String ip;
 
     public MemberPostsThread(String info, String uniqueId, String[] msg, ISquare square, IUtility utility,
             IFactory factory) {
@@ -20,6 +22,8 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
         workDone = false;
         allPosts = new ArrayList<>();
         this.factory = factory;
+        this.port = utility.readFile(Constants.PORT_FILE);
+        this.ip = utility.readFile(Constants.IP_FILE);
     }
 
     @Override
@@ -37,7 +41,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
     }
 
     private void getPostsFromOtherMembers() {
-        if (!info.contains(uniqueId) && !info.startsWith(Constants.STAR)) {
+        if (!(info.contains(uniqueId) && (info.contains(ip) && info.contains(port))) && !info.startsWith(Constants.STAR)) {
             String[] member = info.split(Constants.DATA_SEPARATOR);
             IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
                     square.getInvite());
@@ -82,8 +86,8 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
 
     private void processGetImageFile(String data, String[] member) {
         String[] message = data.split(Constants.DATA_SEPARATOR);
-        String fileName = message[1].substring(message[1].indexOf(Constants.END_SQUARE_BRACKET),
-                Constants.END_SQUARE_BRACKET.length());
+        String fileName = message[1].substring(utility.add(message[1].indexOf(Constants.END_SQUARE_BRACKET),
+                Constants.END_SQUARE_BRACKET.length()));
 
         if (utility.checkFileExists(fileName)) {
             return;
