@@ -149,7 +149,7 @@ public class Factory implements IFactory {
     }
 
     public IModalViewer createModalViewer(int type) {
-        return createModalViewer(type, new xxMockIUtility(), new xxMockSquare());
+        return createModalViewer(type, new UtilityEmpty(), new SquareEmpty());
     }
 
     public IModalViewer createModalViewer(int type, IUtility utility, ISquare square) {

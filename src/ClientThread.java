@@ -70,11 +70,6 @@ public class ClientThread extends Thread implements IClientThread {
                     continue;
                 }
 
-                raw = utility.readFile(file, lastKnownPost);
-                if (!raw.equals(Constants.EMPTY_STRING)) {
-                    processMessages(raw);
-                }
-
                 String[] msg = new String[1];
                 msg[0] = Constants.NO_POSTS;
 
@@ -114,6 +109,11 @@ public class ClientThread extends Thread implements IClientThread {
                 }
 
                 updatePosts(file);
+
+                raw = utility.readFile(file, lastKnownPost);
+                if (!raw.equals(Constants.EMPTY_STRING)) {
+                    processMessages(raw);
+                }
 
                 Thread.sleep(waitTime);
 
