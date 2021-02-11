@@ -64,7 +64,8 @@ public class VersionChecker extends Thread implements IVersionChecker {
                 squareInvite);
 
         String encryptedPassword = utility.memberEncrypt(factory, password, memberInfo[1]);
-        String encryptedData = utility.concatStrings(encryptedPassword, Constants.COMMAND_DATA_SEPARATOR, utility.encrypt(Constants.CHECK_VERSION_COMMAND, password));
+        String encryptedData = utility.concatStrings(encryptedPassword, Constants.COMMAND_DATA_SEPARATOR,
+                utility.encrypt(Constants.CHECK_VERSION_COMMAND, password));
         String result = client.sendMessage(encryptedData, Constants.ENCRYPT_CLIENT_TRANSFER);
 
         if (result.equals(Constants.EMPTY_STRING)) {
@@ -83,10 +84,12 @@ public class VersionChecker extends Thread implements IVersionChecker {
 
         if (resultVersion.length == currentVersion.length && resultVersion.length == 3
                 && !isVersionEqual(resultVersion, currentVersion)) {
-            
-            String encrypted = utility.encrypt(utility.concatStrings(Constants.GET_APP_JAR_COMMAND, Constants.COMMAND_DATA_SEPARATOR
-            , Constants.JAR_FILE, Constants.COMMAND_DATA_SEPARATOR, uniqueId), password);
-            String response = client.sendMessage(encrypted, Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER);
+
+            String encrypted = utility.encrypt(utility.concatStrings(Constants.GET_APP_JAR_COMMAND,
+                    Constants.COMMAND_DATA_SEPARATOR, Constants.JAR_FILE, Constants.COMMAND_DATA_SEPARATOR, uniqueId),
+                    password);
+            String fin = utility.concatStrings(encryptedPassword, Constants.COMMAND_DATA_SEPARATOR,encrypted);
+            String response = client.sendMessage(fin, Constants.ENCRYPT_CLIENT_TRANSFER);
 
             SquareResponse responseData = new SquareResponse(response);
 
