@@ -5,11 +5,15 @@ public class VersionChecker extends Thread implements IVersionChecker {
     private IUtility utility;
     private String uniqueId;
     private IFactory factory;
+    private String port;
+    private String ip;
 
     public VersionChecker(IUtility utility, String uniqueId, IFactory factory) {
         this.utility = utility;
         this.uniqueId = uniqueId;
         this.factory = factory;
+        this.port = utility.readFile(Constants.PORT_FILE);
+        this.ip = utility.readFile(Constants.IP_FILE);
     }
 
     @Override
@@ -21,7 +25,7 @@ public class VersionChecker extends Thread implements IVersionChecker {
         DoubleString[] allMembers = getAllMembers();
         for (DoubleString member : allMembers) {
             String[] info = member.getStringTwo().split(Constants.FILE_DATA_SEPARATOR);
-            if (!info[4].equals(uniqueId) && !info[0].startsWith(Constants.STAR)) {
+            if (!(info[4].equals(uniqueId) && (info[2].equals(ip) && info[3].equals(port))) && !info[0].startsWith(Constants.STAR)) {
                 checkVersionAgainstMember(member.getStringTwo(), member.getStringOne());
             }
         }
