@@ -598,7 +598,7 @@ public class Utility implements IUtility {
         return result;
     }
 
-    public String memberEncrypt(IFactory factory, String memberPublicKey, String data) {
+    public String memberEncrypt(IFactory factory, String data, String memberPublicKey) {
         ISquareKeyPair tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, this);
         
         tempKeys.setPublicKeyFromBase64(memberPublicKey);

@@ -213,7 +213,8 @@ public class ClientThread extends Thread implements IClientThread {
             IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
                     square.getInvite());
             String response = client.sendMessage(
-                    utility.concatStrings(Constants.MEMBER_COMMAND, Constants.COMMAND_DATA_SEPARATOR, uniqueId), Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER);
+                    utility.concatStrings(Constants.MEMBER_COMMAND, Constants.COMMAND_DATA_SEPARATOR, uniqueId),
+                    Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER);
             if (!response.equals(Constants.EMPTY_STRING)) {
                 findNewMembers(response, file);
             }
@@ -226,18 +227,19 @@ public class ClientThread extends Thread implements IClientThread {
             IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
                     square.getInvite());
             String response = client.sendMessage(
-                    utility.concatStrings(Constants.READ_ALIAS_COMMAND, utility.concatStrings(Constants.COMMAND_DATA_SEPARATOR, uniqueId)),
+                    utility.concatStrings(Constants.READ_ALIAS_COMMAND,
+                            utility.concatStrings(Constants.COMMAND_DATA_SEPARATOR, uniqueId)),
                     Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER);
             if (!response.equals(Constants.EMPTY_STRING)) {
                 String[] responseInfo = response.split(Constants.COLON);
                 if (responseInfo[0].equals(Constants.OK_RESULT)) {
-                    processAliasFileReturn(responseInfo[1]);
+                    processAliasFileReturn(responseInfo[1], member[1]);
                 }
             }
         }
     }
 
-    private void processAliasFileReturn(String response) {
+    private void processAliasFileReturn(String response, String memberPublicKey) {
         RequesterInfo requester = new RequesterInfo(utility.readFile(Constants.IP_FILE));
         String[] responseInfo = response.split(Constants.COMMAND_DATA_SEPARATOR);
         ISquareKeyPair tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
