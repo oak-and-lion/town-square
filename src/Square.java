@@ -207,4 +207,8 @@ public class Square implements ISquare {
     public Tab getTab() {
         return tab;
     }
+
+    public IFactory getFactory() {
+        return this.factory;
+    }
 }

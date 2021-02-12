@@ -168,6 +168,10 @@ public class App extends Application implements IApp {
         return null;
     }
 
+    public Stage getStage() {
+        return this.theStage;
+    }
+
     private void setResizeListeners(Stage primaryStage, IDialogController controller) {
         // create a listener
         final ChangeListener<Number> listener = new ChangeListener<Number>() {

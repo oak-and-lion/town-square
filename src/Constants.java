@@ -26,6 +26,7 @@ public class Constants {
     public static final int BASE_MODAL_VIDEO_VIEWER = 2;
     public static final int BASE_MODAL_MEMBER_VIEWER = 3;
     public static final int BASE_SHOW_SQUARE_MEMBERS = 1;
+    public static final int BASE_MODAL_LICENSE_VIEWER = 4;
     public static final int SYSTEM_EXIT_OK = 0;
     public static final int SYSTEM_EXIT_FAIL = 1;
     public static final int SYSTEM_EXIT_ALREADY_RUNNING = 2;

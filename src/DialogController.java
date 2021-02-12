@@ -207,7 +207,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     }
 
     public void showLicense() {
-        ModalLicenseViewer l = new ModalLicenseViewer();
+        IModalViewer l = factory.createModalViewer(Constants.BASE_MODAL_LICENSE_VIEWER, utility, new SquareEmpty(this));
         l.show(License.getLicense(utility));
     }
 

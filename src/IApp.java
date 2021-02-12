@@ -1,3 +1,5 @@
+import javafx.stage.Stage;
+
 public interface IApp {
     void sendDefaultName(String defaultName);
     void sendPort(String port);
@@ -10,4 +12,5 @@ public interface IApp {
     void hideServer();
     void exposeServer();
     boolean isHidingServer();
+    Stage getStage();
 }

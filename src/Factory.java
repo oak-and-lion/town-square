@@ -154,11 +154,13 @@ public class Factory implements IFactory {
 
     public IModalViewer createModalViewer(int type, IUtility utility, ISquare square) {
         if (type == Constants.BASE_MODAL_IMAGE_VIEWER) {
-            return new ModalImageViewer();
+            return new ModalImageViewer(square.getSampleController().getParent().getStage());
         } else if (type == Constants.BASE_MODAL_VIDEO_VIEWER) {
-            return new ModalVideoViewer();
+            return new ModalVideoViewer(square.getSampleController().getParent().getStage());
         } else if (type == Constants.BASE_MODAL_MEMBER_VIEWER) {
-            return new ModalMembersList(utility, square);
+            return new ModalMembersList(utility, square, square.getSampleController().getParent().getStage());
+        } else if (type == Constants.BASE_MODAL_LICENSE_VIEWER) {
+            return new ModalLicenseViewer(square.getSampleController().getParent().getStage());
         }
 
         return null;
@@ -257,6 +259,8 @@ public class Factory implements IFactory {
             return new CommandWorkerCheckVersion(utility, square, dialogController, this);
         } else if (cmd.equals(Constants.ADD_MEMBER_COMMAND)) {
             return new CommandWorkerAddMember(utility, square, dialogController);
+        } else if (cmd.equals(Constants.ACK_COMMAND)) {
+            return new CommandWorkerAck(utility, square, dialogController);
         }
 
         return new CommandWorkerEmpty(utility, square, dialogController);
