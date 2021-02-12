@@ -188,11 +188,13 @@ public class Constants {
     public static final String PAUSE_COMMAND = "pause";
     public static final String UNPAUSE_COMMAND = "unpause";
     public static final String NICKNAME_COMMAND = "nickname";
+    public static final String VERSION_COMMAND = "ver";
     public static final String COMMANDS_TITLE = "List of Commands";
     public static final String SEMI_COLON = ";";
     public static final int PAUSE_WAIT_TIME = 10000;
     public static final String WAIT_TIME_FILE = "wait.time";
     public static final int DEFAULT_WAIT_TIME = 1000;
+    public static final int RESIZE_WAIT_TIME = 210;
     public static final String HELLO_WORLD = "hello world";
     public static final int ASCII_ZERO = 48;
     public static final int ASCII_LOWER_Z = 122;

@@ -158,7 +158,7 @@ public class App extends Application implements IApp {
             controller.processPendingInvites();
 
             versionChecker = factory.createVersionChecker(Constants.BASE_VERSION_CHECKER, utility, uniqueId);
-            versionChecker.run();
+            versionChecker.start();
 
             return controller;
 

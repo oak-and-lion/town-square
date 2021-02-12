@@ -781,7 +781,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             @Override
             public Void call() {
                 try {
-                    Thread.sleep(210);
+                    Thread.sleep(Constants.RESIZE_WAIT_TIME);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }

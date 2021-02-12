@@ -115,6 +115,10 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
 
         String[] fileData = responseData.getMessage().split(Constants.COMMAND_DATA_SEPARATOR);
 
+        if (fileData.length < 2 || fileData[0].equals(Constants.EMPTY_STRING)) {
+            return;
+        }
+
         String key = keys.decryptFromBase64(fileData[0]);
 
         String f = utility.decrypt(fileData[1], key);

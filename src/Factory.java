@@ -265,6 +265,8 @@ public class Factory implements IFactory {
             return new CommandWorkerHelp(utility, square, dialogController);
         } else if (cmd.equals(Constants.UNBLOCK_COMMAND)) {
             return new CommandWorkerUnblock(utility, square, dialogController);
+        } else if (cmd.equals(Constants.VERSION_COMMAND)) {
+            return new CommandWorkerCheckVersion(utility, square, dialogController, this);
         }
 
         return new CommandWorkerEmpty(utility, square, dialogController);
