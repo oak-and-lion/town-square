@@ -2,6 +2,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipOutputStream;
 
@@ -67,12 +68,14 @@ public class CommandWorkerCreateClone extends CommandWorkerBase implements IComm
             ArrayList<String> srcFiles = new ArrayList<>();
             srcFiles.add(Constants.DEFAULT_NAME_FILE);
             srcFiles.add(Constants.UNIQUE_ID_FILE);
-            srcFiles.add(utility.concatStrings(square.getSafeLowerName(), Constants.SQUARE_FILE_EXT));
-            srcFiles.add(utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT));
-            srcFiles.add(utility.concatStrings(square.getSafeLowerName(), Constants.POSTS_FILE_EXT));
-            srcFiles.add(utility.concatStrings(square.getSafeLowerName(), Constants.ALIAS_FILE_EXT));
             srcFiles.add(Constants.PRIVATE_KEY_FILE);
             srcFiles.add(Constants.PUBLIC_KEY_FILE);
+            Collections.addAll(srcFiles, utility.getFiles(Constants.SQUARE_FILE_EXT));
+            Collections.addAll(srcFiles, utility.getFiles(Constants.MEMBERS_FILE_EXT));
+            Collections.addAll(srcFiles, utility.getFiles(Constants.POSTS_FILE_EXT));
+            Collections.addAll(srcFiles, utility.getFiles(Constants.ALIAS_FILE_EXT));
+            Collections.addAll(srcFiles, utility.getFiles(Constants.BLOCK_FILE_EXT));
+
             try (FileOutputStream fos = new FileOutputStream(utility.concatStrings(square.getSafeLowerName(), Constants.TEMP_FILE_EXT))) {
 
                 ZipOutputStream zipOut = new ZipOutputStream(fos);

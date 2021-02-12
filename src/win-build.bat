@@ -23,15 +23,18 @@ mkdir output
 
 cd output
 
+echo copying runtime dependencies
 copy ..\..\..\javafx-windows.zip
 copy ..\..\..\jdk-11.0.9_windows-x64_bin.zip
 copy ..\..\..\town-square-windows.bat
+copy ..\..\..\blocked-image.png
+copy ..\..\..\blocked-video.mp4
 
 jar -c -v -m ..\manifest.txt -f App.jar ..\*.class ..\sample.fxml
 
 mkdir package
 
-tar -a -c -f package\pkg-town-square_windows.zip town-square-windows.bat App.jar javafx-windows.zip jdk-11.0.9_windows-x64_bin.zip
+tar -a -c -f package\pkg-town-square_windows.zip town-square-windows.bat App.jar javafx-windows.zip jdk-11.0.9_windows-x64_bin.zip blocked-image.png blocked-video.mp4
 
 cd package
 
