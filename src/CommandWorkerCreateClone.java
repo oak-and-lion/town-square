@@ -27,7 +27,6 @@ public class CommandWorkerCreateClone extends CommandWorkerBase implements IComm
         String port = args[3];
         ICommandWorker pauseWorker = factory.createCommandWorker(Constants.PAUSE_COMMAND, utility, square, parent);
         ICommandWorker unpauseWorker = factory.createCommandWorker(Constants.UNPAUSE_COMMAND, utility, square, parent);
-        ISquareWorker registerAlias = factory.createSquareWorker(Constants.REGISTER_ALIAS_COMMAND, utility, parent, square.getController().getLogger());
         BooleanString result = new BooleanString(false, Constants.MALFORMED_REQUEST_MESSAGE);
 
         // decrypt the dna file using the password
@@ -48,10 +47,6 @@ public class CommandWorkerCreateClone extends CommandWorkerBase implements IComm
                 pauseWorker.doWork(Constants.EMPTY_STRING);
             }
 
-            ArrayList<String> regAlias = new ArrayList<>();
-            regAlias.add(Constants.UNENCRYPTED_FLAG);
-            regAlias.add(square.getInvite());
-            regAlias.add(Constants.REGISTER_ALIAS_COMMAND);
             StringBuilder temp = new StringBuilder();
             temp.append(Constants.NULL_TEXT);
             temp.append(Constants.FILE_DATA_SEPARATOR);
@@ -60,8 +55,6 @@ public class CommandWorkerCreateClone extends CommandWorkerBase implements IComm
             temp.append(port);
             temp.append(Constants.FILE_DATA_SEPARATOR);
             temp.append(utility.readFile(Constants.UNIQUE_ID_FILE));
-            regAlias.add(temp.toString());
-            registerAlias.doWork(square, regAlias.toArray(new String[regAlias.size()]));
 
             utility.deleteFile(utility.concatStrings(square.getSafeLowerName(), Constants.CLONE_FILE_EXT));
             // zip up the files
@@ -73,7 +66,6 @@ public class CommandWorkerCreateClone extends CommandWorkerBase implements IComm
             Collections.addAll(srcFiles, utility.getFiles(Constants.SQUARE_FILE_EXT));
             Collections.addAll(srcFiles, utility.getFiles(Constants.MEMBERS_FILE_EXT));
             Collections.addAll(srcFiles, utility.getFiles(Constants.POSTS_FILE_EXT));
-            Collections.addAll(srcFiles, utility.getFiles(Constants.ALIAS_FILE_EXT));
             Collections.addAll(srcFiles, utility.getFiles(Constants.BLOCK_FILE_EXT));
 
             try (FileOutputStream fos = new FileOutputStream(utility.concatStrings(square.getSafeLowerName(), Constants.TEMP_FILE_EXT))) {

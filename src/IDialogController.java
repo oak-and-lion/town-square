@@ -8,7 +8,6 @@ public interface IDialogController {
     String getDefaultName();
     void setDefaultName(String name);
     void setVersion(String version);
-    void setAlias(String alias);
     void setParent(IApp app);
     void addPostMessages(ISquare square, VBox vbox, ScrollPane scrollPane, String message, long millis, String memberId);
     void setUtilityController(IUtility utility);

@@ -114,7 +114,6 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             parent.sendPort(port.getText());
             updateDefaultNameInMemberFiles(defaultName.getText());
             updatePortInMemberFiles(port.getText(), uniqueId.getText());
-            updateAliases(alias.getText());
             updateInvitations(remoteIP.getSelectionModel().getSelectedItem().getDisplay(), port.getText());
         }
     }
@@ -711,10 +710,6 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             utility.writeFile(utility.concatStrings(squareSafeName, Constants.SQUARE_FILE_EXT), info);
             setTabSquare(square);
 
-            byte[] data1 = utility
-                    .readBinaryFile(utility.concatStrings(Constants.MY_SQUARE_DEFAULT, Constants.ALIAS_FILE_EXT));
-            utility.writeBinaryFile(utility.concatStrings(squareSafeName, Constants.ALIAS_FILE_EXT), data1);
-
             return true;
         }
 
@@ -1158,27 +1153,6 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             String newMemberInfo = String.join(Constants.NEWLINE, lines);
             utility.deleteFile(file);
             utility.writeFile(file, newMemberInfo);
-        }
-    }
-
-    private void updateAliases(String aliasList) {
-        String[] aliases = aliasList.trim().toLowerCase().split(Constants.SEMI_COLON);
-        for (ISquare square : squares) {
-            processAlias(square, aliases);
-        }
-    }
-
-    private void processAlias(ISquare square, String[] aliases) {
-        RequesterInfo requesterInfo = new RequesterInfo(utility.readFile(Constants.IP_FILE));
-        for (String a : aliases) {
-            if (a.equals(Constants.EMPTY_STRING)) {
-                continue;
-            }
-            String request = utility.concatStrings(Constants.UNENCRYPTED_FLAG, Constants.COMMAND_DATA_SEPARATOR,
-                    square.getInvite(), Constants.COMMAND_DATA_SEPARATOR, Constants.REGISTER_ALIAS_COMMAND,
-                    Constants.COMMAND_DATA_SEPARATOR, Constants.NULL_TEXT, Constants.FILE_DATA_SEPARATOR, a,
-                    Constants.FILE_DATA_SEPARATOR, port.getText(), Constants.FILE_DATA_SEPARATOR, uniqueId.getText());
-            square.getController().processRequest(request, requesterInfo);
         }
     }
 }

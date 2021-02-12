@@ -181,14 +181,6 @@ public class Factory implements IFactory {
         return null;
     }
 
-    public IMemberAliasUpdateThread createMemberAliasUpdateThread(int type, String info, String uniqueId, ISquare square, IUtility utility) {
-        if (type == Constants.BASE_MEMBER_ALIAS_UPDATE_THREAD) {
-            return new MemberAliasUpdateThread(this, info, uniqueId, square, utility);
-        }
-
-        return null;
-    }
-
     public ISquareWorker createSquareWorker(String command, IUtility utility, IDialogController dialogController, ILogIt logger) {
         if (command.equals(Constants.GET_APP_JAR_COMMAND)) {
             return new SquareWorkerAppJar(utility, command);
@@ -206,14 +198,10 @@ public class Factory implements IFactory {
             return new SquareWorkerClone(utility, command);
         } else if (command.equals(Constants.REQUEST_FILE_COMMAND)) {
             return new SquareWorkerGetFile(utility, command, this);
-        } else if (command.equals(Constants.READ_ALIAS_COMMAND)) {
-            return new SquareWorkerReadAlias(utility, command, this);
         } else if (command.equals(Constants.CHECK_VERSION_COMMAND)) {
             return new SquareWorkerCheckVersion(utility, command);
         } else if (command.equals(Constants.MEMBER_COMMAND)) {
             return new SquareWorkerMember(utility, command);
-        } else if (command.equals(Constants.REGISTER_ALIAS_COMMAND)) {
-            return new SquareWorkerRegisterAlias(utility, command);
         }
 
         return new SquareWorkerEmpty(utility, command);

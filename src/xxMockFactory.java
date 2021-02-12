@@ -95,10 +95,6 @@ public class xxMockFactory implements IFactory {
         return null;
     }
 
-    public IMemberAliasUpdateThread createMemberAliasUpdateThread(int type, String info, String uniqueId, ISquare square, IUtility utility) {
-        return null;
-    }
-
     public ISquareWorker createSquareWorker(String command, IUtility utility, IDialogController dialogController, ILogIt logger) {
         return null;
     }

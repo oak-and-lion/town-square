@@ -50,23 +50,9 @@ public class VersionChecker extends Thread implements IVersionChecker {
             String invite = squareInfo[1];
             ArrayList<String> smembers = getMembersFromFile(
                     file.replace(Constants.SQUARE_FILE_EXT, Constants.MEMBERS_FILE_EXT));
-            ArrayList<String> aliases = getMembersFromFile(
-                    file.replace(Constants.SQUARE_FILE_EXT, Constants.ALIAS_FILE_EXT));
             ArrayList<DoubleString> newMembers = new ArrayList<>();
             for (String member : smembers) {
                 members.add(new DoubleString(invite, member));
-                String[] info = member.split(Constants.DATA_SEPARATOR);
-                for (String alias : aliases) {
-                    if (alias.startsWith(info[4])) {
-                        AliasObject ao = new AliasObject(alias, info[1]);
-                        for (int x = 0; x < ao.length(); x++) {
-                            String temp = utility.concatStrings(Constants.NULL_TEXT, Constants.DATA_SEPARATOR, info[1],
-                                    Constants.DATA_SEPARATOR, ao.getIp(x), Constants.DATA_SEPARATOR, ao.getPort(x),
-                                    Constants.DATA_SEPARATOR, ao.getUniqueId());
-                            newMembers.add(new DoubleString(invite, temp));
-                        }
-                    }
-                }
             }
 
             members.addAll(newMembers);
