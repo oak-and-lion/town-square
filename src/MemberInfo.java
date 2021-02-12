@@ -43,6 +43,20 @@ public class MemberInfo implements Comparable<MemberInfo> {
         return uniqueId;
     }
 
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append(getName());
+        result.append(Constants.FILE_DATA_SEPARATOR);
+        result.append(getPublicKey());
+        result.append(Constants.FILE_DATA_SEPARATOR);
+        result.append(getIp());
+        result.append(Constants.FILE_DATA_SEPARATOR);
+        result.append(getPort());
+        result.append(Constants.FILE_DATA_SEPARATOR);
+        result.append(getUniqueId());
+        return result.toString();
+    }
+
     @Override
     public int compareTo(MemberInfo m) {
         int result = getUniqueId().compareTo(m.getUniqueId());

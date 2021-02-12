@@ -27,6 +27,8 @@ public class CommandWorkerCreateClone extends CommandWorkerBase implements IComm
         String port = args[3];
         ICommandWorker pauseWorker = factory.createCommandWorker(Constants.PAUSE_COMMAND, utility, square, parent);
         ICommandWorker unpauseWorker = factory.createCommandWorker(Constants.UNPAUSE_COMMAND, utility, square, parent);
+        ICommandWorker addMemberWorker = factory.createCommandWorker(Constants.ADD_MEMBER_COMMAND, utility, square,
+                parent);
         BooleanString result = new BooleanString(false, Constants.MALFORMED_REQUEST_MESSAGE);
 
         // decrypt the dna file using the password
@@ -36,16 +38,22 @@ public class CommandWorkerCreateClone extends CommandWorkerBase implements IComm
                 tempPass.append(Constants.UNDERSCORE);
             }
         }
-        String data = utility.decrypt(utility.readFile(utility.concatStrings(square.getSafeLowerName(), Constants.DNA_FILE_EXT)),
+        String data = utility.decrypt(
+                utility.readFile(utility.concatStrings(square.getSafeLowerName(), Constants.DNA_FILE_EXT)),
                 tempPass.toString());
         // if successful:
         if (data.equals(Constants.CLONE_CHALLENGE)) {
-            boolean alreadyPaused = utility.checkFileExists(utility.concatStrings(square.getSafeLowerName(), Constants.PAUSE_FILE_EXT));
+            boolean alreadyPaused = utility
+                    .checkFileExists(utility.concatStrings(square.getSafeLowerName(), Constants.PAUSE_FILE_EXT));
 
             if (!alreadyPaused) {
                 // pause the square while creating the clone package
                 pauseWorker.doWork(Constants.EMPTY_STRING);
             }
+
+            // add to the members file
+            addMemberWorker.doWork(utility.concatStrings(Constants.SELF_COMMAND, Constants.FILE_DATA_SEPARATOR, address,
+                    Constants.FILE_DATA_SEPARATOR, port));
 
             StringBuilder temp = new StringBuilder();
             temp.append(Constants.NULL_TEXT);
@@ -68,7 +76,8 @@ public class CommandWorkerCreateClone extends CommandWorkerBase implements IComm
             Collections.addAll(srcFiles, utility.getFiles(Constants.POSTS_FILE_EXT));
             Collections.addAll(srcFiles, utility.getFiles(Constants.BLOCK_FILE_EXT));
 
-            try (FileOutputStream fos = new FileOutputStream(utility.concatStrings(square.getSafeLowerName(), Constants.TEMP_FILE_EXT))) {
+            try (FileOutputStream fos = new FileOutputStream(
+                    utility.concatStrings(square.getSafeLowerName(), Constants.TEMP_FILE_EXT))) {
 
                 ZipOutputStream zipOut = new ZipOutputStream(fos);
                 for (String srcFile : srcFiles) {
@@ -82,7 +91,8 @@ public class CommandWorkerCreateClone extends CommandWorkerBase implements IComm
             }
 
             // encrypt it using the password
-            byte[] zippedData = utility.readBinaryFile(utility.concatStrings(square.getSafeLowerName(), Constants.TEMP_FILE_EXT));
+            byte[] zippedData = utility
+                    .readBinaryFile(utility.concatStrings(square.getSafeLowerName(), Constants.TEMP_FILE_EXT));
 
             String zippedB64 = utility.convertToBase64(zippedData);
 

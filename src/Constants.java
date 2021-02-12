@@ -185,6 +185,8 @@ public class Constants {
     public static final String UNPAUSE_COMMAND = "unpause";
     public static final String NICKNAME_COMMAND = "nickname";
     public static final String VERSION_COMMAND = "ver";
+    public static final String ADD_MEMBER_COMMAND = "addmember";
+    public static final String SELF_COMMAND = "self";
     public static final String COMMANDS_TITLE = "List of Commands";
     public static final String SEMI_COLON = ";";
     public static final int PAUSE_WAIT_TIME = 10000;
