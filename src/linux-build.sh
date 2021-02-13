@@ -31,7 +31,7 @@ cp ../../../town-square-linux.sh town-square-linux.sh
 
 mkdir package
 
-tar -a -c -f package/pkg-town-square_linux.zip town-square-linux.sh App.jar javafx-linux.zip OpenJDK11U-jdk_x64_linux_hotspot_11.0.10_9.tar.gz
+tar -a -c -f package/pkg-town-square_linux.tar.gz town-square-linux.sh App.jar javafx-linux.zip OpenJDK11U-jdk_x64_linux_hotspot_11.0.10_9.tar.gz
 
 cd package
 
