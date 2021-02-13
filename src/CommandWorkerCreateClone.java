@@ -27,8 +27,7 @@ public class CommandWorkerCreateClone extends CommandWorkerBase implements IComm
         String port = args[3];
         ICommandWorker pauseWorker = factory.createCommandWorker(Constants.PAUSE_COMMAND, utility, square, parent);
         ICommandWorker unpauseWorker = factory.createCommandWorker(Constants.UNPAUSE_COMMAND, utility, square, parent);
-        ICommandWorker addMemberWorker = factory.createCommandWorker(Constants.ADD_MEMBER_COMMAND, utility, square,
-                parent);
+        
         BooleanString result = new BooleanString(false, Constants.MALFORMED_REQUEST_MESSAGE);
 
         // decrypt the dna file using the password
@@ -51,9 +50,19 @@ public class CommandWorkerCreateClone extends CommandWorkerBase implements IComm
                 pauseWorker.doWork(Constants.EMPTY_STRING);
             }
 
-            // add to the members file
-            addMemberWorker.doWork(utility.concatStrings(Constants.SELF_COMMAND, Constants.FILE_DATA_SEPARATOR, address,
-                    Constants.FILE_DATA_SEPARATOR, port));
+            // add to the ALL known members file
+            String[] memberFiles = utility.getFiles(Constants.SQUARE_FILE_EXT);
+            for (String squareFile : memberFiles) {
+                String[] info = utility.readFile(squareFile).split(Constants.COMMA);
+                
+                ISquare newSquare = parent.getSquareByInvite(info[1]);
+                
+                //factory.createSquare(Constants.BASE_SQUARE, utility.readFile(squareFile), port, address, squareController, utility, parent, parent.getun);
+                ICommandWorker addMemberWorker = factory.createCommandWorker(Constants.ADD_MEMBER_COMMAND, utility, newSquare,
+                    parent);
+                addMemberWorker.doWork(utility.concatStrings(Constants.SELF_COMMAND, Constants.FILE_DATA_SEPARATOR, address,
+                        Constants.FILE_DATA_SEPARATOR, port));
+            }
 
             StringBuilder temp = new StringBuilder();
             temp.append(Constants.NULL_TEXT);
