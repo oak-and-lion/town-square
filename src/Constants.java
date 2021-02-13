@@ -3,7 +3,7 @@ import javafx.scene.paint.Color;
 public class Constants {
     private Constants() {}
 
-    public static final String VERSION = "0.0.7";
+    public static final String VERSION = "0.0.8";
     public static final int BASE_CRYPTO_UTILS = 1;
     public static final int BASE_SQUARE_KEY_PAIR = 1;
     public static final int UTILITY_SQUARE_KEY_PAIR = 2;
@@ -26,12 +26,12 @@ public class Constants {
     public static final int BASE_MODAL_VIDEO_VIEWER = 2;
     public static final int BASE_MODAL_MEMBER_VIEWER = 3;
     public static final int BASE_SHOW_SQUARE_MEMBERS = 1;
+    public static final int BASE_MODAL_LICENSE_VIEWER = 4;
     public static final int SYSTEM_EXIT_OK = 0;
     public static final int SYSTEM_EXIT_FAIL = 1;
     public static final int SYSTEM_EXIT_ALREADY_RUNNING = 2;
     public static final int BASE_COMMAND_CONTROLLER = 1;
-    public static final int BASE_MEMBER_POSTS_THREAD = 1;
-    public static final int BASE_MEMBER_ALIAS_UPDATE_THREAD = 1;    
+    public static final int BASE_MEMBER_POSTS_THREAD = 1; 
     public static final int NULL_OBJECT_TYPE = Integer.MAX_VALUE;
     public static final String SQUARE_FILE_EXT = ".square";
     public static final String UNIQUE_ID_FILE = "unique.id";
@@ -84,7 +84,6 @@ public class Constants {
     public static final String POST_PROMPT_TEXT = "Type your message";
     public static final String JOIN_COMMAND = "join";
     public static final String MEMBER_COMMAND = "members";
-    public static final String READ_ALIAS_COMMAND = "aliases";
     public static final String REQUEST_PUBLIC_KEY_COMMAND = "pkey";
     public static final String REQUEST_FILE_COMMAND = "file";
     public static final String CHECK_VERSION_COMMAND = "ver";
@@ -110,7 +109,6 @@ public class Constants {
     public static final String NO_POSTS = "-1";
     public static final String NO_ROWS = "-1";
     public static final String POST_COMMAND = "post";
-    public static final String REGISTER_ALIAS_COMMAND = "regalias";
     public static final String ACK_COMMAND = "ack";
     public static final boolean NOT_FOUND_RETURN_ZERO = false;
     public static final boolean NOT_FOUND_RETURN_NEG_ONE = true;
@@ -155,7 +153,6 @@ public class Constants {
     public static final int NOT_FOUND_IN_STRING = -1;
     public static final String JAR_FILE = "App.jar";
     public static final String TEMP_JAR_FILE = "_new_App.jar";
-    public static final String ALIAS_FILE_EXT = ".alias";
     public static final String FORWARD_SLASH = "/";
     public static final double MIN_WINDOW_WIDTH = 614.4000244140625;
     public static final double MIN_WINDOW_HEIGHT = 463.20001220703125;
@@ -188,11 +185,15 @@ public class Constants {
     public static final String PAUSE_COMMAND = "pause";
     public static final String UNPAUSE_COMMAND = "unpause";
     public static final String NICKNAME_COMMAND = "nickname";
+    public static final String VERSION_COMMAND = "ver";
+    public static final String ADD_MEMBER_COMMAND = "addmember";
+    public static final String SELF_COMMAND = "self";
     public static final String COMMANDS_TITLE = "List of Commands";
     public static final String SEMI_COLON = ";";
     public static final int PAUSE_WAIT_TIME = 10000;
     public static final String WAIT_TIME_FILE = "wait.time";
     public static final int DEFAULT_WAIT_TIME = 1000;
+    public static final int RESIZE_WAIT_TIME = 210;
     public static final String HELLO_WORLD = "hello world";
     public static final int ASCII_ZERO = 48;
     public static final int ASCII_LOWER_Z = 122;

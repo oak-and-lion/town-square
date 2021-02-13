@@ -1,10 +1,11 @@
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
 
 public class ModalLicenseViewer extends BaseViewer implements IModalViewer {
-    public ModalLicenseViewer() {
-        super();
+    public ModalLicenseViewer(Stage parentStage) {
+        super(parentStage);
     }
     
     public void show(String license) {

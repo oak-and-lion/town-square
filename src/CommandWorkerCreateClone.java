@@ -2,6 +2,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipOutputStream;
 
@@ -26,7 +27,8 @@ public class CommandWorkerCreateClone extends CommandWorkerBase implements IComm
         String port = args[3];
         ICommandWorker pauseWorker = factory.createCommandWorker(Constants.PAUSE_COMMAND, utility, square, parent);
         ICommandWorker unpauseWorker = factory.createCommandWorker(Constants.UNPAUSE_COMMAND, utility, square, parent);
-        ISquareWorker registerAlias = factory.createSquareWorker(Constants.REGISTER_ALIAS_COMMAND, utility, parent, square.getController().getLogger());
+        ICommandWorker addMemberWorker = factory.createCommandWorker(Constants.ADD_MEMBER_COMMAND, utility, square,
+                parent);
         BooleanString result = new BooleanString(false, Constants.MALFORMED_REQUEST_MESSAGE);
 
         // decrypt the dna file using the password
@@ -36,21 +38,23 @@ public class CommandWorkerCreateClone extends CommandWorkerBase implements IComm
                 tempPass.append(Constants.UNDERSCORE);
             }
         }
-        String data = utility.decrypt(utility.readFile(utility.concatStrings(square.getSafeLowerName(), Constants.DNA_FILE_EXT)),
+        String data = utility.decrypt(
+                utility.readFile(utility.concatStrings(square.getSafeLowerName(), Constants.DNA_FILE_EXT)),
                 tempPass.toString());
         // if successful:
         if (data.equals(Constants.CLONE_CHALLENGE)) {
-            boolean alreadyPaused = utility.checkFileExists(utility.concatStrings(square.getSafeLowerName(), Constants.PAUSE_FILE_EXT));
+            boolean alreadyPaused = utility
+                    .checkFileExists(utility.concatStrings(square.getSafeLowerName(), Constants.PAUSE_FILE_EXT));
 
             if (!alreadyPaused) {
                 // pause the square while creating the clone package
                 pauseWorker.doWork(Constants.EMPTY_STRING);
             }
 
-            ArrayList<String> regAlias = new ArrayList<>();
-            regAlias.add(Constants.UNENCRYPTED_FLAG);
-            regAlias.add(square.getInvite());
-            regAlias.add(Constants.REGISTER_ALIAS_COMMAND);
+            // add to the members file
+            addMemberWorker.doWork(utility.concatStrings(Constants.SELF_COMMAND, Constants.FILE_DATA_SEPARATOR, address,
+                    Constants.FILE_DATA_SEPARATOR, port));
+
             StringBuilder temp = new StringBuilder();
             temp.append(Constants.NULL_TEXT);
             temp.append(Constants.FILE_DATA_SEPARATOR);
@@ -59,21 +63,21 @@ public class CommandWorkerCreateClone extends CommandWorkerBase implements IComm
             temp.append(port);
             temp.append(Constants.FILE_DATA_SEPARATOR);
             temp.append(utility.readFile(Constants.UNIQUE_ID_FILE));
-            regAlias.add(temp.toString());
-            registerAlias.doWork(square, regAlias.toArray(new String[regAlias.size()]));
 
             utility.deleteFile(utility.concatStrings(square.getSafeLowerName(), Constants.CLONE_FILE_EXT));
             // zip up the files
             ArrayList<String> srcFiles = new ArrayList<>();
             srcFiles.add(Constants.DEFAULT_NAME_FILE);
             srcFiles.add(Constants.UNIQUE_ID_FILE);
-            srcFiles.add(utility.concatStrings(square.getSafeLowerName(), Constants.SQUARE_FILE_EXT));
-            srcFiles.add(utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT));
-            srcFiles.add(utility.concatStrings(square.getSafeLowerName(), Constants.POSTS_FILE_EXT));
-            srcFiles.add(utility.concatStrings(square.getSafeLowerName(), Constants.ALIAS_FILE_EXT));
             srcFiles.add(Constants.PRIVATE_KEY_FILE);
             srcFiles.add(Constants.PUBLIC_KEY_FILE);
-            try (FileOutputStream fos = new FileOutputStream(utility.concatStrings(square.getSafeLowerName(), Constants.TEMP_FILE_EXT))) {
+            Collections.addAll(srcFiles, utility.getFiles(Constants.SQUARE_FILE_EXT));
+            Collections.addAll(srcFiles, utility.getFiles(Constants.MEMBERS_FILE_EXT));
+            Collections.addAll(srcFiles, utility.getFiles(Constants.POSTS_FILE_EXT));
+            Collections.addAll(srcFiles, utility.getFiles(Constants.BLOCK_FILE_EXT));
+
+            try (FileOutputStream fos = new FileOutputStream(
+                    utility.concatStrings(square.getSafeLowerName(), Constants.TEMP_FILE_EXT))) {
 
                 ZipOutputStream zipOut = new ZipOutputStream(fos);
                 for (String srcFile : srcFiles) {
@@ -87,7 +91,8 @@ public class CommandWorkerCreateClone extends CommandWorkerBase implements IComm
             }
 
             // encrypt it using the password
-            byte[] zippedData = utility.readBinaryFile(utility.concatStrings(square.getSafeLowerName(), Constants.TEMP_FILE_EXT));
+            byte[] zippedData = utility
+                    .readBinaryFile(utility.concatStrings(square.getSafeLowerName(), Constants.TEMP_FILE_EXT));
 
             String zippedB64 = utility.convertToBase64(zippedData);
 

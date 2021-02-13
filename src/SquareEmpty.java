@@ -82,4 +82,7 @@ public class SquareEmpty implements ISquare {
     public ISquareController getController() {
         return null;
     }
+    public IFactory getFactory() {
+        return new Factory();
+    }
 }

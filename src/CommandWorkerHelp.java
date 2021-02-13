@@ -19,6 +19,7 @@ public class CommandWorkerHelp extends CommandWorkerBase implements ICommandWork
         commands.add(Constants.PAUSE_COMMAND);
         commands.add(Constants.UNBLOCK_COMMAND);
         commands.add(Constants.UNPAUSE_COMMAND);
+        commands.add(Constants.VERSION_COMMAND);
     }
 
     public List<BooleanString> doWork(String commandArgs) {

@@ -11,6 +11,7 @@ if NOT EXIST "jdk-11.0.9\" (
 if EXIST "_new_App.jar" (
     copy /B /Y _new_App.jar App.jar
     del _new_App.jar
+    del _new_App.ver
 )
 
 if EXIST "my_square.clone" (

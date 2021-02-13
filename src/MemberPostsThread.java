@@ -41,12 +41,16 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
     }
 
     private void getPostsFromOtherMembers() {
-        if (!(info.contains(uniqueId) && (info.contains(ip) && info.contains(port))) && !info.startsWith(Constants.STAR)) {
+        if (!(info.contains(uniqueId) && (info.contains(ip) && info.contains(port)))
+                && !info.startsWith(Constants.STAR)) {
             String[] member = info.split(Constants.DATA_SEPARATOR);
             IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
                     square.getInvite());
-            String response = client.sendMessage(utility.concatStrings(Constants.READ_COMMAND,
-                    Constants.COMMAND_DATA_SEPARATOR, msg[0], Constants.COMMAND_DATA_SEPARATOR, uniqueId), Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER);
+            String response = client
+                    .sendMessage(
+                            utility.concatStrings(Constants.READ_COMMAND, Constants.COMMAND_DATA_SEPARATOR, msg[0],
+                                    Constants.COMMAND_DATA_SEPARATOR, uniqueId),
+                            Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER);
             if (!response.equals(Constants.EMPTY_STRING)) {
                 String[] responseSplit = response.split(Constants.COLON);
                 if (responseSplit.length == 2 && responseSplit[0].equals(Constants.OK_RESULT)
@@ -76,18 +80,20 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
                     String[] m1 = m.split(Constants.FILE_DATA_SEPARATOR, 2);
                     long millis = Long.parseLong(m1[0]);
                     allPosts.add(new PostMessage(millis, m));
-                    if (m.indexOf(Constants.IMAGE_MARKER) > Constants.NOT_FOUND_IN_STRING) {
-                        processGetImageFile(m, member);
+                    if ((m.indexOf(Constants.IMAGE_MARKER) > Constants.NOT_FOUND_IN_STRING)
+                            || (m.indexOf(Constants.FILE_MARKER) > Constants.NOT_FOUND_IN_STRING)
+                            || (m.indexOf(Constants.VIDEO_MARKER) > Constants.NOT_FOUND_IN_STRING)) {
+                        processGetFile(m, member);
                     }
                 }
             }
         }
     }
 
-    private void processGetImageFile(String data, String[] member) {
+    private void processGetFile(String data, String[] member) {
         String[] message = data.split(Constants.DATA_SEPARATOR);
-        String fileName = message[1].substring(utility.add(message[1].indexOf(Constants.END_SQUARE_BRACKET),
-                Constants.END_SQUARE_BRACKET.length()));
+        String fileName = message[1].substring(
+                utility.add(message[1].indexOf(Constants.END_SQUARE_BRACKET), Constants.END_SQUARE_BRACKET.length()));
 
         if (utility.checkFileExists(fileName)) {
             return;
@@ -96,8 +102,11 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
         IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
                 square.getInvite());
 
-        String response = client.sendMessage(utility.concatStrings(Constants.REQUEST_FILE_COMMAND,
-                Constants.COMMAND_DATA_SEPARATOR, fileName, Constants.COMMAND_DATA_SEPARATOR, uniqueId), Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER);
+        String response = client
+                .sendMessage(
+                        utility.concatStrings(Constants.REQUEST_FILE_COMMAND, Constants.COMMAND_DATA_SEPARATOR,
+                                fileName, Constants.COMMAND_DATA_SEPARATOR, uniqueId),
+                        Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER);
 
         SquareResponse responseData = new SquareResponse(response);
 
@@ -105,6 +114,10 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
         keys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
 
         String[] fileData = responseData.getMessage().split(Constants.COMMAND_DATA_SEPARATOR);
+
+        if (fileData.length < 2 || fileData[0].equals(Constants.EMPTY_STRING)) {
+            return;
+        }
 
         String key = keys.decryptFromBase64(fileData[0]);
 

@@ -21,9 +21,6 @@ public class xxMockIDialogController implements IDialogController {
     public void setVersion(String version){
         // not needed 
     }
-    public void setAlias(String alias){
-        // not needed 
-    }
     public void setParent(IApp app){
         // not needed 
     }

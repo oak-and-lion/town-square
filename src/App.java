@@ -50,7 +50,6 @@ public class App extends Application implements IApp {
         ISquare defaultSquare = null;
         String port = Constants.DEFAULT_PORT;
         String ip = Constants.DEFAULT_IP;
-        String alias = Constants.EMPTY_STRING;
         String remoteIP = utility.getRemoteIP(logger);
         defaultName = Constants.DEFAULT_USER_NAME;
         hidingServer = false;
@@ -123,7 +122,6 @@ public class App extends Application implements IApp {
                 utility.concatStrings(defaultName, Constants.DATA_SEPARATOR, keys.getPublicKeyBase64(), Constants.DATA_SEPARATOR
                                 , remoteIP, Constants.DATA_SEPARATOR, port, Constants.DATA_SEPARATOR, uniqueId));
             }
-            alias = getAliases(uniqueId);
 
             primaryStage.addEventHandler(WindowEvent.WINDOW_SHOWN, new EventHandler<WindowEvent>() {
                 @Override
@@ -149,7 +147,7 @@ public class App extends Application implements IApp {
             ipAddresses.add(new IPAddress(remoteIP, remoteIP));
             ipAddresses.addAll(utility.getLocalIPs(logger));
 
-            initializeController(controller, uniqueId, port, ip, ipAddresses, alias, defaultSquare, commandController);
+            initializeController(controller, uniqueId, port, ip, ipAddresses, defaultSquare, commandController);
 
             initializeSquareController(squareController, port);
 
@@ -158,7 +156,7 @@ public class App extends Application implements IApp {
             controller.processPendingInvites();
 
             versionChecker = factory.createVersionChecker(Constants.BASE_VERSION_CHECKER, utility, uniqueId);
-            versionChecker.run();
+            versionChecker.start();
 
             return controller;
 
@@ -168,6 +166,10 @@ public class App extends Application implements IApp {
         }
 
         return null;
+    }
+
+    public Stage getStage() {
+        return this.theStage;
     }
 
     private void setResizeListeners(Stage primaryStage, IDialogController controller) {
@@ -217,7 +219,7 @@ public class App extends Application implements IApp {
     }
 
     private void initializeController(IDialogController controller, String uniqueId, String port, String ip,
-            ObservableList<IPAddress> ipAddresses, String alias, ISquare defaultSquare,
+            ObservableList<IPAddress> ipAddresses, ISquare defaultSquare,
             ICommandController commandController) {
         controller.setFactory(factory);
         controller.setUtilityController(utility);
@@ -231,7 +233,6 @@ public class App extends Application implements IApp {
         controller.setTabSquare(defaultSquare);
         controller.setPublicKey(keys.getPublicKeyBase64());
         controller.buildSquares();
-        controller.setAlias(alias);
     }
 
     private boolean checkCurrentState(IAlertBox alert) {
@@ -353,30 +354,6 @@ public class App extends Application implements IApp {
 
     public boolean isHidingServer() {
         return hidingServer;
-    }
-
-    private String getAliases(String uniqueId) {
-        if (utility.checkFileExists(utility.concatStrings(Constants.MY_SQUARE_DEFAULT, Constants.ALIAS_FILE_EXT))) {
-            String[] temp = utility.searchFile(utility.concatStrings(Constants.MY_SQUARE_DEFAULT, Constants.ALIAS_FILE_EXT), uniqueId,
-                    Constants.SEARCH_STARTS_WITH);
-            if (temp.length > 0) {
-                StringBuilder result = new StringBuilder();
-                String[] values = temp[0].split(Constants.QUESTION_MARK_SPLIT);
-                String[] ips = values[1].split(Constants.FORWARD_SLASH);
-                boolean first = true;
-                for (String ip : ips) {
-                    String[] t = ip.split(Constants.COLON);
-                    if (!first) {
-                        result.append(Constants.SEMI_COLON);
-                    }
-                    first = false;
-                    result.append(t[0]);
-                }
-                return result.toString();
-            }
-        }
-
-        return Constants.EMPTY_STRING;
     }
 
     public static void main(String[] args) {

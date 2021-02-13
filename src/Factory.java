@@ -154,11 +154,13 @@ public class Factory implements IFactory {
 
     public IModalViewer createModalViewer(int type, IUtility utility, ISquare square) {
         if (type == Constants.BASE_MODAL_IMAGE_VIEWER) {
-            return new ModalImageViewer();
+            return new ModalImageViewer(square.getSampleController().getParent().getStage());
         } else if (type == Constants.BASE_MODAL_VIDEO_VIEWER) {
-            return new ModalVideoViewer();
+            return new ModalVideoViewer(square.getSampleController().getParent().getStage());
         } else if (type == Constants.BASE_MODAL_MEMBER_VIEWER) {
-            return new ModalMembersList(utility, square);
+            return new ModalMembersList(utility, square, square.getSampleController().getParent().getStage());
+        } else if (type == Constants.BASE_MODAL_LICENSE_VIEWER) {
+            return new ModalLicenseViewer(square.getSampleController().getParent().getStage());
         }
 
         return null;
@@ -181,14 +183,6 @@ public class Factory implements IFactory {
         return null;
     }
 
-    public IMemberAliasUpdateThread createMemberAliasUpdateThread(int type, String info, String uniqueId, ISquare square, IUtility utility) {
-        if (type == Constants.BASE_MEMBER_ALIAS_UPDATE_THREAD) {
-            return new MemberAliasUpdateThread(this, info, uniqueId, square, utility);
-        }
-
-        return null;
-    }
-
     public ISquareWorker createSquareWorker(String command, IUtility utility, IDialogController dialogController, ILogIt logger) {
         if (command.equals(Constants.GET_APP_JAR_COMMAND)) {
             return new SquareWorkerAppJar(utility, command);
@@ -206,14 +200,10 @@ public class Factory implements IFactory {
             return new SquareWorkerClone(utility, command);
         } else if (command.equals(Constants.REQUEST_FILE_COMMAND)) {
             return new SquareWorkerGetFile(utility, command, this);
-        } else if (command.equals(Constants.READ_ALIAS_COMMAND)) {
-            return new SquareWorkerReadAlias(utility, command, this);
         } else if (command.equals(Constants.CHECK_VERSION_COMMAND)) {
             return new SquareWorkerCheckVersion(utility, command);
         } else if (command.equals(Constants.MEMBER_COMMAND)) {
             return new SquareWorkerMember(utility, command);
-        } else if (command.equals(Constants.REGISTER_ALIAS_COMMAND)) {
-            return new SquareWorkerRegisterAlias(utility, command);
         }
 
         return new SquareWorkerEmpty(utility, command);
@@ -265,6 +255,12 @@ public class Factory implements IFactory {
             return new CommandWorkerHelp(utility, square, dialogController);
         } else if (cmd.equals(Constants.UNBLOCK_COMMAND)) {
             return new CommandWorkerUnblock(utility, square, dialogController);
+        } else if (cmd.equals(Constants.VERSION_COMMAND)) {
+            return new CommandWorkerCheckVersion(utility, square, dialogController, this);
+        } else if (cmd.equals(Constants.ADD_MEMBER_COMMAND)) {
+            return new CommandWorkerAddMember(utility, square, dialogController);
+        } else if (cmd.equals(Constants.ACK_COMMAND)) {
+            return new CommandWorkerAck(utility, square, dialogController);
         }
 
         return new CommandWorkerEmpty(utility, square, dialogController);

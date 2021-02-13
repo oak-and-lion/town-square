@@ -9,12 +9,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.stage.Stage;
 
 public class ModalVideoViewer extends BaseViewer implements IModalViewer {
     
     private MediaPlayer mediaPlayer;
-    public ModalVideoViewer() {
-        super();
+    public ModalVideoViewer(Stage parentStage) {
+        super(parentStage);
     }
 
     public void show(String file) {

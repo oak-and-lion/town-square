@@ -4,10 +4,11 @@ import java.io.InputStream;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
 public class ModalImageViewer extends BaseViewer implements IModalViewer {
-    public ModalImageViewer() {
-        super();
+    public ModalImageViewer(Stage parentStage) {
+        super(parentStage);
     }
 
     public void show(String imageFile) {

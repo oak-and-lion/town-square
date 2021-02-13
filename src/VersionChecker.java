@@ -7,6 +7,7 @@ public class VersionChecker extends Thread implements IVersionChecker {
     private IFactory factory;
     private String port;
     private String ip;
+    private boolean done;
 
     public VersionChecker(IUtility utility, String uniqueId, IFactory factory) {
         this.utility = utility;
@@ -14,18 +15,25 @@ public class VersionChecker extends Thread implements IVersionChecker {
         this.factory = factory;
         this.port = utility.readFile(Constants.PORT_FILE);
         this.ip = utility.readFile(Constants.IP_FILE);
+        done = false;
     }
 
     @Override
     public void run() {
         checkVersion();
+        done = true;
+    }
+
+    public boolean isDone() {
+        return done;
     }
 
     public void checkVersion() {
         DoubleString[] allMembers = getAllMembers();
         for (DoubleString member : allMembers) {
             String[] info = member.getStringTwo().split(Constants.FILE_DATA_SEPARATOR);
-            if (!(info[4].equals(uniqueId) && (info[2].equals(ip) && info[3].equals(port))) && !info[0].startsWith(Constants.STAR)) {
+            if (!(info[4].equals(uniqueId) && (info[2].equals(ip) && info[3].equals(port)))
+                    && !info[0].startsWith(Constants.STAR)) {
                 checkVersionAgainstMember(member.getStringTwo(), member.getStringOne());
             }
         }
@@ -42,9 +50,12 @@ public class VersionChecker extends Thread implements IVersionChecker {
             String invite = squareInfo[1];
             ArrayList<String> smembers = getMembersFromFile(
                     file.replace(Constants.SQUARE_FILE_EXT, Constants.MEMBERS_FILE_EXT));
+            ArrayList<DoubleString> newMembers = new ArrayList<>();
             for (String member : smembers) {
                 members.add(new DoubleString(invite, member));
             }
+
+            members.addAll(newMembers);
         }
 
         return members.toArray(new DoubleString[members.size()]);
@@ -92,7 +103,7 @@ public class VersionChecker extends Thread implements IVersionChecker {
             String encrypted = utility.encrypt(utility.concatStrings(Constants.GET_APP_JAR_COMMAND,
                     Constants.COMMAND_DATA_SEPARATOR, Constants.JAR_FILE, Constants.COMMAND_DATA_SEPARATOR, uniqueId),
                     password);
-            String fin = utility.concatStrings(encryptedPassword, Constants.COMMAND_DATA_SEPARATOR,encrypted);
+            String fin = utility.concatStrings(encryptedPassword, Constants.COMMAND_DATA_SEPARATOR, encrypted);
             String response = client.sendMessage(fin, Constants.ENCRYPT_CLIENT_TRANSFER);
 
             SquareResponse responseData = new SquareResponse(response);

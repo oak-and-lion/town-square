@@ -1,3 +1,5 @@
+import javafx.stage.Stage;
+
 public class xxMockIApp implements IApp {
     public void close(int i) {
         // not needed
@@ -40,5 +42,9 @@ public class xxMockIApp implements IApp {
 
     public void sendDefaultName(String name) {
         // not needed
+    }
+
+    public Stage getStage() {
+        return new Stage();
     }
 }

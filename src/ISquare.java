@@ -26,4 +26,5 @@ public interface ISquare {
     void runClientFunctions(int maxRuns);
     ISquareController getController();
     String getTrueName();
+    IFactory getFactory();
 }

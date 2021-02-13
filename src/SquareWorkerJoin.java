@@ -20,18 +20,24 @@ public class SquareWorkerJoin extends SquareWorkerBase implements ISquareWorker 
 
         if (args.length == 8) {
             String file = utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT);
-            String[] sameNames = utility.searchFile(file, args[3], Constants.SEARCH_STARTS_WITH);
-            String[] sameIds = utility.searchFile(file, args[7], Constants.SEARCH_CONTAINS);
-            boolean previousLeave = checkPreviousLeave(sameIds);
+            MemberInfoList members = new MemberInfoList();
+            String[] fileMembers = utility.readFile(file).split(Constants.READ_FILE_DATA_SEPARATOR);
+            for (String fileMember : fileMembers) {
+                members.add(new MemberInfo(fileMember));
+            }
+            
+            MemberInfo joinMember = new MemberInfo(args[3], args[4], args[5], args[6], args[7]);
+            boolean sameId = members.containsUniqueId(joinMember.getUniqueId());
+            boolean previousLeave = checkPreviousLeave();
             processPreviousLeave(previousLeave, file, args);
-            String registeredName = args[3];
-            if (sameIds.length < 1 || previousLeave) {
-                if (sameNames.length > 0) {
-                    registeredName += utility.concatStrings(Constants.PERCENT, Integer.toString(sameNames.length));
+            String registeredName = joinMember.getName();
+            if (!sameId || previousLeave) {
+                if (members.containsName(joinMember.getName(), joinMember.getUniqueId())) {
+                    registeredName += utility.concatStrings(Constants.PERCENT, Integer.toString(members.size()));
                 }
 
-                String data = utility.concatStrings(args[4], Constants.DATA_SEPARATOR, args[5],
-                        Constants.DATA_SEPARATOR, args[6], Constants.DATA_SEPARATOR, args[7]);
+                String data = utility.concatStrings(joinMember.getPublicKey(), Constants.DATA_SEPARATOR, joinMember.getIp(),
+                        Constants.DATA_SEPARATOR, joinMember.getPort(), Constants.DATA_SEPARATOR, joinMember.getUniqueId());
 
                 return processCommand(registeredName, data, file, square);
             } else {
@@ -45,16 +51,8 @@ public class SquareWorkerJoin extends SquareWorkerBase implements ISquareWorker 
         return buildResult(Constants.MALFORMED_REQUEST_RESULT, Constants.MALFORMED_REQUEST_MESSAGE);
     }
 
-    private boolean checkPreviousLeave(String[] sameIds) {
-        boolean previousLeave = false;
-        for (String sameId : sameIds) {
-            if (sameId.startsWith(Constants.STAR)) {
-                previousLeave = true;
-                break;
-            }
-        }
-
-        return previousLeave;
+    private boolean checkPreviousLeave() {
+        return false;
     }
 
     private void processPreviousLeave(boolean previousLeave, String file, String[] args) {

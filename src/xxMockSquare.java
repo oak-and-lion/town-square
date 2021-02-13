@@ -82,4 +82,7 @@ public class xxMockSquare implements ISquare {
     public ISquareController getController() {
         return null;
     }
+    public IFactory getFactory() {
+        return null;
+    }
 }
