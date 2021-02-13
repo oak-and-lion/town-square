@@ -26,6 +26,13 @@ then
     fi
 fi
 
+clonefile="my_square.clone"
+if [ -f $clonefile ]
+then
+    unzip $clonefile
+    rm $clonefile
+fi
+
 echo starting Town Square
 
 ./jdk-11.0.2.jdk/Contents/Home/bin/java --module-path "javafx/lib" --add-modules "javafx.controls,javafx.fxml,javafx.media" -jar App.jar
