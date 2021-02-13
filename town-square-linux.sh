@@ -29,7 +29,7 @@ fi
 clonefile="my_square.clone"
 if [ -f $clonefile ]
 then
-    unzip $clonefile
+    unzip -o $clonefile
     rm $clonefile
 fi
 
