@@ -25,7 +25,7 @@ public interface IDialogController {
     void showAbout();
     void showList(String[] items, String listTitle, String listHeader);
     void updatePauseNotification(ISquare square, boolean paused);
-    void processImageAction(int buttonClicked, String file, long millis);
+    void processImageAction(int buttonClicked, String file, long millis, ISquare square);
     void setFactory(IFactory factory);
     IApp getParent();
     void showLicense();

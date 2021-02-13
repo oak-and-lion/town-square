@@ -757,9 +757,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         knownPostMessages.add(millis);
 
         if (message.contains(Constants.IMAGE_MARKER)) {
-            buildImageMessage(message, messageList, millis);
+            buildImageMessage(message, messageList, millis, square);
         } else if (message.contains(Constants.VIDEO_MARKER)) {
-            buildVideoMessage(message, messageList, millis);
+            buildVideoMessage(message, messageList, millis, square);
         } else if (message.contains(Constants.FILE_MARKER)) {
             buildFileMessage(message, messageList, scrollPane, millis);
         } else if (message.contains(Constants.URL_MARKER)) {
@@ -892,7 +892,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         postMessageWorkers.add(new MessageWorker(label, scrollPane, labelInfo));
     }
 
-    private void buildImageMessage(String message, VBox messageList, long millis) {
+    private void buildImageMessage(String message, VBox messageList, long millis, ISquare square) {
         HBox hbox = createHBox(10, 0, 0, 0);
         int index = utility.add(message.indexOf(Constants.END_SQUARE_BRACKET), Constants.END_SQUARE_BRACKET.length());
         String file = message.substring(index, message.length());
@@ -921,7 +921,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                         button = Constants.SECONDARY_BUTTON;
                     }
 
-                    processImageAction(button, file, millis);
+                    processImageAction(button, file, millis, square);
                 }
             });
             index = message.indexOf(utility.concatStrings(Constants.COLON, Constants.SPACE));
@@ -937,10 +937,10 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         }
     }
 
-    public void processImageAction(int buttonClicked, String file, long millis) {
+    public void processImageAction(int buttonClicked, String file, long millis, ISquare square) {
         if (buttonClicked == Constants.PRIMARY_BUTTON) {
             if (modalImageViewer == null) {
-                modalImageViewer = factory.createModalViewer(Constants.BASE_MODAL_IMAGE_VIEWER);
+                modalImageViewer = factory.createModalViewer(Constants.BASE_MODAL_IMAGE_VIEWER, utility, square);
             }
             modalImageViewer.show(file);
         } else if (buttonClicked == Constants.SECONDARY_BUTTON) {
@@ -971,7 +971,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         }
     }
 
-    private void buildVideoMessage(String message, VBox messageList, long millis) {
+    private void buildVideoMessage(String message, VBox messageList, long millis, ISquare square) {
         HBox hbox = createHBox(10, 0, 0, 0);
         int index = utility.add(message.indexOf(Constants.END_SQUARE_BRACKET), Constants.END_SQUARE_BRACKET.length());
         String file = message.substring(index, message.length());
@@ -1004,7 +1004,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                     button = Constants.SECONDARY_BUTTON;
                 }
 
-                processVideoAction(file, button, millis);
+                processVideoAction(file, button, millis, square);
             }
         });
         if (videos == null) {
@@ -1017,10 +1017,10 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         messageList.getChildren().addAll(hbox);
     }
 
-    private void processVideoAction(String file, int buttonClicked, long millis) {
+    private void processVideoAction(String file, int buttonClicked, long millis, ISquare square) {
         if (buttonClicked == Constants.PRIMARY_BUTTON) {
             if (modalVideoViewer == null) {
-                modalVideoViewer = factory.createModalViewer(Constants.BASE_MODAL_VIDEO_VIEWER);
+                modalVideoViewer = factory.createModalViewer(Constants.BASE_MODAL_VIDEO_VIEWER, utility, square);
             }
             modalVideoViewer.show(file);
         } else if (buttonClicked == Constants.SECONDARY_BUTTON) {
