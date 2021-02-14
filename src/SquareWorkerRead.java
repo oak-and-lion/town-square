@@ -29,7 +29,7 @@ public class SquareWorkerRead extends SquareWorkerBase implements ISquareWorker 
         if (checkSquareAccess(square, memberId)) {
             String file = utility.concatStrings(square.getSafeLowerName(), Constants.POSTS_FILE_EXT);
             String memberFile = utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT);
-            boolean getEntireFile = Long.valueOf(start) > -1 ? Constants.NOT_FOUND_RETURN_ZERO
+            boolean getEntireFile = Long.valueOf(start) > -1 ? Constants.NOT_FOUND_RETURN_NEG_ONE
                     : !Constants.NOT_FOUND_RETURN_ZERO;
             if (getEntireFile != Constants.NOT_FOUND_RETURN_ZERO) {
                 logger.logInfo("Need whole file");
