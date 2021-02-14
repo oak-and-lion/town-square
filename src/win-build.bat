@@ -30,7 +30,11 @@ copy ..\..\..\town-square-windows.bat
 copy ..\..\..\blocked-image.png
 copy ..\..\..\blocked-video.mp4
 
+echo creating JAR file
+
 jar -c -v -m ..\manifest.txt -f App.jar ..\*.class ..\sample.fxml
+
+echo creating final package
 
 mkdir package
 
