@@ -41,20 +41,19 @@ public class Client implements IClient {
     }
 
     public String sendMessage(String text, boolean encrypt) {
+        String encryptFlag = Constants.UNENCRYPTED_FLAG;
+        if (encrypt) {
+            encryptFlag = Constants.ENCRYPTED_FLAG;
+        }
+        String sendData = utility.concatStrings(encryptFlag, Constants.COMMAND_DATA_SEPARATOR, squareId,
+                Constants.COMMAND_DATA_SEPARATOR, text);
         logger.logInfo(utility.concatStrings("Sending client request: [", hostName, Constants.COLON,
-                Integer.toString(port), "] ", text));
+                Integer.toString(port), "] ", sendData));
         try (Socket socket = new Socket()) {
             socket.connect(new InetSocketAddress(hostName, port), 1000);
             OutputStream output = socket.getOutputStream();
             PrintWriter writer = new PrintWriter(output, true);
-
-            String encryptFlag = Constants.UNENCRYPTED_FLAG;
-            if (encrypt) {
-                encryptFlag = Constants.ENCRYPTED_FLAG;
-            }
-
-            return communicateWithServer(utility.concatStrings(encryptFlag, Constants.COMMAND_DATA_SEPARATOR, squareId,
-                    Constants.COMMAND_DATA_SEPARATOR, text), writer, socket);
+            return communicateWithServer(sendData, writer, socket);
         } catch (SocketException se) {
             if (se.getMessage().equals("Connection refused: connect")) {
                 logger.logInfo(utility.concatStrings(CLIENT_PREFIX, squareId, "' not available"));
