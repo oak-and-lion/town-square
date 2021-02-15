@@ -164,7 +164,8 @@ public class ClientThread extends Thread implements IClientThread {
     }
 
     private void getMembersFromOtherMembers(String info, String file) {
-        if (!info.contains(uniqueId) && !info.startsWith(Constants.STAR)) {
+        if (!(info.contains(uniqueId) && (info.contains(square.getIP()) && info.contains(square.getPort())))
+                && !info.startsWith(Constants.STAR)) {
             String[] member = info.split(Constants.DATA_SEPARATOR);
             tempKeys.setPublicKeyFromBase64(member[1]);
             IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),

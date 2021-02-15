@@ -3,7 +3,7 @@ import javafx.scene.paint.Color;
 public class Constants {
     private Constants() {}
 
-    public static final String VERSION = "0.0.10";
+    public static final String VERSION = "0.0.11";
     public static final int BASE_CRYPTO_UTILS = 1;
     public static final int BASE_SQUARE_KEY_PAIR = 1;
     public static final int UTILITY_SQUARE_KEY_PAIR = 2;
