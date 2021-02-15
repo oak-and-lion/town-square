@@ -27,7 +27,6 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
         this.ip = utility.readFile(Constants.IP_FILE);
         tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
         tempKeys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
-        tempKeys.setPublicKeyFromBase64(utility.readFile(Constants.PUBLIC_KEY_FILE));
     }
 
     @Override
@@ -48,6 +47,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
         if (!(info.contains(uniqueId) && (info.contains(ip) && info.contains(port)))
                 && !info.startsWith(Constants.STAR)) {
             String[] member = info.split(Constants.DATA_SEPARATOR);
+            tempKeys.setPublicKeyFromBase64(member[1]);
             IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
                     square.getInvite(), square.getSampleController().getParent());
             String password = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);

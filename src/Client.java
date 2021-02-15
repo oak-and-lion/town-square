@@ -56,8 +56,8 @@ public class Client implements IClient {
             OutputStream output = socket.getOutputStream();
             PrintWriter writer = new PrintWriter(output, true);
             String result = communicateWithServer(sendData, writer, socket);
-            logger.logInfo(utility.concatStrings(guid, " Client request response: ]", hostName, Constants.COLON,
-                    Integer.toString(port), "] ", result));
+            logger.logInfo(utility.concatStrings(guid, " Client request response: [", hostName, Constants.COLON,
+                    Integer.toString(port), "] "));
             return result;
         } catch (SocketException se) {
             if (se.getMessage().equals("Connection refused: connect")) {

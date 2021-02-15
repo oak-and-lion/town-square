@@ -34,7 +34,6 @@ public class ClientThread extends Thread implements IClientThread {
         this.app = app;
         tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
         tempKeys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
-        tempKeys.setPublicKeyFromBase64(utility.readFile(Constants.PUBLIC_KEY_FILE));
     }
 
     private void getWaitTime() {
@@ -167,13 +166,15 @@ public class ClientThread extends Thread implements IClientThread {
     private void getMembersFromOtherMembers(String info, String file) {
         if (!info.contains(uniqueId) && !info.startsWith(Constants.STAR)) {
             String[] member = info.split(Constants.DATA_SEPARATOR);
+            tempKeys.setPublicKeyFromBase64(member[1]);
             IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
                     square.getInvite(), app);
-                    String password = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
+            String password = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
             String temp = utility.concatStrings(Constants.MEMBER_COMMAND, Constants.COMMAND_DATA_SEPARATOR, uniqueId);
             String encrypted = utility.concatStrings(tempKeys.encryptToBase64(password),
                     Constants.COMMAND_DATA_SEPARATOR, utility.encrypt(temp, password));
-            String response = client.sendMessage(encrypted, Constants.ENCRYPT_CLIENT_TRANSFER, Constants.MEMBER_COMMAND);
+            String response = client.sendMessage(encrypted, Constants.ENCRYPT_CLIENT_TRANSFER,
+                    Constants.MEMBER_COMMAND);
             if (!response.equals(Constants.EMPTY_STRING)) {
                 findNewMembers(response, file);
             }
