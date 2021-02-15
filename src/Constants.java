@@ -258,4 +258,6 @@ public class Constants {
     public static final String NICKNAME_FILE_EXT = ".nickname";
     public static final String SINGLE_QUOTE = "'";
     public static final String DELETE_COMMAND = "delete";
+    public static final String HUB_REGISTRATION_FILE = "registration.hub";
+    public static final String REGISTER_HUB = "reghub";
 }

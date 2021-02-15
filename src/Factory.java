@@ -261,6 +261,8 @@ public class Factory implements IFactory {
             return new CommandWorkerAddMember(utility, square, dialogController);
         } else if (cmd.equals(Constants.ACK_COMMAND)) {
             return new CommandWorkerAck(utility, square, dialogController);
+        } else if (cmd.equals(Constants.REGISTER_HUB)) {
+            return new CommandWorkerRegisterHub(utility, square, dialogController);
         }
 
         return new CommandWorkerEmpty(utility, square, dialogController);

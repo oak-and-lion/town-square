@@ -65,6 +65,7 @@ public class ClientThread extends Thread implements IClientThread {
 
             String raw;
             int count = 0;
+
             while (process) {
                 if (utility
                         .checkFileExists(utility.concatStrings(square.getSafeLowerName(), Constants.PAUSE_FILE_EXT))) {
@@ -155,11 +156,21 @@ public class ClientThread extends Thread implements IClientThread {
     }
 
     private String[] getAllMembers(String memberFile) {
-        String memberRaw = utility.readFile(memberFile, Constants.NOT_FOUND_ROW);
-
-        String[] members = memberRaw.split(Constants.COMMAND_DATA_SEPARATOR);
         ArrayList<String> memberWork = new ArrayList<>();
-        memberWork.addAll(Arrays.asList(members));
+
+        if (utility.checkFileExists(Constants.HUB_REGISTRATION_FILE)) {
+            String[] hubInfo = utility.readFile(Constants.HUB_REGISTRATION_FILE).split(Constants.READ_FILE_DATA_SEPARATOR);
+            String[] members = utility.searchFile(memberFile, hubInfo[1], Constants.SEARCH_CONTAINS);
+            if (members.length > 0) {
+                memberWork.add(members[0]);
+            }
+        } else {
+            String memberRaw = utility.readFile(memberFile, Constants.NOT_FOUND_ROW);
+
+            String[] members = memberRaw.split(Constants.COMMAND_DATA_SEPARATOR);
+
+            memberWork.addAll(Arrays.asList(members));
+        }
         return memberWork.toArray(new String[memberWork.size()]);
     }
 
