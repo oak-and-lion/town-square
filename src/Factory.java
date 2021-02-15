@@ -265,4 +265,16 @@ public class Factory implements IFactory {
 
         return new CommandWorkerEmpty(utility, square, dialogController);
     }
+
+    public IApp createApp(String loggerFlag, IAlertBox alertbox, ISystemExit exit, IFactory f) {
+        return new AppBase(loggerFlag, alertbox, exit, f);
+    }
+
+    public IDialogController createDialogController(int type, IApp app, IUtility utility) {
+        if (type == Constants.SERVER_DIALOG_CONTROLLER) {
+            return new ServerDialogController(app, utility, this);
+        }
+
+        return null;
+    }
 }

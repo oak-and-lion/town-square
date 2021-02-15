@@ -51,4 +51,12 @@ public class xxMockIApp implements IApp {
     public int getLoggerType() {
         return Constants.FILE_LOGGER;
     }
+
+    public void start(Stage stage) {
+        // do nothing
+    }
+
+    public void start() {
+        start(null);
+    }
 }

@@ -36,4 +36,6 @@ public interface IFactory {
     ISquare findSquareByCommand(String command, String inviteId, IDialogController dialogController);
     IShowSquareMembers createShowSquareMembers(int type);
     ICommandWorker createCommandWorker(String cmd, IUtility utility, ISquare square, IDialogController dialogController);
+    IApp createApp(String loggerFlag, IAlertBox alertbox, ISystemExit exit, IFactory f);
+    IDialogController createDialogController(int type, IApp app, IUtility utility);
 }

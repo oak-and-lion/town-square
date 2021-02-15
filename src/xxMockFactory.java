@@ -110,4 +110,12 @@ public class xxMockFactory implements IFactory {
     public ICommandWorker createCommandWorker(String cmd, IUtility utility, ISquare square, IDialogController dialogController) {
         return null;
     }
+
+    public IApp createApp(String loggerFlag, IAlertBox alertbox, ISystemExit exit, IFactory f) {
+        return new AppBase(loggerFlag, alertbox, exit, f);
+    }
+
+    public IDialogController createDialogController(int type, IApp app, IUtility utility) {
+        return new ServerDialogController(app, utility, this);
+    }
 }

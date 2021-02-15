@@ -40,6 +40,10 @@ public class App extends Application implements IApp {
         }
     }
 
+    public void start() {
+        start(null);
+    }
+
     @Override
     public void start(Stage primaryStage) {
         utility = factory.createUtility(Constants.BASE_UTILITY);
