@@ -159,10 +159,14 @@ public class ClientThread extends Thread implements IClientThread {
         ArrayList<String> memberWork = new ArrayList<>();
 
         if (utility.checkFileExists(Constants.HUB_REGISTRATION_FILE)) {
-            String[] hubInfo = utility.readFile(Constants.HUB_REGISTRATION_FILE).split(Constants.READ_FILE_DATA_SEPARATOR);
-            String[] members = utility.searchFile(memberFile, hubInfo[1], Constants.SEARCH_CONTAINS);
+            String hubInfo = utility.readFile(Constants.HUB_REGISTRATION_FILE);
+            String[] members = utility.searchFile(memberFile, utility.readFile(Constants.UNIQUE_ID_FILE),
+                    Constants.SEARCH_CONTAINS);
             if (members.length > 0) {
-                memberWork.add(members[0]);
+                String[] memberInfo = members[0].split(Constants.FILE_DATA_SEPARATOR);
+                String m = utility.concatStrings(memberInfo[0], Constants.FILE_DATA_SEPARATOR, memberInfo[1],
+                        Constants.FILE_DATA_SEPARATOR, hubInfo, Constants.FILE_DATA_SEPARATOR, memberInfo[4]);
+                memberWork.add(m);
             }
         } else {
             String memberRaw = utility.readFile(memberFile, Constants.NOT_FOUND_ROW);
@@ -281,6 +285,32 @@ public class ClientThread extends Thread implements IClientThread {
     }
 
     public void addPostMessage(PostMessage message) {
-        posts.add(message);
+        if (utility.checkFileExists(Constants.HUB_REGISTRATION_FILE)) {
+            postToHub(message);
+        } else {
+            posts.add(message);
+        }
+    }
+
+    private void postToHub(PostMessage message) {        
+        String hubInfo = utility.readFile(Constants.HUB_REGISTRATION_FILE);
+        String[] members = utility.searchFile(
+                utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT),
+                utility.readFile(Constants.UNIQUE_ID_FILE), Constants.SEARCH_CONTAINS);
+        if (members.length > 0) {
+            String[] hub = hubInfo.split(Constants.FILE_DATA_SEPARATOR);
+            String[] memberInfo = members[0].split(Constants.FILE_DATA_SEPARATOR);
+            tempKeys.setPublicKeyFromBase64(memberInfo[1]);
+            String password = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
+            String encrypted = utility.encrypt(message.getMessage(), password);
+            String encryptedPassword = tempKeys.encryptToBase64(password);
+            String text = utility.concatStrings(encryptedPassword, Constants.COMMAND_DATA_SEPARATOR, encrypted);
+            IClient client = factory.createClient(Constants.BASE_CLIENT, hub[0], Integer.parseInt(hub[1]), square.getId(), app);
+            String result = client.sendMessage(text, Constants.ENCRYPT_CLIENT_TRANSFER, Constants.SEND_MESSAGE);
+            SquareResponse response = new SquareResponse(result);
+            if (response.getCode().equals(Constants.OK_RESULT)) {
+                // need code
+            }
+        }
     }
 }

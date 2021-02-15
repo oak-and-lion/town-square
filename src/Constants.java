@@ -260,4 +260,5 @@ public class Constants {
     public static final String DELETE_COMMAND = "delete";
     public static final String HUB_REGISTRATION_FILE = "registration.hub";
     public static final String REGISTER_HUB = "reghub";
+    public static final String SEND_MESSAGE = "send";
 }
