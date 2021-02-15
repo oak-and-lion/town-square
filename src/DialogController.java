@@ -461,8 +461,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         Label spacer = createLabel(Constants.EMPTY_STRING, 0, 5, 0, 5);
         VBox generatePostControls = createVBox(0, 10, 0, 10);
         generatePostControls.setMinHeight(281);
-        generatePostControls.setStyle(utility.concatStrings("-fx-padding: 10;-fx-border-style: solid inside;-fx-border-width: 2;"
-                , "-fx-border-insets: 5;-fx-border-radius: 5;-fx-border-color: #333;"));
+        generatePostControls
+                .setStyle(utility.concatStrings("-fx-padding: 10;-fx-border-style: solid inside;-fx-border-width: 2;",
+                        "-fx-border-insets: 5;-fx-border-radius: 5;-fx-border-color: #333;"));
 
         if (postControls == null) {
             postControls = new ArrayList<>();
@@ -650,7 +651,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         // 3 == id of the square being invited to
         // u~207.244.84.59~44123~a7075b5b-b91d-4448-a0f9-d9b0bec1a726
         String[] split = invite.split(Constants.TILDE);
-        IClient client = factory.createClient(Constants.BASE_CLIENT, split[1], Integer.valueOf(split[2]), split[3], getParent());
+        IClient client = factory.createClient(Constants.BASE_CLIENT, split[1], Integer.valueOf(split[2]), split[3],
+                getParent());
         boolean encrypt = false;
         ISquareKeyPair tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
 
@@ -658,7 +660,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             encrypt = true;
         }
 
-        String remotePublicKey = client.sendMessage(Constants.REQUEST_PUBLIC_KEY_COMMAND, Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER);
+        String remotePublicKey = client.sendMessage(Constants.REQUEST_PUBLIC_KEY_COMMAND,
+                Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER, Constants.REQUEST_PUBLIC_KEY_COMMAND);
         if (remotePublicKey.equals(Constants.EMPTY_STRING)) {
             utility.writeFile(utility.concatStrings(Constants.INVITE_FILE_PREFIX, split[3], Constants.INVITE_FILE_EXT),
                     invite);
@@ -682,7 +685,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                     utility.encrypt(data, password));
         }
 
-        response = processTCPReturn(client.sendMessage(data, encrypt));
+        response = processTCPReturn(client.sendMessage(data, encrypt, Constants.JOIN_COMMAND));
 
         if (response.getCode().equals(Constants.OK_RESULT)
                 || response.getCode().equals(Constants.ALREADY_REGISTERED_RESULT)) {
@@ -695,7 +698,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             String password = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
             data = utility.concatStrings(tempKeys.encryptToBase64(password), Constants.COMMAND_DATA_SEPARATOR,
                     utility.encrypt(temp, password));
-            response = processTCPReturn(client.sendMessage(data, encrypt));
+            response = processTCPReturn(client.sendMessage(data, encrypt, Constants.MEMBER_COMMAND));
             utility.writeFile(utility.concatStrings(squareSafeName, Constants.MEMBERS_FILE_EXT),
                     response.getMessage().replace(Constants.COMMAND_DATA_SEPARATOR, Constants.NEWLINE));
             String info = utility.concatStrings(responseData[3], Constants.COMMA, client.getSquareId(), Constants.COMMA,
@@ -1066,8 +1069,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         // My Square,a7075b5b-b91d-4448-a0f9-d9b0bec1a726,tabDefaultSquare,0,~~~~~~~
         String uuid = utility.createUUID();
         String safeName = input.replace(Constants.SPACE, Constants.UNDERSCORE).toLowerCase();
-        String contents = utility.concatStrings(input, Constants.COMMA, uuid, Constants.COMMA,
-                Constants.TAB_PREFIX, safeName, Constants.COMMA, Constants.ZERO, Constants.NO_PASSWORD_VALUE);
+        String contents = utility.concatStrings(input, Constants.COMMA, uuid, Constants.COMMA, Constants.TAB_PREFIX,
+                safeName, Constants.COMMA, Constants.ZERO, Constants.NO_PASSWORD_VALUE);
         utility.writeFile(utility.concatStrings(safeName, Constants.SQUARE_FILE_EXT), contents);
         setTabSquare(new Square(contents, port.getText(), remoteIP.getValue().getDisplay(),
                 factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,

@@ -23,7 +23,7 @@ public class CommandWorkerGetClone extends CommandWorkerBase implements ICommand
         String squareId = args[2];
         String password = args[3];
         IClient client = factory.createClient(Constants.BASE_CLIENT, hostName, port, squareId, parent.getParent());
-        String pkey = client.sendMessage(Constants.REQUEST_PUBLIC_KEY_COMMAND, Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER);
+        String pkey = client.sendMessage(Constants.REQUEST_PUBLIC_KEY_COMMAND, Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER, Constants.REQUEST_PUBLIC_KEY_COMMAND);
         SquareResponse resp = new SquareResponse(pkey);
         if (resp.getCode().equals(Constants.OK_RESULT)) {
             ISquareKeyPair keyPair = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
@@ -33,7 +33,7 @@ public class CommandWorkerGetClone extends CommandWorkerBase implements ICommand
                     , Constants.COMMAND_DATA_SEPARATOR, utility.readFile(Constants.IP_FILE)
                     , Constants.COMMAND_DATA_SEPARATOR, utility.readFile(Constants.PORT_FILE)), key);
             String f = keyPair.encryptToBase64(key);
-            String result = client.sendMessage(utility.concatStrings(f, Constants.COMMAND_DATA_SEPARATOR, e), Constants.ENCRYPT_CLIENT_TRANSFER);
+            String result = client.sendMessage(utility.concatStrings(f, Constants.COMMAND_DATA_SEPARATOR, e), Constants.ENCRYPT_CLIENT_TRANSFER, Constants.CLONE_COMMAND);
             SquareResponse cloneResponse = new SquareResponse(result);
             if (cloneResponse.getCode().equals(Constants.OK_RESULT)) {
                 StringBuilder pwdPadded = new StringBuilder(password);

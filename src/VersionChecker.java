@@ -83,7 +83,7 @@ public class VersionChecker extends Thread implements IVersionChecker {
         String encryptedPassword = utility.memberEncrypt(factory, password, memberInfo[1]);
         String encryptedData = utility.concatStrings(encryptedPassword, Constants.COMMAND_DATA_SEPARATOR,
                 utility.encrypt(Constants.CHECK_VERSION_COMMAND, password));
-        String result = client.sendMessage(encryptedData, Constants.ENCRYPT_CLIENT_TRANSFER);
+        String result = client.sendMessage(encryptedData, Constants.ENCRYPT_CLIENT_TRANSFER, Constants.CHECK_VERSION_COMMAND);
 
         if (result.equals(Constants.EMPTY_STRING)) {
             return;
@@ -106,7 +106,7 @@ public class VersionChecker extends Thread implements IVersionChecker {
                     Constants.COMMAND_DATA_SEPARATOR, Constants.JAR_FILE, Constants.COMMAND_DATA_SEPARATOR, uniqueId),
                     password);
             String fin = utility.concatStrings(encryptedPassword, Constants.COMMAND_DATA_SEPARATOR, encrypted);
-            String response = client.sendMessage(fin, Constants.ENCRYPT_CLIENT_TRANSFER);
+            String response = client.sendMessage(fin, Constants.ENCRYPT_CLIENT_TRANSFER, Constants.GET_APP_JAR_COMMAND);
 
             SquareResponse responseData = new SquareResponse(response);
 

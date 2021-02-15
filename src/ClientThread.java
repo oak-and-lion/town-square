@@ -173,7 +173,7 @@ public class ClientThread extends Thread implements IClientThread {
             String temp = utility.concatStrings(Constants.MEMBER_COMMAND, Constants.COMMAND_DATA_SEPARATOR, uniqueId);
             String encrypted = utility.concatStrings(tempKeys.encryptToBase64(password),
                     Constants.COMMAND_DATA_SEPARATOR, utility.encrypt(temp, password));
-            String response = client.sendMessage(encrypted, Constants.ENCRYPT_CLIENT_TRANSFER);
+            String response = client.sendMessage(encrypted, Constants.ENCRYPT_CLIENT_TRANSFER, Constants.MEMBER_COMMAND);
             if (!response.equals(Constants.EMPTY_STRING)) {
                 findNewMembers(response, file);
             }

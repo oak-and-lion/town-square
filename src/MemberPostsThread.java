@@ -55,7 +55,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
                     Constants.COMMAND_DATA_SEPARATOR, uniqueId);
             String encrypted = utility.concatStrings(tempKeys.encryptToBase64(password),
                     Constants.COMMAND_DATA_SEPARATOR, utility.encrypt(temp, password));
-            String response = client.sendMessage(encrypted, Constants.ENCRYPT_CLIENT_TRANSFER);
+            String response = client.sendMessage(encrypted, Constants.ENCRYPT_CLIENT_TRANSFER, Constants.READ_COMMAND);
             if (!response.equals(Constants.EMPTY_STRING)) {
                 String[] responseSplit = response.split(Constants.COLON);
                 if (responseSplit.length == 2 && responseSplit[0].equals(Constants.OK_RESULT)
@@ -110,7 +110,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
                 Constants.COMMAND_DATA_SEPARATOR, uniqueId);
         String encrypted = utility.concatStrings(tempKeys.encryptToBase64(password), Constants.COMMAND_DATA_SEPARATOR,
                 utility.encrypt(temp, password));
-        String response = client.sendMessage(encrypted, Constants.ENCRYPT_CLIENT_TRANSFER);
+        String response = client.sendMessage(encrypted, Constants.ENCRYPT_CLIENT_TRANSFER, Constants.REQUEST_FILE_COMMAND);
 
         SquareResponse responseData = new SquareResponse(response);
 

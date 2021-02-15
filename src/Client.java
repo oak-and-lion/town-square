@@ -41,7 +41,7 @@ public class Client implements IClient {
                 factory.createUtility(Constants.BASE_UTILITY));
     }
 
-    public String sendMessage(String text, boolean encrypt) {
+    public String sendMessage(String text, boolean encrypt, String command) {
         String guid = utility.createUUID();
         String encryptFlag = Constants.UNENCRYPTED_FLAG;
         if (encrypt) {
@@ -50,7 +50,7 @@ public class Client implements IClient {
         String sendData = utility.concatStrings(encryptFlag, Constants.COMMAND_DATA_SEPARATOR, squareId,
                 Constants.COMMAND_DATA_SEPARATOR, text);
         logger.logInfo(utility.concatStrings(guid, " Sending client request: [", hostName, Constants.COLON,
-                Integer.toString(port), "] ", sendData));
+                Integer.toString(port), "] ", command, Constants.SPACE, Constants.DASH, Constants.SPACE, sendData));
         try (Socket socket = new Socket()) {
             socket.connect(new InetSocketAddress(hostName, port), 1000);
             OutputStream output = socket.getOutputStream();
