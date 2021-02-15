@@ -310,6 +310,9 @@ public class ClientThread extends Thread implements IClientThread {
             SquareResponse response = new SquareResponse(result);
             if (response.getCode().equals(Constants.OK_RESULT)) {
                 // need code
+            } else {
+                // backup locally, in case it doesn't work
+                posts.add(message);
             }
         }
     }
