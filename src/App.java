@@ -35,6 +35,8 @@ public class App extends Application implements IApp {
         loggerType = Constants.FILE_LOGGER;
         if (logFlag.equals("-nl")) {
             loggerType = Constants.EMPTY_LOGGER;
+        } else if (logFlag.equals("-cl")) {
+            loggerType = Constants.CONSOLE_LOGGER;
         }
     }
 

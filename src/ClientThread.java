@@ -18,6 +18,7 @@ public class ClientThread extends Thread implements IClientThread {
     private int waitTime;
     private int maxRuns;
     private IApp app;
+    private ISquareKeyPair tempKeys;
 
     public ClientThread(ISquare s, IUtility utility, String uniqueId, IFactory factory, IApp app) {
         square = s;
@@ -31,6 +32,9 @@ public class ClientThread extends Thread implements IClientThread {
         this.maxRuns = Constants.INFINITE_LOOP_FLAG;
         getWaitTime();
         this.app = app;
+        tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
+        tempKeys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
+        tempKeys.setPublicKeyFromBase64(utility.readFile(Constants.PUBLIC_KEY_FILE));
     }
 
     private void getWaitTime() {
@@ -165,9 +169,11 @@ public class ClientThread extends Thread implements IClientThread {
             String[] member = info.split(Constants.DATA_SEPARATOR);
             IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
                     square.getInvite(), app);
-            String response = client.sendMessage(
-                    utility.concatStrings(Constants.MEMBER_COMMAND, Constants.COMMAND_DATA_SEPARATOR, uniqueId),
-                    Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER);
+                    String password = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
+            String temp = utility.concatStrings(Constants.MEMBER_COMMAND, Constants.COMMAND_DATA_SEPARATOR, uniqueId);
+            String encrypted = utility.concatStrings(tempKeys.encryptToBase64(password),
+                    Constants.COMMAND_DATA_SEPARATOR, utility.encrypt(temp, password));
+            String response = client.sendMessage(encrypted, Constants.ENCRYPT_CLIENT_TRANSFER);
             if (!response.equals(Constants.EMPTY_STRING)) {
                 findNewMembers(response, file);
             }

@@ -11,6 +11,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
     private IFactory factory;
     private String port;
     private String ip;
+    private ISquareKeyPair tempKeys;
 
     public MemberPostsThread(String info, String uniqueId, String[] msg, ISquare square, IUtility utility,
             IFactory factory) {
@@ -24,6 +25,9 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
         this.factory = factory;
         this.port = utility.readFile(Constants.PORT_FILE);
         this.ip = utility.readFile(Constants.IP_FILE);
+        tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
+        tempKeys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
+        tempKeys.setPublicKeyFromBase64(utility.readFile(Constants.PUBLIC_KEY_FILE));
     }
 
     @Override
@@ -46,11 +50,12 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
             String[] member = info.split(Constants.DATA_SEPARATOR);
             IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
                     square.getInvite(), square.getSampleController().getParent());
-            String response = client
-                    .sendMessage(
-                            utility.concatStrings(Constants.READ_COMMAND, Constants.COMMAND_DATA_SEPARATOR, msg[0],
-                                    Constants.COMMAND_DATA_SEPARATOR, uniqueId),
-                            Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER);
+            String password = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
+            String temp = utility.concatStrings(Constants.READ_COMMAND, Constants.COMMAND_DATA_SEPARATOR, msg[0],
+                    Constants.COMMAND_DATA_SEPARATOR, uniqueId);
+            String encrypted = utility.concatStrings(tempKeys.encryptToBase64(password),
+                    Constants.COMMAND_DATA_SEPARATOR, utility.encrypt(temp, password));
+            String response = client.sendMessage(encrypted, Constants.ENCRYPT_CLIENT_TRANSFER);
             if (!response.equals(Constants.EMPTY_STRING)) {
                 String[] responseSplit = response.split(Constants.COLON);
                 if (responseSplit.length == 2 && responseSplit[0].equals(Constants.OK_RESULT)
@@ -68,8 +73,6 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
     }
 
     public void processPostData(String[] responseSplit, String[] member) {
-        ISquareKeyPair tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
-        tempKeys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
         String[] decryptData = responseSplit[1].split(Constants.COMMAND_DATA_SEPARATOR);
         if (decryptData.length > 1) {
             String pwd = tempKeys.decryptFromBase64(decryptData[0]);
@@ -102,11 +105,12 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
         IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
                 square.getInvite(), square.getSampleController().getParent());
 
-        String response = client
-                .sendMessage(
-                        utility.concatStrings(Constants.REQUEST_FILE_COMMAND, Constants.COMMAND_DATA_SEPARATOR,
-                                fileName, Constants.COMMAND_DATA_SEPARATOR, uniqueId),
-                        Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER);
+        String password = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
+        String temp = utility.concatStrings(Constants.REQUEST_FILE_COMMAND, Constants.COMMAND_DATA_SEPARATOR, fileName,
+                Constants.COMMAND_DATA_SEPARATOR, uniqueId);
+        String encrypted = utility.concatStrings(tempKeys.encryptToBase64(password), Constants.COMMAND_DATA_SEPARATOR,
+                utility.encrypt(temp, password));
+        String response = client.sendMessage(encrypted, Constants.ENCRYPT_CLIENT_TRANSFER);
 
         SquareResponse responseData = new SquareResponse(response);
 
