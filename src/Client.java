@@ -18,12 +18,12 @@ public class Client implements IClient {
 
     private static final String CLIENT_PREFIX = "Client '";
 
-    public Client(String hostName, int port, String squareId, IFactory factory) {
+    public Client(String hostName, int port, String squareId, IFactory factory, IApp appParent) {
         this.hostName = hostName;
         this.port = port;
         this.squareId = squareId;
         this.utility = factory.createUtility(Constants.BASE_UTILITY);
-        createLogger(factory);
+        createLogger(factory, appParent.getLoggerType());
     }
 
     public Client(Square square, IFactory factory) {
@@ -31,46 +31,52 @@ public class Client implements IClient {
         hostName = square.getIP();
         squareId = square.getId();
         this.utility = factory.createUtility(Constants.BASE_UTILITY);
-        createLogger(factory);
+        
+        createLogger(factory, square.getSampleController().getParent().getLoggerType());
     }
 
-    private void createLogger(IFactory factory) {
-        logger = factory.createLogger(Constants.FILE_LOGGER,
+    private void createLogger(IFactory factory, int loggerType) {
+        logger = factory.createLogger(loggerType,
                 utility.concatStrings(Constants.CLIENT_LOG_PREFIX, squareId, Constants.LOG_FILE_EXT),
                 factory.createUtility(Constants.BASE_UTILITY));
     }
 
     public String sendMessage(String text, boolean encrypt) {
+        String guid = utility.createUUID();
         String encryptFlag = Constants.UNENCRYPTED_FLAG;
         if (encrypt) {
             encryptFlag = Constants.ENCRYPTED_FLAG;
         }
         String sendData = utility.concatStrings(encryptFlag, Constants.COMMAND_DATA_SEPARATOR, squareId,
                 Constants.COMMAND_DATA_SEPARATOR, text);
-        logger.logInfo(utility.concatStrings("Sending client request: [", hostName, Constants.COLON,
+        logger.logInfo(utility.concatStrings(guid, " Sending client request: [", hostName, Constants.COLON,
                 Integer.toString(port), "] ", sendData));
         try (Socket socket = new Socket()) {
             socket.connect(new InetSocketAddress(hostName, port), 1000);
             OutputStream output = socket.getOutputStream();
             PrintWriter writer = new PrintWriter(output, true);
-            return communicateWithServer(sendData, writer, socket);
+            String result = communicateWithServer(sendData, writer, socket);
+            logger.logInfo(utility.concatStrings(guid, " Client request response: ]", hostName, Constants.COLON,
+                    Integer.toString(port), "] ", result));
+            return result;
         } catch (SocketException se) {
             if (se.getMessage().equals("Connection refused: connect")) {
-                logger.logInfo(utility.concatStrings(CLIENT_PREFIX, squareId, "' not available"));
+                logger.logInfo(
+                        utility.concatStrings(guid, Constants.SPACE, CLIENT_PREFIX, squareId, "' not available"));
             } else if (se.getMessage().equals("Connection timed out: connect")) {
-                logger.logInfo(utility.concatStrings(CLIENT_PREFIX, hostName, Constants.COLON, Integer.toString(port),
-                        "' not available"));
+                logger.logInfo(utility.concatStrings(guid, Constants.SPACE, CLIENT_PREFIX, hostName, Constants.COLON,
+                        Integer.toString(port), "' not available"));
             } else {
-                logger.logInfo(utility.concatStrings(CLIENT_PREFIX, hostName, Constants.COLON, Integer.toString(port),
-                        Constants.SINGLE_QUOTE, Constants.SPACE, se.getMessage()));
+                logger.logInfo(utility.concatStrings(guid, Constants.SPACE, CLIENT_PREFIX, hostName, Constants.COLON,
+                        Integer.toString(port), Constants.SINGLE_QUOTE, Constants.SPACE, se.getMessage()));
             }
         } catch (UnknownHostException ex) {
-            logger.logInfo(utility.concatStrings("Server not found: ", ex.getMessage()));
+            logger.logInfo(utility.concatStrings(guid, " Server not found: ", ex.getMessage()));
         } catch (IOException ex) {
-            logger.logInfo(utility.concatStrings("I/O error: ", ex.getMessage()));
+            logger.logInfo(utility.concatStrings(guid, " I/O error: ", ex.getMessage()));
         } catch (Exception e) {
-            logger.logInfo(utility.concatStrings(CLIENT_PREFIX, hostName, Constants.COLON, Integer.toString(port),
-                    Constants.SINGLE_QUOTE, Constants.SPACE, e.getMessage()));
+            logger.logInfo(utility.concatStrings(guid, Constants.SPACE, CLIENT_PREFIX, hostName, Constants.COLON,
+                    Integer.toString(port), Constants.SINGLE_QUOTE, Constants.SPACE, e.getMessage()));
         }
 
         return Constants.EMPTY_STRING;

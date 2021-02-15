@@ -35,4 +35,4 @@ fi
 
 echo starting Town Square
 
-./jdk-11.0.2.jdk/Contents/Home/bin/java --module-path "javafx/lib" --add-modules "javafx.controls,javafx.fxml,javafx.media" -jar App.jar
+./jdk-11.0.2.jdk/Contents/Home/bin/java --module-path "javafx/lib" --add-modules "javafx.controls,javafx.fxml,javafx.media" -jar App.jar -nl

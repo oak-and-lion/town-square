@@ -22,7 +22,7 @@ public class CommandWorkerGetClone extends CommandWorkerBase implements ICommand
         int port = Integer.parseInt(args[1]);
         String squareId = args[2];
         String password = args[3];
-        IClient client = factory.createClient(Constants.BASE_CLIENT, hostName, port, squareId);
+        IClient client = factory.createClient(Constants.BASE_CLIENT, hostName, port, squareId, parent.getParent());
         String pkey = client.sendMessage(Constants.REQUEST_PUBLIC_KEY_COMMAND, Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER);
         SquareResponse resp = new SquareResponse(pkey);
         if (resp.getCode().equals(Constants.OK_RESULT)) {

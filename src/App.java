@@ -23,14 +23,19 @@ public class App extends Application implements IApp {
     private static IAlertBox alert;
     private static ISystemExit systemExit;
     private static IFactory factory;
+    private static int loggerType;
     private boolean hidingServer;
     private String stageTitle;
     private Stage theStage;
 
-    private static void setUpDependencies(IAlertBox alertbox, ISystemExit exit, IFactory f) {
+    private static void setUpDependencies(IAlertBox alertbox, ISystemExit exit, IFactory f, String logFlag) {
         alert = alertbox;
         systemExit = exit;
         factory = f;
+        loggerType = Constants.FILE_LOGGER;
+        if (logFlag.equals("-nl")) {
+            loggerType = Constants.EMPTY_LOGGER;
+        }
     }
 
     @Override
@@ -44,7 +49,7 @@ public class App extends Application implements IApp {
 
     private IDialogController processStart(Stage primaryStage) {
         this.theStage = primaryStage;
-        logger = factory.createLogger(Constants.FILE_LOGGER, Constants.MAIN_LOG_FILE, utility);
+        logger = factory.createLogger(loggerType, Constants.MAIN_LOG_FILE, utility);
         String uniqueId = Constants.EMPTY_STRING;
         String defaultSquareInfo = Constants.EMPTY_STRING;
         ISquare defaultSquare = null;
@@ -137,11 +142,11 @@ public class App extends Application implements IApp {
             primaryStage.show();
 
             squareController = factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, controller,
-                    factory.createLogger(Constants.FILE_LOGGER, Constants.SQUARE_CONTROLLER_LOG_FILE, utility),
+                    factory.createLogger(loggerType, Constants.SQUARE_CONTROLLER_LOG_FILE, utility),
                     factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility));
 
             defaultSquare = factory.createSquare(Constants.BASE_SQUARE, defaultSquareInfo, port, ip, squareController,
-                    utility, controller, uniqueId);
+                    utility, controller, uniqueId, this);
 
             ObservableList<IPAddress> ipAddresses = FXCollections.observableArrayList();
             ipAddresses.add(new IPAddress(remoteIP, remoteIP));
@@ -155,7 +160,7 @@ public class App extends Application implements IApp {
 
             controller.processPendingInvites();
 
-            versionChecker = factory.createVersionChecker(Constants.BASE_VERSION_CHECKER, utility, uniqueId);
+            versionChecker = factory.createVersionChecker(Constants.BASE_VERSION_CHECKER, utility, uniqueId, this);
             versionChecker.start();
 
             return controller;
@@ -213,7 +218,7 @@ public class App extends Application implements IApp {
     private void initializeSquareController(ISquareController squareController, String port) {
         if (squareController != null) {
             server = factory.createServer(Constants.BASE_SERVER, Integer.parseInt(port), squareController,
-                    factory.createLogger(Constants.FILE_LOGGER, Constants.SERVER_LOG_FILE, utility), this);
+                    factory.createLogger(loggerType, Constants.SERVER_LOG_FILE, utility), this);
             server.start();
         }
     }
@@ -356,15 +361,26 @@ public class App extends Application implements IApp {
         return hidingServer;
     }
 
+    public int getLoggerType() {
+        return loggerType;
+    }
+
     public static void main(String[] args) {
+        String loggerFlag = Constants.EMPTY_STRING;
+        if (args.length > 0) {
+            loggerFlag = args[0];
+            System.out.println(loggerFlag);
+        } else {
+            System.out.println("no args");
+        }
         IFactory factory = new Factory();
         setUpDependencies(factory.createAlertBox(Constants.BASE_ALERT_BOX),
-                factory.createSystemExit(Constants.BASE_SYSTEM_EXIT), factory);
+                factory.createSystemExit(Constants.BASE_SYSTEM_EXIT), factory, loggerFlag);
         launch(args);
     }
 
     public static void execute(IAlertBox alertbox, ISystemExit systemExit, IFactory factory) {
-        setUpDependencies(alertbox, systemExit, factory);
+        setUpDependencies(alertbox, systemExit, factory, Constants.EMPTY_STRING);
         App app = new App();
         app.start(null);
     }

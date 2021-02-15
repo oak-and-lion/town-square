@@ -54,9 +54,9 @@ public class Factory implements IFactory {
         return null;
     }
 
-    public IClient createClient(int type, String hostname, int port, String squareId) {
+    public IClient createClient(int type, String hostname, int port, String squareId, IApp appParent) {
         if (type == Constants.BASE_CLIENT) {
-            return new Client(hostname, port, squareId, this);
+            return new Client(hostname, port, squareId, this, appParent);
         }
 
         return null;
@@ -71,9 +71,9 @@ public class Factory implements IFactory {
     }
 
     public ISquare createSquare(int type, String defaultSquareInfo, String port, String ip,
-            ISquareController squareController, IUtility utility, IDialogController controller, String uniqueId) {
+            ISquareController squareController, IUtility utility, IDialogController controller, String uniqueId, IApp app) {
         if (type == Constants.BASE_SQUARE) {
-            return new Square(defaultSquareInfo, port, ip, squareController, utility, controller, uniqueId, this);
+            return new Square(defaultSquareInfo, port, ip, squareController, utility, controller, uniqueId, this, app);
         }
 
         return null;
@@ -95,12 +95,12 @@ public class Factory implements IFactory {
             return LogItFile.create(utility, file);
         }
 
-        return null;
+        return LogItEmpty.create();
     }
 
-    public IClientThread createClientThread(int type, ISquare square, IUtility utility, String uniqueId) {
+    public IClientThread createClientThread(int type, ISquare square, IUtility utility, String uniqueId, IApp app) {
         if (type == Constants.BASE_CLIENT_THREAD) {
-            return new ClientThread(square, utility, uniqueId, this);
+            return new ClientThread(square, utility, uniqueId, this, app);
         }
 
         return null;
@@ -140,9 +140,9 @@ public class Factory implements IFactory {
         return null;
     }
 
-    public IVersionChecker createVersionChecker(int type, IUtility utility, String uniqueId) {
+    public IVersionChecker createVersionChecker(int type, IUtility utility, String uniqueId, IApp parent) {
         if (type == Constants.BASE_VERSION_CHECKER) {
-            return new VersionChecker(utility, uniqueId, this);
+            return new VersionChecker(utility, uniqueId, this, parent);
         }
 
         return null;

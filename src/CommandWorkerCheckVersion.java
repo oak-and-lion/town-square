@@ -11,7 +11,7 @@ public class CommandWorkerCheckVersion extends CommandWorkerBase implements ICom
 
     public List<BooleanString> doWork(String commandArgs) {
         IVersionChecker versionChecker = factory.createVersionChecker(Constants.BASE_VERSION_CHECKER, utility,
-                utility.readFile(Constants.UNIQUE_ID_FILE));
+                utility.readFile(Constants.UNIQUE_ID_FILE), parent.getParent());
         versionChecker.start();
         while (!versionChecker.isDone()) {
             try {

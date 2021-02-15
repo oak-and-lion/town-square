@@ -23,9 +23,10 @@ public class Square implements ISquare {
     private IClientThread clientThread;
     private Tab tab;
     private IFactory factory;
+    private IApp app;
 
     public Square(String info, String port, String ip, ISquareController squareController, IUtility utility,
-            IDialogController sampleController, String uniqueId, IFactory factory) {
+            IDialogController sampleController, String uniqueId, IFactory factory, IApp app) {
         setPassword(Constants.EMPTY_STRING);
         this.port = port;
         this.ip = ip;
@@ -54,11 +55,12 @@ public class Square implements ISquare {
         controller = squareController;
         this.sampleController = sampleController;
         this.factory = factory;
+        this.app = app;
         initializeClientThread();
     }
 
     private void initializeClientThread() {
-        clientThread = factory.createClientThread(Constants.BASE_CLIENT_THREAD, this, utility, uniqueId);
+        clientThread = factory.createClientThread(Constants.BASE_CLIENT_THREAD, this, utility, uniqueId, app);
 
         if (utility.checkFileExists(utility.concatStrings(getSafeLowerName(), Constants.POSTS_FILE_EXT))) {
             lastKnownPost = utility

@@ -26,7 +26,7 @@ public class xxMockFactory implements IFactory {
         return null;
     }
 
-    public IClientThread createClientThread(int type, ISquare square, IUtility utility, String uniqueId) {
+    public IClientThread createClientThread(int type, ISquare square, IUtility utility, String uniqueId, IApp app) {
         return null;
     }
 
@@ -52,15 +52,15 @@ public class xxMockFactory implements IFactory {
     }
 
     public ISquare createSquare(int type, String defaultSquareInfo, String port, String ip,
-            ISquareController squareController, IUtility utility, IDialogController controller, String uniqueId) {
+            ISquareController squareController, IUtility utility, IDialogController controller, String uniqueId, IApp app) {
         return null;
     }
 
-    public IVersionChecker createVersionChecker(int type, IUtility utility, String uniqueId) {
+    public IVersionChecker createVersionChecker(int type, IUtility utility, String uniqueId, IApp parent) {
         return null;
     }
 
-    public IClient createClient(int type, String hostname, int port, String squareId) {
+    public IClient createClient(int type, String hostname, int port, String squareId, IApp parent) {
         return null;
     }
 

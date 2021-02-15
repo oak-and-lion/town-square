@@ -11,7 +11,7 @@ public interface IFactory {
     IAlertBox createAlertBox(int type);
     ISystemExit createSystemExit(int type);
     ILogIt createLogger(int type, String file, IUtility utility);
-    IClientThread createClientThread(int type, ISquare square, IUtility utility, String uniqueId);
+    IClientThread createClientThread(int type, ISquare square, IUtility utility, String uniqueId, IApp app);
     ICryptoUtils createCryptoUtils(int type);
     ISquareKeyPair createSquareKeyPair(int type, IUtility utility);
     ICommandController createCommandController(int type, IUtility utility, IDialogController controller);
@@ -19,9 +19,9 @@ public interface IFactory {
             ILogIt logger, ISquareKeyPair keyPair);
     IServer createServer(int type, int port, ISquareController squareController, ILogIt logger, IApp app);
     ISquare createSquare(int type, String defaultSquareInfo, String port, String ip,
-        ISquareController squareController, IUtility utility, IDialogController controller, String uniqueId);
-    IVersionChecker createVersionChecker(int type, IUtility utility, String uniqueId);
-    IClient createClient(int type, String hostname, int port, String squareId);
+        ISquareController squareController, IUtility utility, IDialogController controller, String uniqueId, IApp app);
+    IVersionChecker createVersionChecker(int type, IUtility utility, String uniqueId, IApp parent);
+    IClient createClient(int type, String hostname, int port, String squareId, IApp appParent);
     ISquareKeyPair createSquareKeyPair(int type);
     ISquareKeyPair createSquareKeyPair(int type, PublicKey publicKey, PrivateKey privateKey);
     IServerThread createServerThread(int type, Socket socket, ISquareController squareController,

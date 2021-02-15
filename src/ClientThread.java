@@ -17,8 +17,9 @@ public class ClientThread extends Thread implements IClientThread {
     private IFactory factory;
     private int waitTime;
     private int maxRuns;
+    private IApp app;
 
-    public ClientThread(ISquare s, IUtility utility, String uniqueId, IFactory factory) {
+    public ClientThread(ISquare s, IUtility utility, String uniqueId, IFactory factory, IApp app) {
         square = s;
         this.utility = utility;
         process = true;
@@ -29,6 +30,7 @@ public class ClientThread extends Thread implements IClientThread {
         this.factory = factory;
         this.maxRuns = Constants.INFINITE_LOOP_FLAG;
         getWaitTime();
+        this.app = app;
     }
 
     private void getWaitTime() {
@@ -162,7 +164,7 @@ public class ClientThread extends Thread implements IClientThread {
         if (!info.contains(uniqueId) && !info.startsWith(Constants.STAR)) {
             String[] member = info.split(Constants.DATA_SEPARATOR);
             IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
-                    square.getInvite());
+                    square.getInvite(), app);
             String response = client.sendMessage(
                     utility.concatStrings(Constants.MEMBER_COMMAND, Constants.COMMAND_DATA_SEPARATOR, uniqueId),
                     Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER);

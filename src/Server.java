@@ -55,6 +55,7 @@ public class Server extends Thread implements IServer {
         } catch (IOException ex) {
             logger.logInfo(ex.getMessage());
             ex.printStackTrace();
+            parent.closeApp(Constants.SYSTEM_EXIT_PORT_IN_USE, Constants.SYSTEM_EXIT_PORT_IN_USE);
         }
     }
 

@@ -13,4 +13,5 @@ public interface IApp {
     void exposeServer();
     boolean isHidingServer();
     Stage getStage();
+    int getLoggerType();
 }

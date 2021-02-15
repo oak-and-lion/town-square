@@ -8,14 +8,16 @@ public class VersionChecker extends Thread implements IVersionChecker {
     private String port;
     private String ip;
     private boolean done;
+    private IApp parent;
 
-    public VersionChecker(IUtility utility, String uniqueId, IFactory factory) {
+    public VersionChecker(IUtility utility, String uniqueId, IFactory factory, IApp parent) {
         this.utility = utility;
         this.uniqueId = uniqueId;
         this.factory = factory;
         this.port = utility.readFile(Constants.PORT_FILE);
         this.ip = utility.readFile(Constants.IP_FILE);
         done = false;
+        this.parent = parent;
     }
 
     @Override
@@ -76,7 +78,7 @@ public class VersionChecker extends Thread implements IVersionChecker {
         String[] memberInfo = member.split(Constants.DATA_SEPARATOR);
 
         IClient client = factory.createClient(Constants.BASE_CLIENT, memberInfo[2], Integer.valueOf(memberInfo[3]),
-                squareInvite);
+                squareInvite, parent);
 
         String encryptedPassword = utility.memberEncrypt(factory, password, memberInfo[1]);
         String encryptedData = utility.concatStrings(encryptedPassword, Constants.COMMAND_DATA_SEPARATOR,

@@ -45,7 +45,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
                 && !info.startsWith(Constants.STAR)) {
             String[] member = info.split(Constants.DATA_SEPARATOR);
             IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
-                    square.getInvite());
+                    square.getInvite(), square.getSampleController().getParent());
             String response = client
                     .sendMessage(
                             utility.concatStrings(Constants.READ_COMMAND, Constants.COMMAND_DATA_SEPARATOR, msg[0],
@@ -100,7 +100,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
         }
 
         IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
-                square.getInvite());
+                square.getInvite(), square.getSampleController().getParent());
 
         String response = client
                 .sendMessage(

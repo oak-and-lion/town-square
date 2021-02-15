@@ -3,7 +3,7 @@ import javafx.scene.paint.Color;
 public class Constants {
     private Constants() {}
 
-    public static final String VERSION = "0.0.9";
+    public static final String VERSION = "0.0.10";
     public static final int BASE_CRYPTO_UTILS = 1;
     public static final int BASE_SQUARE_KEY_PAIR = 1;
     public static final int UTILITY_SQUARE_KEY_PAIR = 2;
@@ -16,6 +16,7 @@ public class Constants {
     public static final int BASE_CLIENT = 1;
     public static final int CONSOLE_LOGGER = 1;
     public static final int FILE_LOGGER = 2;
+    public static final int EMPTY_LOGGER = 9999;
     public static final int BASE_CLIENT_THREAD = 1;
     public static final int BASE_SERVER_THREAD = 1;
     public static final int BASE_TEXT_DIALOG_BOX = 1;
@@ -30,6 +31,7 @@ public class Constants {
     public static final int SYSTEM_EXIT_OK = 0;
     public static final int SYSTEM_EXIT_FAIL = 1;
     public static final int SYSTEM_EXIT_ALREADY_RUNNING = 2;
+    public static final int SYSTEM_EXIT_PORT_IN_USE = 3;
     public static final int BASE_COMMAND_CONTROLLER = 1;
     public static final int BASE_MEMBER_POSTS_THREAD = 1; 
     public static final int NULL_OBJECT_TYPE = Integer.MAX_VALUE;

@@ -125,7 +125,7 @@ public class xxUnitTestsFactory extends xxUnitTestsBaseClass {
     @TestMethod
     public void testCreateClientPass() {
         final String METHOD_NAME = "testCreateClientPass";
-        IClient test = factory.createClient(Constants.BASE_CLIENT, Constants.EMPTY_STRING, 1, Constants.EMPTY_STRING);
+        IClient test = factory.createClient(Constants.BASE_CLIENT, Constants.EMPTY_STRING, 1, Constants.EMPTY_STRING, null);
 
         checkNotEquals(test, null, METHOD_NAME);
         checkClass(test.getClass(), Client.class, METHOD_NAME);
@@ -133,7 +133,7 @@ public class xxUnitTestsFactory extends xxUnitTestsBaseClass {
 
     @TestMethod
     public void testCreateClientFail() {
-        IClient test = factory.createClient(Constants.NULL_OBJECT_TYPE, Constants.EMPTY_STRING, 1, Constants.EMPTY_STRING);
+        IClient test = factory.createClient(Constants.NULL_OBJECT_TYPE, Constants.EMPTY_STRING, 1, Constants.EMPTY_STRING, null);
 
         checkEquals(test, null, "testCreateClientFail");
     }
