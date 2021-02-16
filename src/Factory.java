@@ -175,9 +175,9 @@ public class Factory implements IFactory {
     }
 
     public IMemberPostsThread createMemberPostsThread(int type, String info, String uniqueId, String[] msg,
-            ISquare square, IUtility utility) {
+            ISquare square, IUtility utility, IApp app) {
         if (type == Constants.BASE_MEMBER_POSTS_THREAD) {
-            return new MemberPostsThread(info, uniqueId, msg, square, utility, this);
+            return new MemberPostsThread(info, uniqueId, msg, square, utility, this, app);
         }
 
         return null;
@@ -204,6 +204,8 @@ public class Factory implements IFactory {
             return new SquareWorkerCheckVersion(utility, command);
         } else if (command.equals(Constants.MEMBER_COMMAND)) {
             return new SquareWorkerMember(utility, command);
+        } else if (command.equals(Constants.SEND_MESSAGE)) {
+            return new SquareWorkerSendMessage(utility, command);
         }
 
         return new SquareWorkerEmpty(utility, command);

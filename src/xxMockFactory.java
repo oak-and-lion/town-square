@@ -6,7 +6,7 @@ import javafx.scene.control.TextField;
 
 public class xxMockFactory implements IFactory {
     public IMemberPostsThread createMemberPostsThread(int type, String info, String uniqueId, String[] msg,
-            ISquare square, IUtility utility) {
+            ISquare square, IUtility utility, IApp app) {
         return new xxMockMemberPostsThread();
     }
 

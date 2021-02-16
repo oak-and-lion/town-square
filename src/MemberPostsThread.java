@@ -12,14 +12,16 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
     private String port;
     private String ip;
     private ISquareKeyPair tempKeys;
+    private IApp app;
 
     public MemberPostsThread(String info, String uniqueId, String[] msg, ISquare square, IUtility utility,
-            IFactory factory) {
+            IFactory factory, IApp app) {
         this.info = info;
         this.uniqueId = uniqueId;
         this.msg = msg;
         this.square = square;
         this.utility = utility;
+        this.app = app;
         workDone = false;
         allPosts = new ArrayList<>();
         this.factory = factory;
@@ -49,7 +51,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
             String[] member = info.split(Constants.DATA_SEPARATOR);
             tempKeys.setPublicKeyFromBase64(member[1]);
             IClient client = factory.createClient(Constants.BASE_CLIENT, member[2], Integer.valueOf(member[3]),
-                    square.getInvite(), square.getSampleController().getParent());
+                    square.getInvite(), app);
             String password = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
             String temp = utility.concatStrings(Constants.READ_COMMAND, Constants.COMMAND_DATA_SEPARATOR, msg[0],
                     Constants.COMMAND_DATA_SEPARATOR, uniqueId);

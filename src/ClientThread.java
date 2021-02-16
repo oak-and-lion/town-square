@@ -89,7 +89,7 @@ public class ClientThread extends Thread implements IClientThread {
                 for (String info : members) {
                     // spin up new thread for each member and process ASAP
                     IMemberPostsThread thread = factory.createMemberPostsThread(Constants.BASE_MEMBER_POSTS_THREAD,
-                            info, uniqueId, msg, square, utility);
+                            info, uniqueId, msg, square, utility, app);
                     memberThreads.add(thread);
                     thread.start();
                 }

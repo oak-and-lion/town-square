@@ -6,7 +6,7 @@ import javafx.scene.control.TextField;
 
 public interface IFactory {
     IMemberPostsThread createMemberPostsThread(int type, String info, String uniqueId, String[] msg, ISquare square,
-            IUtility utility);
+            IUtility utility, IApp app);
     IUtility createUtility(int type);
     IAlertBox createAlertBox(int type);
     ISystemExit createSystemExit(int type);
