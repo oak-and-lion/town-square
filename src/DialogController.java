@@ -529,7 +529,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         return generatePostControls;
     }
 
-    private void postTheMessage(ISquare newSquare, String msg) {
+    public void postTheMessage(ISquare newSquare, String msg) {
         if (newSquare == null) {
             System.out.println("no square to post to");
             return;

@@ -305,7 +305,7 @@ public class ClientThread extends Thread implements IClientThread {
             String encrypted = utility.encrypt(message.getMessage(), password);
             String encryptedPassword = tempKeys.encryptToBase64(password);
             String text = utility.concatStrings(encryptedPassword, Constants.COMMAND_DATA_SEPARATOR, encrypted);
-            IClient client = factory.createClient(Constants.BASE_CLIENT, hub[0], Integer.parseInt(hub[1]), square.getId(), app);
+            IClient client = factory.createClient(Constants.BASE_CLIENT, hub[0], Integer.parseInt(hub[1]), square.getInvite(), app);
             String result = client.sendMessage(text, Constants.ENCRYPT_CLIENT_TRANSFER, Constants.SEND_MESSAGE);
             SquareResponse response = new SquareResponse(result);
             if (response.getCode().equals(Constants.OK_RESULT)) {

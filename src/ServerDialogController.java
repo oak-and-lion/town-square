@@ -264,4 +264,15 @@ public class ServerDialogController implements IDialogController {
     private String safeString(String s) {
         return s.replace(Constants.SPACE, Constants.UNDERSCORE).toLowerCase();
     }
+
+    public void postTheMessage(ISquare newSquare, String msg) {
+        if (msg.startsWith(Constants.COMMAND_PREFIX)) {
+            commandController.processCommand(msg, newSquare);
+        } else {
+            long currentMillis = System.currentTimeMillis();
+            String data = utility.concatStrings(Long.toString(currentMillis), Constants.FILE_DATA_SEPARATOR, msg,
+                    Constants.FILE_DATA_SEPARATOR, uniqueId);
+            newSquare.addPostMessage(new PostMessage(currentMillis, data));
+        }
+    }
 }

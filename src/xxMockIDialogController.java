@@ -108,4 +108,8 @@ public class xxMockIDialogController implements IDialogController {
     public void setTabName(ISquare square, String oldName, String newName) {
         // not needed
     }
+
+    public void postTheMessage(ISquare newSquare, String msg) {
+        // not needed
+    }
 }
