@@ -292,7 +292,7 @@ public class ClientThread extends Thread implements IClientThread {
         }
     }
 
-    private void postToHub(PostMessage message) {        
+    private void postToHub(PostMessage message) {
         String hubInfo = utility.readFile(Constants.HUB_REGISTRATION_FILE);
         String[] members = utility.searchFile(
                 utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT),
@@ -302,10 +302,12 @@ public class ClientThread extends Thread implements IClientThread {
             String[] memberInfo = members[0].split(Constants.FILE_DATA_SEPARATOR);
             tempKeys.setPublicKeyFromBase64(memberInfo[1]);
             String password = utility.generateRandomString(Constants.ENCRYPTION_KEY_LENGTH);
-            String encrypted = utility.encrypt(message.getMessage(), password);
+            String encrypted = utility.encrypt(utility.concatStrings(Constants.SEND_MESSAGE,
+                    Constants.COMMAND_DATA_SEPARATOR, message.getMessage()), password);
             String encryptedPassword = tempKeys.encryptToBase64(password);
             String text = utility.concatStrings(encryptedPassword, Constants.COMMAND_DATA_SEPARATOR, encrypted);
-            IClient client = factory.createClient(Constants.BASE_CLIENT, hub[0], Integer.parseInt(hub[1]), square.getInvite(), app);
+            IClient client = factory.createClient(Constants.BASE_CLIENT, hub[0], Integer.parseInt(hub[1]),
+                    square.getInvite(), app);
             String result = client.sendMessage(text, Constants.ENCRYPT_CLIENT_TRANSFER, Constants.SEND_MESSAGE);
             SquareResponse response = new SquareResponse(result);
             if (response.getCode().equals(Constants.OK_RESULT)) {
