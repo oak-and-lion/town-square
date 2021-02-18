@@ -13,6 +13,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
     private String ip;
     private ISquareKeyPair tempKeys;
     private IApp app;
+    private ILogIt errorLogger;
 
     public MemberPostsThread(String info, String uniqueId, String[] msg, ISquare square, IUtility utility,
             IFactory factory, IApp app) {
@@ -29,6 +30,8 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
         this.ip = utility.readFile(Constants.IP_FILE);
         tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
         tempKeys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
+        this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility,
+                app.getDialogController());
     }
 
     @Override
@@ -36,7 +39,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
         try {
             getPostsFromOtherMembers();
         } catch (Exception ie) {
-            ie.printStackTrace();
+            errorLogger.logInfo(ie.getMessage());
             Thread.currentThread().interrupt();
         }
     }
@@ -112,7 +115,8 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
                 Constants.COMMAND_DATA_SEPARATOR, uniqueId);
         String encrypted = utility.concatStrings(tempKeys.encryptToBase64(password), Constants.COMMAND_DATA_SEPARATOR,
                 utility.encrypt(temp, password));
-        String response = client.sendMessage(encrypted, Constants.ENCRYPT_CLIENT_TRANSFER, Constants.REQUEST_FILE_COMMAND);
+        String response = client.sendMessage(encrypted, Constants.ENCRYPT_CLIENT_TRANSFER,
+                Constants.REQUEST_FILE_COMMAND);
 
         SquareResponse responseData = new SquareResponse(response);
 

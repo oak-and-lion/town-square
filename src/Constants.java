@@ -16,6 +16,7 @@ public class Constants {
     public static final int BASE_CLIENT = 1;
     public static final int CONSOLE_LOGGER = 1;
     public static final int FILE_LOGGER = 2;
+    public static final int ERROR_LOGGER = 3;
     public static final int EMPTY_LOGGER = 9999;
     public static final int BASE_CLIENT_THREAD = 1;
     public static final int BASE_SERVER_THREAD = 1;
@@ -261,4 +262,5 @@ public class Constants {
     public static final String HUB_REGISTRATION_FILE = "registration.hub";
     public static final String REGISTER_HUB = "reghub";
     public static final String SEND_MESSAGE = "send";
+    public static final String ERROR_LOG_FILE = "_error.log";
 }

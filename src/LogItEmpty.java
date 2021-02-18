@@ -14,4 +14,8 @@ public class LogItEmpty implements ILogIt {
     public void logInfo(String msg) {
         // log no where
     }
+
+    public IDialogController getDialogController() {
+        return new DialogControllerEmpty();
+    }
 }

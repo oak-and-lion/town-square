@@ -3,10 +3,12 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class xxMockIDialogController implements IDialogController {
-    ICommandController commandController;
+public class DialogControllerEmpty implements IDialogController {
+    private ICommandController commandController;
+    private IFactory factory;
+    
     public ISquare getSquareByInvite(String id){
-        return new xxMockSquare(this);
+        return new SquareEmpty(this);
     }
 
     public boolean isGui() {
@@ -23,9 +25,6 @@ public class xxMockIDialogController implements IDialogController {
     }
     public void setParent(IApp app){
         // not needed 
-    }
-    public void initErrorLogger() {
-        // not needed
     }
     public void addPostMessages(ISquare square, VBox vbox, ScrollPane scrollPane, String message, long millis, String memberId){
         // not needed 
@@ -89,11 +88,11 @@ public class xxMockIDialogController implements IDialogController {
     }
 
     public void setFactory(IFactory factory) {
-        // not needed
+        this.factory = factory;
     }
 
     public IFactory getFactory() {
-        return null;
+        return this.factory;
     }
 
     public IApp getParent() {
@@ -117,6 +116,10 @@ public class xxMockIDialogController implements IDialogController {
     }
 
     public void postTheMessage(ISquare newSquare, String msg) {
+        // not needed
+    }
+
+    public void initErrorLogger() {
         // not needed
     }
 }

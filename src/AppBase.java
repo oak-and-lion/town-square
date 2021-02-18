@@ -13,6 +13,7 @@ public class AppBase extends Thread implements IApp {
     private ISquareKeyPair keyPair;
     private String defaultName;
     private Stage stage;
+    private IDialogController controller;
 
     public AppBase(String loggerFlag, IAlertBox alertbox, ISystemExit exit, IFactory f) {
         setUpDependencies(alertbox, exit, f, loggerFlag);
@@ -32,8 +33,8 @@ public class AppBase extends Thread implements IApp {
             utility.writeFile(Constants.PORT_FILE, Constants.DEFAULT_PORT);
         }
         port = utility.readFile(Constants.PORT_FILE);
-        logger = factory.createLogger(loggerType, Constants.MAIN_LOG_FILE, utility);
-        IDialogController controller = factory.createDialogController(Constants.SERVER_DIALOG_CONTROLLER, this, utility);
+        controller = factory.createDialogController(Constants.SERVER_DIALOG_CONTROLLER, this, utility);
+        logger = factory.createLogger(loggerType, Constants.MAIN_LOG_FILE, utility, controller);
         ICommandController commandController = factory.createCommandController(Constants.BASE_COMMAND_CONTROLLER, utility, controller);
         controller.setCommandController(commandController);
         
@@ -140,5 +141,9 @@ public class AppBase extends Thread implements IApp {
 
     public Stage getStage() {
         return stage;
+    }
+
+    public IDialogController getDialogController() {
+        return controller;
     }
 }

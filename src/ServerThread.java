@@ -12,6 +12,8 @@ public class ServerThread extends Thread implements IServerThread {
     private ILogIt logger;
     private IUtility utility;
     private RequesterInfo requester;
+    private ILogIt errorLogger;
+    private IFactory factory;
 
     public ServerThread(Socket socket, ISquareController squareController, ILogIt logger, IUtility utility,
             RequesterInfo requester) {
@@ -20,6 +22,8 @@ public class ServerThread extends Thread implements IServerThread {
         this.logger = logger;
         this.utility = utility;
         this.requester = requester;
+        this.factory = logger.getDialogController().getFactory();
+        this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility, logger.getDialogController());
     }
 
     @Override
@@ -48,8 +52,7 @@ public class ServerThread extends Thread implements IServerThread {
             logger.logInfo(utility.concatStrings("Client Disconnected: ", socket.getInetAddress().getHostAddress()));
             socket.close();
         } catch (IOException ex) {
-            logger.logInfo(ex.getMessage());
-            ex.printStackTrace();
+            errorLogger.logInfo(ex.getMessage());
         }
     }
 }

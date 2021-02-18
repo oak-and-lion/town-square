@@ -7,6 +7,7 @@ public class SquareController implements ISquareController {
     private ISquareKeyPair keys;
     private ILogIt logger;
     private IFactory factory;
+    private ILogIt errorLogger;
 
     public SquareController(IUtility mainUtility, IDialogController controller, ILogIt logger, ISquareKeyPair keyPair,
             IFactory factory) {
@@ -14,6 +15,8 @@ public class SquareController implements ISquareController {
         sampleController = controller;
         keys = keyPair;
         this.logger = logger;
+        this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility,
+                this.logger.getDialogController());
         this.factory = factory;
     }
 
@@ -67,7 +70,7 @@ public class SquareController implements ISquareController {
                 result.add(inviteId);
                 result.addAll(Arrays.asList(data));
             } catch (Exception e) {
-                e.printStackTrace();
+                errorLogger.logInfo(e.getMessage());
             }
         }
 

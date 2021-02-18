@@ -3,10 +3,12 @@ import java.util.List;
 
 public class CommandWorkerCheckVersion extends CommandWorkerBase implements ICommandWorker {
     private IFactory factory;
+    private ILogIt errorLogger;
 
     public CommandWorkerCheckVersion(IUtility utility, ISquare square, IDialogController parent, IFactory factory) {
         super(utility, square, parent);
         this.factory = factory;
+        this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility, this.parent);
     }
 
     public List<BooleanString> doWork(String commandArgs) {
@@ -17,7 +19,7 @@ public class CommandWorkerCheckVersion extends CommandWorkerBase implements ICom
             try {
                 Thread.sleep(Constants.DEFAULT_WAIT_TIME);
             } catch (InterruptedException ie) {
-                ie.printStackTrace();
+                errorLogger.logInfo(ie.getMessage());
                 Thread.currentThread().interrupt();
             }
         }

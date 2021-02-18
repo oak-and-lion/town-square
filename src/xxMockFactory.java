@@ -22,7 +22,7 @@ public class xxMockFactory implements IFactory {
         return null;
     }
 
-    public ILogIt createLogger(int type, String file, IUtility utility) {
+    public ILogIt createLogger(int type, String file, IUtility utility, IDialogController dialogController) {
         return null;
     }
 
@@ -30,7 +30,7 @@ public class xxMockFactory implements IFactory {
         return null;
     }
 
-    public ICryptoUtils createCryptoUtils(int type) {
+    public ICryptoUtils createCryptoUtils(int type, IDialogController controller) {
         return null;
     }
 

@@ -19,6 +19,7 @@ public class ClientThread extends Thread implements IClientThread {
     private int maxRuns;
     private IApp app;
     private ISquareKeyPair tempKeys;
+    private ILogIt errorLogger;
 
     public ClientThread(ISquare s, IUtility utility, String uniqueId, IFactory factory, IApp app) {
         square = s;
@@ -34,6 +35,7 @@ public class ClientThread extends Thread implements IClientThread {
         this.app = app;
         tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
         tempKeys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
+        this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility, this.app.getDialogController());
     }
 
     private void getWaitTime() {
@@ -112,7 +114,7 @@ public class ClientThread extends Thread implements IClientThread {
                 count = checkCount(count);
             }
         } catch (InterruptedException ie) {
-            ie.printStackTrace();
+            errorLogger.logInfo(ie.getMessage());
             Thread.currentThread().interrupt();
         }
     }
@@ -149,7 +151,7 @@ public class ClientThread extends Thread implements IClientThread {
             try {
                 Thread.sleep(Constants.TINY_PAUSE);
             } catch (InterruptedException ie) {
-                ie.printStackTrace();
+                errorLogger.logInfo(ie.getMessage());
                 Thread.currentThread().interrupt();
             }
         }

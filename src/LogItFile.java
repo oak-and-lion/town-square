@@ -4,14 +4,16 @@ import java.time.format.DateTimeFormatter;
 public class LogItFile implements ILogIt {
     private IUtility utility;
     private String file;
+    private IDialogController dialogController;
 
-    private LogItFile(IUtility utility, String file) {
+    private LogItFile(IUtility utility, String file, IDialogController dialogController) {
         this.utility = utility;
         this.file = file;
+        this.dialogController = dialogController;
     }
 
-    public static ILogIt create(IUtility utility, String file) {
-        return new LogItFile(utility, file);
+    public static ILogIt create(IUtility utility, String file, IDialogController dialogController) {
+        return new LogItFile(utility, file, dialogController);
     }
 
     public void logInfo(String msg) {
@@ -25,5 +27,9 @@ public class LogItFile implements ILogIt {
         }
 
         utility.appendToFile(file, msg);
+    }
+
+    public IDialogController getDialogController() {
+        return this.dialogController;
     }
 }

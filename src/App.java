@@ -27,6 +27,7 @@ public class App extends Application implements IApp {
     private boolean hidingServer;
     private String stageTitle;
     private Stage theStage;
+    private IDialogController controller;
 
     private static void setUpDependencies(IAlertBox alertbox, ISystemExit exit, IFactory f, String logFlag) {
         alert = alertbox;
@@ -55,7 +56,6 @@ public class App extends Application implements IApp {
 
     private IDialogController processStart(Stage primaryStage) {
         this.theStage = primaryStage;
-        logger = factory.createLogger(loggerType, Constants.MAIN_LOG_FILE, utility);
         String uniqueId = Constants.EMPTY_STRING;
         String defaultSquareInfo = Constants.EMPTY_STRING;
         ISquare defaultSquare = null;
@@ -69,11 +69,7 @@ public class App extends Application implements IApp {
         IVersionChecker versionChecker;
         ICommandController commandController;
 
-        ICryptoUtils cryptoUtils = factory.createCryptoUtils(Constants.BASE_CRYPTO_UTILS);
-
         keys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
-
-        utility = factory.createUtility(Constants.BASE_UTILITY);
 
         systemExit.setParent(this);
 
@@ -84,7 +80,10 @@ public class App extends Application implements IApp {
 
             Scene scene = new Scene(root);
 
-            final IDialogController controller = loader.<DialogController>getController();
+            controller = loader.<DialogController>getController();
+
+            ICryptoUtils cryptoUtils = factory.createCryptoUtils(Constants.BASE_CRYPTO_UTILS, controller);
+            logger = factory.createLogger(loggerType, Constants.MAIN_LOG_FILE, utility, controller);
 
             commandController = factory.createCommandController(Constants.BASE_COMMAND_CONTROLLER, utility, controller);
 
@@ -148,7 +147,7 @@ public class App extends Application implements IApp {
             primaryStage.show();
 
             squareController = factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, controller,
-                    factory.createLogger(loggerType, Constants.SQUARE_CONTROLLER_LOG_FILE, utility),
+                    factory.createLogger(loggerType, Constants.SQUARE_CONTROLLER_LOG_FILE, utility, controller),
                     factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility));
 
             defaultSquare = factory.createSquare(Constants.BASE_SQUARE, defaultSquareInfo, port, ip, squareController,
@@ -160,7 +159,7 @@ public class App extends Application implements IApp {
 
             initializeController(controller, uniqueId, port, ip, ipAddresses, defaultSquare, commandController);
 
-            initializeSquareController(squareController, port);
+            initializeSquareController(squareController, port, controller);
 
             logger.logInfo("Started Town Square");
 
@@ -221,10 +220,10 @@ public class App extends Application implements IApp {
         primaryStage.heightProperty().addListener(listener);
     }
 
-    private void initializeSquareController(ISquareController squareController, String port) {
+    private void initializeSquareController(ISquareController squareController, String port, IDialogController controller) {
         if (squareController != null) {
             server = factory.createServer(Constants.BASE_SERVER, Integer.parseInt(port), squareController,
-                    factory.createLogger(loggerType, Constants.SERVER_LOG_FILE, utility), this);
+                    factory.createLogger(loggerType, Constants.SERVER_LOG_FILE, utility, controller), this);
             server.start();
         }
     }
@@ -243,6 +242,7 @@ public class App extends Application implements IApp {
         controller.setPort(port);
         controller.setTabSquare(defaultSquare);
         controller.setPublicKey(keys.getPublicKeyBase64());
+        controller.initErrorLogger();
         controller.buildSquares();
     }
 
@@ -371,13 +371,14 @@ public class App extends Application implements IApp {
         return loggerType;
     }
 
+    public IDialogController getDialogController() {
+        return controller;
+    }
+
     public static void main(String[] args) {
         String loggerFlag = Constants.EMPTY_STRING;
         if (args.length > 0) {
             loggerFlag = args[0];
-            System.out.println(loggerFlag);
-        } else {
-            System.out.println("no args");
         }
         IFactory factory = new Factory();
         setUpDependencies(factory.createAlertBox(Constants.BASE_ALERT_BOX),

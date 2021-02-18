@@ -16,4 +16,5 @@ public interface IApp {
     int getLoggerType();
     void start(Stage stage);
     void start();
+    IDialogController getDialogController();
 }

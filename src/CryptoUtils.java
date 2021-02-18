@@ -16,8 +16,10 @@ import java.util.List;
 
 public class CryptoUtils implements ICryptoUtils {
     private IFactory factory;
-    public CryptoUtils(IFactory factory) {
+    private ILogIt errorLogger;
+    public CryptoUtils(IFactory factory, IDialogController controller) {
         this.factory = factory;
+        this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, factory.createUtility(Constants.BASE_UTILITY), controller);
     }
     public static byte[] getRandomNonce(int numBytes) {
         byte[] nonce = new byte[numBytes];
@@ -78,7 +80,7 @@ public class CryptoUtils implements ICryptoUtils {
         try {
             kpg = KeyPairGenerator.getInstance(Constants.RSA);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            errorLogger.logInfo(e.getMessage());
         }
         if (kpg != null) {
             kpg.initialize(2048);

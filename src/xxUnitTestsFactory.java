@@ -76,7 +76,7 @@ public class xxUnitTestsFactory extends xxUnitTestsBaseClass {
 
     @TestMethod
     public void testCreateCryptoUtilsPass() {
-        ICryptoUtils test = factory.createCryptoUtils(Constants.BASE_CRYPTO_UTILS);
+        ICryptoUtils test = factory.createCryptoUtils(Constants.BASE_CRYPTO_UTILS, new xxMockIDialogController());
 
         checkNotEquals(test, null, "testCreateCryptoUtilsPass");
         checkClass(test.getClass(), CryptoUtils.class, "testCreateCryptoUtilsPass");
@@ -84,7 +84,7 @@ public class xxUnitTestsFactory extends xxUnitTestsBaseClass {
 
     @TestMethod
     public void testCreateCryptoUtilsFail() {
-        ICryptoUtils test = factory.createCryptoUtils(Constants.NULL_OBJECT_TYPE);
+        ICryptoUtils test = factory.createCryptoUtils(Constants.NULL_OBJECT_TYPE, null);
 
         checkEquals(test, null, "testCreateCryptoUtilsFail");
     }

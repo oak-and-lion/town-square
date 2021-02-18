@@ -1,11 +1,17 @@
 public class LogItConsole implements ILogIt {
     private static LogItConsole console;
 
-    private LogItConsole() {}
+    private IDialogController dialogController;
 
-    public static ILogIt create() {
+    private LogItConsole(
+        IDialogController dialogController
+    ) {
+        this.dialogController = dialogController;
+    }
+
+    public static ILogIt create(IDialogController dialogController) {
         if (console == null) {
-            console = new LogItConsole();
+            console = new LogItConsole(dialogController);
         }
 
         return console;
@@ -13,5 +19,9 @@ public class LogItConsole implements ILogIt {
 
     public void logInfo(String msg) {
         System.out.println(msg);
+    }
+
+    public IDialogController getDialogController() {
+        return dialogController;
     }
 }

@@ -45,6 +45,10 @@ public class ServerDialogController implements IDialogController {
         return app;
     }
 
+    public void initErrorLogger() {
+        // not needed
+    }
+
     public void updatePauseNotification(ISquare square, boolean paused) {
         // not needed
     }
@@ -100,6 +104,10 @@ public class ServerDialogController implements IDialogController {
 
     public void setFactory(IFactory factory) {
         this.factory = factory;
+    }
+
+    public IFactory getFactory() {
+        return this.factory;
     }
 
     public ICommandController getCommandController() {
@@ -245,7 +253,7 @@ public class ServerDialogController implements IDialogController {
                     remoteIP,
                     factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
                             factory.createLogger(getParent().getLoggerType(),
-                                    utility.concatStrings(uniqueId, Constants.LOG_FILE_EXT), utility),
+                                    utility.concatStrings(uniqueId, Constants.LOG_FILE_EXT), utility, app.getDialogController()),
                             factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
                     utility, this, uniqueId, getParent());
             utility.writeFile(utility.concatStrings(squareSafeName, Constants.SQUARE_FILE_EXT), info);

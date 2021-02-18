@@ -4,7 +4,7 @@ public class Test {
         IUtility utility = Utility.create();
 
         String[] s = utility.searchFile("my_square.members", "asdfsafasddsafdsaf", false, -1);
-        ILogIt logger = factory.createLogger(1, "test.log", utility);
+        ILogIt logger = factory.createLogger(1, "test.log", utility, null);
         logger.logInfo(Integer.toString(s.length));
 
     }

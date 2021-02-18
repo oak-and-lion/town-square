@@ -58,6 +58,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     private IModalViewer modalVideoViewer;
     private ICommandController commandController;
     private IFactory factory;
+    private ILogIt errorLogger;
 
     @FXML
     private TextField uniqueId;
@@ -248,7 +249,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             }
             postTheMessage(square, utility.concatStrings(marker, target.getName()));
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            errorLogger.logInfo(ioe.getLocalizedMessage());
         }
     }
 
@@ -292,6 +293,10 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         squareInvites = new ArrayList<>();
     }
 
+    public IFactory getFactory() {
+        return this.factory;
+    }
+
     public boolean isGui() {
         return true;
     }
@@ -314,6 +319,10 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     public void setFactory(IFactory value) {
         factory = value;
+    }
+
+    public void initErrorLogger() {
+        this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility, this);
     }
 
     public void resizeControls(double width, double height) {
@@ -531,7 +540,6 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
 
     public void postTheMessage(ISquare newSquare, String msg) {
         if (newSquare == null) {
-            System.out.println("no square to post to");
             return;
         }
         if (msg.startsWith(Constants.COMMAND_PREFIX)) {
@@ -707,7 +715,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                     remoteIP.getValue().getDisplay(),
                     factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
                             factory.createLogger(getParent().getLoggerType(),
-                                    utility.concatStrings(uniqueId.getText(), Constants.LOG_FILE_EXT), utility),
+                                    utility.concatStrings(uniqueId.getText(), Constants.LOG_FILE_EXT), utility, this),
                             factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
                     utility, this, uniqueId.getText(), getParent());
             utility.writeFile(utility.concatStrings(squareSafeName, Constants.SQUARE_FILE_EXT), info);
@@ -729,7 +737,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             setTabSquare(new Square(contents, port.getText(), remoteIP.getValue().getDisplay(),
                     factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
                             factory.createLogger(getParent().getLoggerType(),
-                                    utility.concatStrings(uniqueId.getText(), Constants.LOG_FILE_EXT), utility),
+                                    utility.concatStrings(uniqueId.getText(), Constants.LOG_FILE_EXT), utility, this),
                             factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
                     utility, this, uniqueId.getText(), factory, getParent()));
         }
@@ -812,11 +820,11 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                         desktop.browse(uri);
                     }
                 } catch (NullPointerException npe) {
-                    npe.printStackTrace();
+                    errorLogger.logInfo(npe.getMessage());
                 } catch (IOException ioe) {
-                    ioe.printStackTrace();
+                    errorLogger.logInfo(ioe.getMessage());
                 } catch (URISyntaxException use) {
-                    use.printStackTrace();
+                    errorLogger.logInfo(use.getMessage());
                 }
             }
         });
@@ -853,9 +861,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                     File f = new File(file);
                     Desktop.getDesktop().open(f);
                 } catch (NullPointerException npe) {
-                    npe.printStackTrace();
+                    errorLogger.logInfo(npe.getMessage());
                 } catch (IOException ioe) {
-                    ioe.printStackTrace();
+                    errorLogger.logInfo(ioe.getMessage());
                 }
             }
         });
@@ -936,7 +944,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             }
             images.add(imageView);
         } catch (Exception e) {
-            e.printStackTrace();
+            errorLogger.logInfo(e.getMessage());
         }
     }
 
@@ -966,7 +974,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                         Image i = new Image(stream);
                         image.setImage(i);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        errorLogger.logInfo(e.getMessage());
                     }
                     return;
                 }
@@ -1075,7 +1083,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         setTabSquare(new Square(contents, port.getText(), remoteIP.getValue().getDisplay(),
                 factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
                         factory.createLogger(getParent().getLoggerType(),
-                                utility.concatStrings(uniqueId.getText(), Constants.LOG_FILE_EXT), utility),
+                                utility.concatStrings(uniqueId.getText(), Constants.LOG_FILE_EXT), utility, this),
                         factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
                 utility, this, uniqueId.getText(), factory, getParent()));
     }

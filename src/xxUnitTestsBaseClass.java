@@ -22,7 +22,7 @@ public class xxUnitTestsBaseClass {
 
     private void initialize() {
         errorCount = 0;
-        errorTests = new ArrayList<String>();
+        errorTests = new ArrayList<>();
 
         totalTests = 0;
         Class<?> clazz = this.getClass();
@@ -47,7 +47,7 @@ public class xxUnitTestsBaseClass {
     }
 
     void finish() {
-        ILogIt logger = LogItConsole.create();
+        ILogIt logger = LogItConsole.create(new xxMockIDialogController());
         logger.logInfo("[" + suiteName + "] Results");
         logger.logInfo("Total tests: " + totalTests);
         logger.logInfo("  Errors: " + Integer.toString(errorCount));

@@ -13,7 +13,7 @@ public class ClientCmdTest {
         //String uniqueId = utility.readFile(Constants.UNIQUE_ID_FILE);
         //String defaultSquareInfo = utility.readFile(Constants.DEFAULT_SQUARE_FILE);
         
-        ILogIt logger = factory.createLogger(1, "clientCmdTest.log", utility);
+        ILogIt logger = factory.createLogger(1, "clientCmdTest.log", utility, new xxMockIDialogController());
         
         String cmd = "clone%%%password";
         

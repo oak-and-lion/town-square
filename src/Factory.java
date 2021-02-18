@@ -29,9 +29,9 @@ public class Factory implements IFactory {
         return null;
     }
 
-    public ICryptoUtils createCryptoUtils(int type) {
+    public ICryptoUtils createCryptoUtils(int type, IDialogController controller) {
         if (type == Constants.BASE_CRYPTO_UTILS) {
-            return new CryptoUtils(this);
+            return new CryptoUtils(this, controller);
         }
 
         return null;
@@ -88,11 +88,13 @@ public class Factory implements IFactory {
         return null;
     }
 
-    public ILogIt createLogger(int type, String file, IUtility utility) {
+    public ILogIt createLogger(int type, String file, IUtility utility, IDialogController dialogController) {
         if (type == Constants.CONSOLE_LOGGER) {
-            return LogItConsole.create();
+            return LogItConsole.create(dialogController);
         } else if (type == Constants.FILE_LOGGER) {
-            return LogItFile.create(utility, file);
+            return LogItFile.create(utility, file, dialogController);
+        } else if (type == Constants.ERROR_LOGGER) {
+            return new LogItError(utility, file, dialogController);
         }
 
         return LogItEmpty.create();

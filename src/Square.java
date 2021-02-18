@@ -24,6 +24,7 @@ public class Square implements ISquare {
     private Tab tab;
     private IFactory factory;
     private IApp app;
+    private ILogIt errorLogger;
 
     public Square(String info, String port, String ip, ISquareController squareController, IUtility utility,
             IDialogController sampleController, String uniqueId, IFactory factory, IApp app) {
@@ -56,6 +57,7 @@ public class Square implements ISquare {
         this.sampleController = sampleController;
         this.factory = factory;
         this.app = app;
+        this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility, sampleController);
         initializeClientThread();
     }
 
@@ -75,7 +77,7 @@ public class Square implements ISquare {
             Thread.sleep(millis);
             clientThread.start();
         } catch (InterruptedException ie) {
-            ie.printStackTrace();
+            this.errorLogger.logInfo(ie.getMessage());
             Thread.currentThread().interrupt();
         }
     }

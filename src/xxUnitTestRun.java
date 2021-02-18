@@ -23,7 +23,7 @@ public class xxUnitTestRun {
     }
 
     private static void printFinalResults(int totalTests, int totalErrors) {
-        ILogIt logger = LogItConsole.create();
+        ILogIt logger = LogItConsole.create(new xxMockIDialogController());
 
         logger.logInfo("Total Tests Executed: " + convertToString(totalTests));
         logger.logInfo("Total Failed Tests: " + convertToString(totalErrors));

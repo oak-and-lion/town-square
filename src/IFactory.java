@@ -10,9 +10,9 @@ public interface IFactory {
     IUtility createUtility(int type);
     IAlertBox createAlertBox(int type);
     ISystemExit createSystemExit(int type);
-    ILogIt createLogger(int type, String file, IUtility utility);
+    ILogIt createLogger(int type, String file, IUtility utility, IDialogController dialogController);
     IClientThread createClientThread(int type, ISquare square, IUtility utility, String uniqueId, IApp app);
-    ICryptoUtils createCryptoUtils(int type);
+    ICryptoUtils createCryptoUtils(int type, IDialogController controller);
     ISquareKeyPair createSquareKeyPair(int type, IUtility utility);
     ICommandController createCommandController(int type, IUtility utility, IDialogController controller);
     ISquareController createSquareController(int type, IUtility mainUtility, IDialogController controller,

@@ -4,8 +4,11 @@ import java.util.List;
 import javafx.application.Platform;
 
 public class CommandWorkerNickName extends CommandWorkerBase implements ICommandWorker {
+    ILogIt errorLogger;
+
     public CommandWorkerNickName(IUtility utility, ISquare square, IDialogController parent) {
         super(utility, square, parent);
+        this.errorLogger = square.getFactory().createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility, this.parent);
     }
 
     public List<BooleanString> doWork(String commandArgs) {
@@ -32,7 +35,7 @@ public class CommandWorkerNickName extends CommandWorkerBase implements ICommand
                     }
                 });
             } catch (Exception e) {
-                e.printStackTrace();
+                errorLogger.logInfo(e.getMessage());
             }
         }
 

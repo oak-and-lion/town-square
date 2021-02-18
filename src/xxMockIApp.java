@@ -52,6 +52,10 @@ public class xxMockIApp implements IApp {
         return Constants.FILE_LOGGER;
     }
 
+    public IDialogController getDialogController() {
+        return new xxMockIDialogController();
+    }
+
     public void start(Stage stage) {
         // do nothing
     }

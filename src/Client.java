@@ -15,6 +15,7 @@ public class Client implements IClient {
     private String squareId;
     private ILogIt logger;
     private IUtility utility;
+    private IApp appParent;
 
     private static final String CLIENT_PREFIX = "Client '";
 
@@ -22,6 +23,7 @@ public class Client implements IClient {
         this.hostName = hostName;
         this.port = port;
         this.squareId = squareId;
+        this.appParent = appParent;
         this.utility = factory.createUtility(Constants.BASE_UTILITY);
         createLogger(factory, appParent.getLoggerType());
     }
@@ -38,7 +40,7 @@ public class Client implements IClient {
     private void createLogger(IFactory factory, int loggerType) {
         logger = factory.createLogger(loggerType,
                 utility.concatStrings(Constants.CLIENT_LOG_PREFIX, squareId, Constants.LOG_FILE_EXT),
-                factory.createUtility(Constants.BASE_UTILITY));
+                factory.createUtility(Constants.BASE_UTILITY), appParent.getDialogController());
     }
 
     public String sendMessage(String text, boolean encrypt, String command) {

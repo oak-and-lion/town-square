@@ -9,6 +9,7 @@ public class Server extends Thread implements IServer {
     private IServerThread serverThread;
     private ISquareController squareController;
     private ILogIt logger;
+    private ILogIt errorLogger;
     private IFactory factory;
     private IApp parent;
     private IUtility utility;
@@ -32,6 +33,7 @@ public class Server extends Thread implements IServer {
         this.factory = factory;
         this.parent = parent;
         this.utility = factory.createUtility(Constants.BASE_UTILITY);
+        this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility, this.logger.getDialogController());
     }
 
     public void teardown() {
@@ -53,8 +55,7 @@ public class Server extends Thread implements IServer {
             }
 
         } catch (IOException ex) {
-            logger.logInfo(ex.getMessage());
-            ex.printStackTrace();
+            errorLogger.logInfo(ex.getMessage());
             parent.closeApp(Constants.SYSTEM_EXIT_PORT_IN_USE, Constants.SYSTEM_EXIT_PORT_IN_USE);
         }
     }
@@ -77,7 +78,7 @@ public class Server extends Thread implements IServer {
             serverThread.start();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            errorLogger.logInfo(e.getMessage());
             result = false;
         }
 

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class SquareWorkerGetFile extends SquareWorkerBase implements ISquareWorker {
     private IFactory factory;
+    private ILogIt errorLogger;
 
     public SquareWorkerGetFile(IUtility utility, String command, IFactory factory) {
         super(utility, command);
@@ -12,6 +13,7 @@ public class SquareWorkerGetFile extends SquareWorkerBase implements ISquareWork
     }
 
     public SquareResponse doWork(ISquare square, String[] args) {
+        this.errorLogger = this.factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility, square.getSampleController());
         return new SquareResponse(buildResult(Constants.OK_RESULT, processFileGetMessage(square, args)));
     }
 
@@ -65,9 +67,9 @@ public class SquareWorkerGetFile extends SquareWorkerBase implements ISquareWork
             result = utility.concatStrings(tempKeys.encryptToBase64(password), Constants.COMMAND_DATA_SEPARATOR,
                     temp.toString());
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            errorLogger.logInfo(ioe.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            errorLogger.logInfo(e.getMessage());
         }
 
         return result;
