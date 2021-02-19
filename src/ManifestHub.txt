@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Created-By: oak-and-lion
+Main-Class: Hub
+Class-Path: javafx/lib/javafx.controls.jar

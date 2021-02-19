@@ -8,10 +8,11 @@ public class Hub {
             System.out.println("no args");
         }
         IFactory factory = new Factory();
+        ISystemExit systemExit = factory.createSystemExit(Constants.BASE_SYSTEM_EXIT);
 
         IApp app = factory.createApp(loggerFlag, factory.createAlertBox(Constants.BASE_ALERT_BOX),
-                factory.createSystemExit(Constants.BASE_SYSTEM_EXIT), factory);
-
+                systemExit, factory);
+        systemExit.setParent(app);
         app.start();
         ILogIt errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE,
                 factory.createUtility(Constants.BASE_UTILITY, app.getDialogController()), app.getDialogController());

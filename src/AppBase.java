@@ -28,8 +28,9 @@ public class AppBase extends Thread implements IApp {
             loggerType = Constants.CONSOLE_LOGGER;
         }
 
-        controller = factory.createDialogController(Constants.SERVER_DIALOG_CONTROLLER, this, null);
-        this.utility = factory.createUtility(Constants.BASE_UTILITY, controller);
+        this.utility = factory.createUtility(Constants.BASE_UTILITY, new DialogControllerEmpty());
+        controller = factory.createDialogController(Constants.SERVER_DIALOG_CONTROLLER, this, utility);
+        
         if (!utility.checkFileExists(Constants.PORT_FILE)) {
             utility.writeFile(Constants.PORT_FILE, Constants.DEFAULT_PORT);
         }

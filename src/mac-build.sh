@@ -16,6 +16,7 @@ echo copying sample.xml
 cp sample.fxml staging/sample.fxml
 echo copying manifest files
 cp Manifest.txt staging/Manifest.txt
+cp ManifestHub.txt staging/ManifestHub.txt
 
 cd staging
 
@@ -28,18 +29,20 @@ echo copying runtime dependencies
 cp ../../../javafx-mac.zip javafx-mac.zip
 cp ../../../openjdk-11.0.2_osx-x64_bin.tar.gz openjdk-11.0.2_osx-x64_bin.tar.gz
 cp ../../../town-square-mac.sh town-square-mac.sh
+cp ../../../town-square-mac-hub.sh town-square-mac-hub.sh
 cp ../../../blocked-image.png blocked-image.png
 cp ../../../blocked-video.mp4 blocked-video.mp4
 
 echo creating JAR file
 
 jar -c -v -m ../Manifest.txt -f App.jar ../*.class ../sample.fxml
+jar -c -v -m ../ManifestHub.txt -f Hub.jar ../*.class
 
 echo creating final package
 
 mkdir package
 
-tar -a -c -f package/pkg-town-square_mac.tar.gz town-square-mac.sh App.jar javafx-mac.zip openjdk-11.0.2_osx-x64_bin.tar.gz blocked-image.png blocked-video.mp4
+tar -a -c -f package/pkg-town-square_mac.tar.gz town-square-mac.sh town-square-mac-hub.sh App.jar Hub.jar javafx-mac.zip openjdk-11.0.2_osx-x64_bin.tar.gz blocked-image.png blocked-video.mp4
 
 cd package
 
