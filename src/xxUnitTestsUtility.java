@@ -27,11 +27,15 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
         finish();
     }
 
+    private IUtility createUtility() {
+        return Utility.create(new xxMockIDialogController(), new xxMockFactory());
+    }
+
     @TestMethod
     private void readLastLineOfFilePass() {
         final String METHOD_NAME = "readLastLineOfFilePass";
 
-        IUtility utility = Utility.create();
+        IUtility utility = createUtility();
 
         String result = utility.readLastLineOfFile(TEST_UTILITY_FILE);
 
@@ -42,7 +46,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
     private void readLastLineOfInvalidFilePass() {
         final String METHOD_NAME = "readLastLineOfInvalidFilePass";
 
-        IUtility utility = Utility.create();
+        IUtility utility = createUtility();
 
         String result = utility.readLastLineOfFile(INVALID_TEST_UTILITY_FILE);
 
@@ -53,7 +57,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
     private void countLinesOfFilePass() {
         final String METHOD_NAME = "countLinesOfFilePass";
 
-        IUtility utility = Utility.create();
+        IUtility utility = createUtility();
 
         int result = utility.countLinesInFile(TEST_UTILITY_FILE);
 
@@ -64,7 +68,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
     private void countLinesOfInvalidFilePass() {
         final String METHOD_NAME = "countLinesOfInvalidFilePass";
 
-        IUtility utility = Utility.create();
+        IUtility utility = createUtility();
 
         int result = utility.countLinesInFile(INVALID_TEST_UTILITY_FILE);
 
@@ -75,7 +79,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
     private void findFirstOccurrencePass() {
         final String METHOD_NAME = "findFirstOccurrencePass";
 
-        IUtility utility = Utility.create();
+        IUtility utility = createUtility();
 
         int result = utility.findFirstOccurence(TEST_UTILITY_FILE, "is", true, false);
 
@@ -86,7 +90,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
     private void findFirstOccurrenceFail() {
         final String METHOD_NAME = "findFirstOccurrenceFail";
 
-        IUtility utility = Utility.create();
+        IUtility utility = createUtility();
 
         int result = utility.findFirstOccurence(TEST_UTILITY_FILE, "isa", true, false);
 
@@ -97,7 +101,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
     private void findFirstOccurrenceNonZeroFail() {
         final String METHOD_NAME = "findFirstOccurrenceNonZeroFail";
 
-        IUtility utility = Utility.create();
+        IUtility utility = createUtility();
 
         int result = utility.findFirstOccurence(TEST_UTILITY_FILE, "isa", true, true);
 
@@ -108,7 +112,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
     private void findFirstOccurrenceInvalidFileFail() {
         final String METHOD_NAME = "findFirstOccurrenceInvalidFileFail";
 
-        IUtility utility = Utility.create();
+        IUtility utility = createUtility();
 
         int result = utility.findFirstOccurence(INVALID_TEST_UTILITY_FILE, "is", true, true);
 
@@ -119,7 +123,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
     private void decodeBase64NullStringPass() {
         final String METHOD_NAME = "decodeBase64NullStringPass";
 
-        IUtility utility = Utility.create();
+        IUtility utility = createUtility();
 
         byte[] result = utility.convertFromBase64("");
 
@@ -130,7 +134,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
     private void decodeBase64EmptyStringPass() {
         final String METHOD_NAME = "decodeBase64EmptyStringPass";
 
-        IUtility utility = Utility.create();
+        IUtility utility = createUtility();
 
         byte[] result = utility.convertFromBase64(null);
 
@@ -141,7 +145,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
     private void decodeBase64ValidStringPass() {
         final String METHOD_NAME = "decodeBase64ValidStringPass";
 
-        IUtility utility = Utility.create();
+        IUtility utility = createUtility();
 
         byte[] result = utility.convertFromBase64("dGVzdCBkYXRh");
 
@@ -153,7 +157,7 @@ public class xxUnitTestsUtility extends xxUnitTestsBaseClass {
     private void decodeBase64InvalidStringFail() {
         final String METHOD_NAME = "decodeBase64InvalidStringFail";
 
-        IUtility utility = Utility.create();
+        IUtility utility = createUtility();
 
         byte[] result = utility.convertFromBase64("dGVzdCBkYXRhr");
 

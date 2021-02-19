@@ -114,4 +114,8 @@ public class UtilityEmpty implements IUtility {
     public String memberEncrypt(IFactory factory, String memberPublicKey, String data) {
         return Constants.EMPTY_STRING;
     }
+
+    public void logError(String msg) {
+        // not needed
+    }
 }

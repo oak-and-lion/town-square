@@ -29,7 +29,7 @@ public class xxUnitTestsFactory extends xxUnitTestsBaseClass {
 
     @TestMethod
     public void testCreateSquareKeyPairPass() {
-        ISquareKeyPair test = factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR);
+        ISquareKeyPair test = factory.createSquareKeyPair(Constants.BASE_SQUARE_KEY_PAIR, new xxMockIUtility());
 
         checkNotEquals(test, null, "testCreateSquareKeyPairPass");
         checkClass(test.getClass(), SquareKeyPair.class, "testCreateSquareKeyPairPass");
@@ -58,7 +58,7 @@ public class xxUnitTestsFactory extends xxUnitTestsBaseClass {
             KeyPair kp = kpg.generateKeyPair();
 
             ISquareKeyPair test = factory.createSquareKeyPair(Constants.KEYS_SQUARE_KEY_PAIR, kp.getPublic(),
-                    kp.getPrivate());
+                    kp.getPrivate(), new xxMockIUtility());
 
             checkNotEquals(test, null, METHOD_NAME);
             checkClass(test.getClass(), SquareKeyPair.class, METHOD_NAME);
@@ -141,7 +141,7 @@ public class xxUnitTestsFactory extends xxUnitTestsBaseClass {
     @TestMethod
     public void testCreateUtilityPass() {
         final String METHOD_NAME = "testCreateUtilityPass";
-        IUtility test = factory.createUtility(Constants.BASE_UTILITY);
+        IUtility test = factory.createUtility(Constants.BASE_UTILITY, new xxMockIDialogController());
 
         checkNotEquals(test, null, METHOD_NAME);
         checkClass(test.getClass(), Utility.class, METHOD_NAME);
@@ -149,7 +149,7 @@ public class xxUnitTestsFactory extends xxUnitTestsBaseClass {
 
     @TestMethod
     public void testCreateUtilityFail() {
-        IUtility test = factory.createUtility(Constants.NULL_OBJECT_TYPE);
+        IUtility test = factory.createUtility(Constants.NULL_OBJECT_TYPE, null);
 
         checkEquals(test, null, "testCreateUtilityFail");
     }

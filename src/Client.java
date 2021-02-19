@@ -24,7 +24,7 @@ public class Client implements IClient {
         this.port = port;
         this.squareId = squareId;
         this.appParent = appParent;
-        this.utility = factory.createUtility(Constants.BASE_UTILITY);
+        this.utility = factory.createUtility(Constants.BASE_UTILITY, appParent.getDialogController());
         createLogger(factory, appParent.getLoggerType());
     }
 
@@ -32,7 +32,7 @@ public class Client implements IClient {
         port = Integer.valueOf(square.getPort());
         hostName = square.getIP();
         squareId = square.getId();
-        this.utility = factory.createUtility(Constants.BASE_UTILITY);
+        this.utility = factory.createUtility(Constants.BASE_UTILITY, appParent.getDialogController());
         
         createLogger(factory, square.getSampleController().getParent().getLoggerType());
     }
@@ -40,7 +40,7 @@ public class Client implements IClient {
     private void createLogger(IFactory factory, int loggerType) {
         logger = factory.createLogger(loggerType,
                 utility.concatStrings(Constants.CLIENT_LOG_PREFIX, squareId, Constants.LOG_FILE_EXT),
-                factory.createUtility(Constants.BASE_UTILITY), appParent.getDialogController());
+                factory.createUtility(Constants.BASE_UTILITY, appParent.getDialogController()), appParent.getDialogController());
     }
 
     public String sendMessage(String text, boolean encrypt, String command) {

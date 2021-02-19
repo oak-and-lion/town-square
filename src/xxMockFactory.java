@@ -10,7 +10,7 @@ public class xxMockFactory implements IFactory {
         return new xxMockMemberPostsThread();
     }
 
-    public IUtility createUtility(int type) {
+    public IUtility createUtility(int type, IDialogController controller) {
         return null;
     }
 
@@ -64,11 +64,7 @@ public class xxMockFactory implements IFactory {
         return null;
     }
 
-    public ISquareKeyPair createSquareKeyPair(int type) {
-        return null;
-    }
-
-    public ISquareKeyPair createSquareKeyPair(int type, PublicKey publicKey, PrivateKey privateKey) {
+    public ISquareKeyPair createSquareKeyPair(int type, PublicKey publicKey, PrivateKey privateKey, IUtility utility) {
         return null;
     }
 

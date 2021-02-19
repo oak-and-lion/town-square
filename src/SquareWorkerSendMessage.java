@@ -6,7 +6,7 @@ public class SquareWorkerSendMessage extends SquareWorkerBase implements ISquare
     public SquareResponse doWork(ISquare square, String[] args) {
         String[] message = args[3].split(Constants.FILE_DATA_SEPARATOR);
         long millis = Long.parseLong(message[0]);
-        square.addPostMessage(new PostMessage(millis, args[3]));
+        square.addPostMessage(new PostMessage(millis, args[3], utility));
         return new SquareResponse(Constants.OK_RESULT, command);
     }
 }

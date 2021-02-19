@@ -32,7 +32,7 @@ public class Server extends Thread implements IServer {
         this.logger = logger;
         this.factory = factory;
         this.parent = parent;
-        this.utility = factory.createUtility(Constants.BASE_UTILITY);
+        this.utility = factory.createUtility(Constants.BASE_UTILITY, parent.getDialogController());
         this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility, this.logger.getDialogController());
     }
 
@@ -74,7 +74,7 @@ public class Server extends Thread implements IServer {
             }
             
             serverThread = factory.createServerThread(Constants.BASE_SERVER_THREAD, socket, squareController, logger,
-                    factory.createUtility(Constants.BASE_UTILITY), requester);
+                    factory.createUtility(Constants.BASE_UTILITY, parent.getDialogController()), requester);
             serverThread.start();
 
         } catch (Exception e) {

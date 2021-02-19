@@ -28,12 +28,13 @@ public class AppBase extends Thread implements IApp {
             loggerType = Constants.CONSOLE_LOGGER;
         }
 
-        this.utility = factory.createUtility(Constants.BASE_UTILITY);
+        controller = factory.createDialogController(Constants.SERVER_DIALOG_CONTROLLER, this, null);
+        this.utility = factory.createUtility(Constants.BASE_UTILITY, controller);
         if (!utility.checkFileExists(Constants.PORT_FILE)) {
             utility.writeFile(Constants.PORT_FILE, Constants.DEFAULT_PORT);
         }
         port = utility.readFile(Constants.PORT_FILE);
-        controller = factory.createDialogController(Constants.SERVER_DIALOG_CONTROLLER, this, utility);
+        controller.setUtilityController(utility);
         logger = factory.createLogger(loggerType, Constants.MAIN_LOG_FILE, utility, controller);
         ICommandController commandController = factory.createCommandController(Constants.BASE_COMMAND_CONTROLLER, utility, controller);
         controller.setCommandController(commandController);

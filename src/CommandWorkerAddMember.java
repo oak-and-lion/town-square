@@ -18,7 +18,7 @@ public class CommandWorkerAddMember extends CommandWorkerBase implements IComman
             MemberInfoList members = new MemberInfoList();
             String[] fileMembers = utility.readFile(file).split(Constants.READ_FILE_DATA_SEPARATOR);
             for (String fileMember : fileMembers) {
-                members.add(new MemberInfo(fileMember));
+                members.add(new MemberInfo(fileMember, utility));
             }
             MemberInfo found = null;
             MemberInfo me = null;
@@ -33,7 +33,7 @@ public class CommandWorkerAddMember extends CommandWorkerBase implements IComman
             }
 
             if (found == null && me != null) {
-                found = new MemberInfo(me.getName(), me.getPublicKey(), ip, port, uniqueId);
+                found = new MemberInfo(me.getName(), me.getPublicKey(), ip, port, uniqueId, utility);
                 utility.appendToFile(utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT),
                         utility.concatStrings(Constants.NEWLINE, found.toString()));
             }

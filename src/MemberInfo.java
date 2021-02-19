@@ -4,8 +4,9 @@ public class MemberInfo implements Comparable<MemberInfo> {
     private String ip;
     private String port;
     private String uniqueId;
+    private IUtility utility;
 
-    public MemberInfo(String info) {
+    public MemberInfo(String info, IUtility utility) {
         String[] split = info.split(Constants.FILE_DATA_SEPARATOR);
 
         name = split[0];
@@ -13,14 +14,16 @@ public class MemberInfo implements Comparable<MemberInfo> {
         ip = split[2];
         port = split[3];
         uniqueId = split[4];
+        this.utility = utility;
     }
 
-    public MemberInfo(String name, String publicKey, String ip, String port, String uniqueId) {
+    public MemberInfo(String name, String publicKey, String ip, String port, String uniqueId, IUtility utility) {
         this.name = name;
         this.publicKey = publicKey;
         this.ip = ip;
         this.port = port;
         this.uniqueId = uniqueId;
+        this.utility = utility;
     }
 
     public String getName() {
@@ -81,7 +84,7 @@ public class MemberInfo implements Comparable<MemberInfo> {
             try {
                 m = (MemberInfo)o;
             } catch (Exception e) {
-                e.printStackTrace();
+                utility.logError(e.getMessage());
                 return false;
             }
 

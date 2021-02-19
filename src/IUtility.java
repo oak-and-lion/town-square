@@ -31,4 +31,5 @@ public interface IUtility {
     String concatStrings(String... strings);
     int add(int... ints);
     String memberEncrypt(IFactory factory, String memberPublicKey, String data);
+    void logError(String msg);
 }

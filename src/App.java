@@ -47,7 +47,6 @@ public class App extends Application implements IApp {
 
     @Override
     public void start(Stage primaryStage) {
-        utility = factory.createUtility(Constants.BASE_UTILITY);
         systemExit.setParent(this);
         if (checkCurrentState(alert)) {
             processStart(primaryStage);
@@ -82,6 +81,7 @@ public class App extends Application implements IApp {
 
             controller = loader.<DialogController>getController();
 
+            utility = factory.createUtility(Constants.BASE_UTILITY, controller);
             ICryptoUtils cryptoUtils = factory.createCryptoUtils(Constants.BASE_CRYPTO_UTILS, controller);
             logger = factory.createLogger(loggerType, Constants.MAIN_LOG_FILE, utility, controller);
 

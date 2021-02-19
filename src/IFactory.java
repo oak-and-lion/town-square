@@ -7,7 +7,7 @@ import javafx.scene.control.TextField;
 public interface IFactory {
     IMemberPostsThread createMemberPostsThread(int type, String info, String uniqueId, String[] msg, ISquare square,
             IUtility utility, IApp app);
-    IUtility createUtility(int type);
+    IUtility createUtility(int type, IDialogController controller);
     IAlertBox createAlertBox(int type);
     ISystemExit createSystemExit(int type);
     ILogIt createLogger(int type, String file, IUtility utility, IDialogController dialogController);
@@ -22,8 +22,7 @@ public interface IFactory {
         ISquareController squareController, IUtility utility, IDialogController controller, String uniqueId, IApp app);
     IVersionChecker createVersionChecker(int type, IUtility utility, String uniqueId, IApp parent);
     IClient createClient(int type, String hostname, int port, String squareId, IApp appParent);
-    ISquareKeyPair createSquareKeyPair(int type);
-    ISquareKeyPair createSquareKeyPair(int type, PublicKey publicKey, PrivateKey privateKey);
+    ISquareKeyPair createSquareKeyPair(int type, PublicKey publicKey, PrivateKey privateKey, IUtility utility);
     IServerThread createServerThread(int type, Socket socket, ISquareController squareController,
             ILogIt logger, IUtility utility, RequesterInfo requester);
     ITextDialogBox createTextDialogBox(int type, String title, String headerText, String content,

@@ -280,7 +280,7 @@ public class ServerDialogController implements IDialogController {
             long currentMillis = System.currentTimeMillis();
             String data = utility.concatStrings(Long.toString(currentMillis), Constants.FILE_DATA_SEPARATOR, msg,
                     Constants.FILE_DATA_SEPARATOR, uniqueId);
-            newSquare.addPostMessage(new PostMessage(currentMillis, data));
+            newSquare.addPostMessage(new PostMessage(currentMillis, data, utility));
         }
     }
 }

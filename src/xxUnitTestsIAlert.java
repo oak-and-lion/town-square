@@ -17,7 +17,7 @@ public class xxUnitTestsIAlert extends xxUnitTestsBaseClass {
     @TestMethod
     private void testIAlertPass() {
         final String METHOD_NAME = "testIAlertPass";
-        IUtility utility = Utility.create();
+        IUtility utility = Utility.create(new xxMockIDialogController(), new xxMockFactory());
         utility.writeFile(TOWN_SQUARE_LOCK_FILE, "lock");
         App.execute(new xxMockIAlertBox(), new xxMockISystemExit(), new Factory());
         utility.deleteFile(TOWN_SQUARE_LOCK_FILE);

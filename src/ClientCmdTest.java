@@ -5,7 +5,7 @@ public class ClientCmdTest {
         //=========================================
 
         IFactory factory = new Factory();
-        IUtility utility = factory.createUtility(1);
+        IUtility utility = factory.createUtility(1, new xxMockIDialogController());
 
         //String hostname = "192.168.1.159";
         //int port = 44123;

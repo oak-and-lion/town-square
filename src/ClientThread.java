@@ -254,7 +254,7 @@ public class ClientThread extends Thread implements IClientThread {
                 continue;
             }
             String[] post = postInfo.split(Constants.DATA_SEPARATOR);
-            posts.add(new PostMessage(Long.parseLong(post[0]), postInfo));
+            posts.add(new PostMessage(Long.parseLong(post[0]), postInfo, utility));
             String[] members = utility.searchFile(
                     utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT), post[2], false);
             if (members.length > 0 && members[0] != null) {

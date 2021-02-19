@@ -23,10 +23,10 @@ public class SquareWorkerJoin extends SquareWorkerBase implements ISquareWorker 
             MemberInfoList members = new MemberInfoList();
             String[] fileMembers = utility.readFile(file).split(Constants.READ_FILE_DATA_SEPARATOR);
             for (String fileMember : fileMembers) {
-                members.add(new MemberInfo(fileMember));
+                members.add(new MemberInfo(fileMember, utility));
             }
             
-            MemberInfo joinMember = new MemberInfo(args[3], args[4], args[5], args[6], args[7]);
+            MemberInfo joinMember = new MemberInfo(args[3], args[4], args[5], args[6], args[7], utility);
             boolean sameId = members.containsUniqueId(joinMember.getUniqueId());
             boolean previousLeave = checkPreviousLeave();
             processPreviousLeave(previousLeave, file, args);

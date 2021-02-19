@@ -17,9 +17,12 @@ import java.util.List;
 public class CryptoUtils implements ICryptoUtils {
     private IFactory factory;
     private ILogIt errorLogger;
+    private IUtility utility;
+
     public CryptoUtils(IFactory factory, IDialogController controller) {
         this.factory = factory;
-        this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, factory.createUtility(Constants.BASE_UTILITY), controller);
+        this.utility = factory.createUtility(Constants.BASE_UTILITY, controller);
+        this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility, controller);
     }
     public static byte[] getRandomNonce(int numBytes) {
         byte[] nonce = new byte[numBytes];
@@ -85,7 +88,7 @@ public class CryptoUtils implements ICryptoUtils {
         if (kpg != null) {
             kpg.initialize(2048);
             KeyPair kp = kpg.generateKeyPair();
-            return factory.createSquareKeyPair(Constants.KEYS_SQUARE_KEY_PAIR, kp.getPublic(), kp.getPrivate());
+            return factory.createSquareKeyPair(Constants.KEYS_SQUARE_KEY_PAIR, kp.getPublic(), kp.getPrivate(), utility);
         }
 
         return null;

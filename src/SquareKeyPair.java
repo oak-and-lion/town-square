@@ -18,6 +18,7 @@ import javax.crypto.NoSuchPaddingException;
 public class SquareKeyPair implements ISquareKeyPair {
     private PublicKey publicKey;
     private PrivateKey privateKey;
+    private IUtility utility;
 
     public SquareKeyPair() {
     }
@@ -25,11 +26,13 @@ public class SquareKeyPair implements ISquareKeyPair {
     public SquareKeyPair(IUtility utility) {
         setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
         setPublicKeyFromBase64(utility.readFile(Constants.PUBLIC_KEY_FILE));
+        this.utility = utility;
     }
 
-    public SquareKeyPair(PublicKey publicKey, PrivateKey privateKey) {
+    public SquareKeyPair(PublicKey publicKey, PrivateKey privateKey, IUtility utility) {
         this.publicKey = publicKey;
         this.privateKey = privateKey;
+        this.utility = utility;
     }
 
     public void setPublicKeyFromBase64(String b64Key) {
@@ -42,10 +45,10 @@ public class SquareKeyPair implements ISquareKeyPair {
             EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(key);
             publicKey = keyFactory.generatePublic(publicKeySpec);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            utility.logError(e.getMessage());
         }
         catch (InvalidKeySpecException e1) {
-            e1.printStackTrace();
+            utility.logError(e1.getMessage());
         }
     }
 
@@ -59,10 +62,10 @@ public class SquareKeyPair implements ISquareKeyPair {
             EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(key);
             privateKey = keyFactory.generatePrivate(privateKeySpec);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            utility.logError(e.getMessage());
         }
         catch (InvalidKeySpecException e1) {
-            e1.printStackTrace();
+            utility.logError(e1.getMessage());
         }
     }
 
@@ -101,15 +104,15 @@ public class SquareKeyPair implements ISquareKeyPair {
             cipher.init(Cipher.ENCRYPT_MODE, getPublicKey());
             return cipher.doFinal(data.getBytes());
         } catch (NoSuchAlgorithmException nsae) {
-            nsae.printStackTrace();
+            utility.logError(nsae.getMessage());
         } catch (NoSuchPaddingException nspe) {
-            nspe.printStackTrace();
+            utility.logError(nspe.getMessage());
         } catch (InvalidKeyException ike) {
-            ike.printStackTrace();
+            utility.logError(ike.getMessage());
         } catch (IllegalBlockSizeException ibse) {
-            ibse.printStackTrace();
+            utility.logError(ibse.getMessage());
         } catch (BadPaddingException bpe) {
-            bpe.printStackTrace();
+            utility.logError(bpe.getMessage());
         }
 
         return new byte[0];
@@ -126,15 +129,15 @@ public class SquareKeyPair implements ISquareKeyPair {
             byte[] bytes = cipher.doFinal(data);
             return new String(bytes);
         } catch (IllegalBlockSizeException ibse) {
-            ibse.printStackTrace();
+            utility.logError(ibse.getMessage());
         } catch (InvalidKeyException ike) {
-            ike.printStackTrace();
+            utility.logError(ike.getMessage());
         } catch (BadPaddingException bpe) {
-            bpe.printStackTrace();
+            utility.logError(bpe.getMessage());
         } catch (NoSuchAlgorithmException nsae) {
-            nsae.printStackTrace();
+            utility.logError(nsae.getMessage());
         } catch (NoSuchPaddingException nspe) {
-            nspe.printStackTrace();
+            utility.logError(nspe.getMessage());
         }
 
         return Constants.EMPTY_STRING;

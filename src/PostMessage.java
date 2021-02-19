@@ -2,10 +2,12 @@
 public class PostMessage implements Comparable<PostMessage> {
     private long millis;
     private String message;
+    private IUtility utility;
 
-    public PostMessage(long millis, String message) {
+    public PostMessage(long millis, String message, IUtility utility) {
         this.millis = millis;
         this.message = message;
+        this.utility = utility;
     }
 
     public long getMillis() {
@@ -39,7 +41,7 @@ public class PostMessage implements Comparable<PostMessage> {
             try {
                 m = (PostMessage)o;
             } catch (Exception e) {
-                e.printStackTrace();
+                utility.logError(e.getMessage());
                 return false;
             }
 

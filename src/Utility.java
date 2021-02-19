@@ -31,21 +31,23 @@ public class Utility implements IUtility {
     private static Utility utility;
 
     private Random random;
+    private ILogIt errorLogger;
 
-    private Utility() {
+    private Utility(IDialogController controller, IFactory factory) {
         random = new Random();
+        this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility, controller);
     }
 
-    public static IUtility create() {
+    public static IUtility create(IDialogController controller, IFactory factory) {
         if (utility == null) {
-            utility = new Utility();
+            utility = new Utility(controller, factory);
         }
 
         return utility;
     }
 
-    public static IUtility forceNew() {
-        return new Utility();
+    public static IUtility forceNew(IDialogController controller, IFactory factory) {
+        return new Utility(controller, factory);
     }
 
     public String createUUID() {
@@ -120,7 +122,7 @@ public class Utility implements IUtility {
         try {
             result = in.readLine(); // you get the IP as a String
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            errorLogger.logInfo(ioe.getMessage());
         }
 
         return result;
@@ -132,7 +134,7 @@ public class Utility implements IUtility {
         try {
             in = new BufferedReader(new InputStreamReader(url.openStream()));
         } catch (IOException e) {
-            e.printStackTrace();
+            errorLogger.logInfo(e.getMessage());
         }
 
         return in;
@@ -164,7 +166,7 @@ public class Utility implements IUtility {
             try {
                 Files.delete(f.toPath());
             } catch (IOException se) {
-                se.printStackTrace();
+                errorLogger.logInfo(se.getMessage());
                 result = false;
             }
         }
@@ -184,7 +186,7 @@ public class Utility implements IUtility {
             result.setLineCount(byteRead);
             result.setSuccessful(true);
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            errorLogger.logInfo(ioe.getMessage());
         }
 
         return result;
@@ -210,9 +212,9 @@ public class Utility implements IUtility {
             result.setLineCount(s.size());
             result.setSuccessful(true);
         } catch (IOException e) {
-            e.printStackTrace();
+            errorLogger.logInfo(e.getMessage());
         } catch (SecurityException se) {
-            se.printStackTrace();
+            errorLogger.logInfo(se.getMessage());
         }
 
         return result;
@@ -232,7 +234,7 @@ public class Utility implements IUtility {
                 result.setLineCount(s.size());
                 result.setSuccessful(true);
             } catch (IOException e) {
-                e.printStackTrace();
+                errorLogger.logInfo(e.getMessage());
             }
         }
 
@@ -243,7 +245,7 @@ public class Utility implements IUtility {
         try (FileWriter fw = new FileWriter(getFilePath(f))) {
             bufferedWrite(fw, data);
         } catch (Exception e) {
-            e.printStackTrace();
+            errorLogger.logInfo(e.getMessage());
         }
     }
 
@@ -251,11 +253,11 @@ public class Utility implements IUtility {
         try (BufferedWriter bw = new BufferedWriter(fw)) {
             bw.write(data);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            errorLogger.logInfo(e.getMessage());
         } catch (SecurityException se) {
-            se.printStackTrace();
+            errorLogger.logInfo(se.getMessage());
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            errorLogger.logInfo(ioe.getMessage());
         }
     }
 
@@ -268,11 +270,11 @@ public class Utility implements IUtility {
         try {
             return Files.readAllBytes(path);
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            errorLogger.logInfo(ioe.getMessage());
         } catch (OutOfMemoryError oome) {
-            oome.printStackTrace();
+            errorLogger.logInfo(oome.getMessage());
         } catch (SecurityException se) {
-            se.printStackTrace();
+            errorLogger.logInfo(se.getMessage());
         }
 
         return new byte[0];
@@ -311,7 +313,7 @@ public class Utility implements IUtility {
                 count++;
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
+            errorLogger.logInfo(ex.getMessage());
         }
 
         return result.toString();
@@ -349,7 +351,7 @@ public class Utility implements IUtility {
                 count++;
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
+            errorLogger.logInfo(ex.getMessage());
         }
 
         return temp.toArray(new String[temp.size()]);
@@ -386,7 +388,7 @@ public class Utility implements IUtility {
                 result++;
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
+            errorLogger.logInfo(ex.getMessage());
         }
 
         return result;
@@ -412,7 +414,7 @@ public class Utility implements IUtility {
                 result = line;
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
+            errorLogger.logInfo(ex.getMessage());
         }
 
         return result;
@@ -451,7 +453,7 @@ public class Utility implements IUtility {
                 count++;
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
+            errorLogger.logInfo(ex.getMessage());
         }
 
         if (!notFoundReturnZero && !found) {
@@ -472,7 +474,7 @@ public class Utility implements IUtility {
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
             return cipher.doFinal(convertFromBase64(data));
         } catch (Exception e) {
-            e.printStackTrace();
+            errorLogger.logInfo(e.getMessage());
         }
         return new byte[0];
     }
@@ -485,7 +487,7 @@ public class Utility implements IUtility {
             byte[] encryptedMessage = cipher.doFinal(data.getBytes());
             return convertToBase64(encryptedMessage);
         } catch (Exception e) {
-            e.printStackTrace();
+            errorLogger.logInfo(e.getMessage());
         }
         return Constants.EMPTY_STRING;
     }
@@ -531,7 +533,7 @@ public class Utility implements IUtility {
                 zipOut.write(bytes, 0, length);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            errorLogger.logInfo(e.getMessage());
         }
     }
 
@@ -560,7 +562,7 @@ public class Utility implements IUtility {
             }
             zis.closeEntry();
         } catch (Exception e) {
-            e.printStackTrace();
+            errorLogger.logInfo(e.getMessage());
         }
 
         return true;
@@ -574,7 +576,7 @@ public class Utility implements IUtility {
                 fos.write(buffer, 0, len);
             }
         } catch (Exception e1) {
-            e1.printStackTrace();
+            errorLogger.logInfo(e1.getMessage());
         }
     }
 
@@ -604,5 +606,9 @@ public class Utility implements IUtility {
         tempKeys.setPublicKeyFromBase64(memberPublicKey);
 
         return tempKeys.encryptToBase64(data);
+    }
+
+    public void logError(String msg) {
+        errorLogger.logInfo(msg);
     }
 }

@@ -12,10 +12,11 @@ import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 
 public class ModalVideoViewer extends BaseViewer implements IModalViewer {
-    
+    private IUtility utility;
     private MediaPlayer mediaPlayer;
-    public ModalVideoViewer(Stage parentStage) {
+    public ModalVideoViewer(Stage parentStage, IUtility utility) {
         super(parentStage);
+        this.utility = utility;
     }
 
     public void show(String file) {
@@ -43,7 +44,7 @@ public class ModalVideoViewer extends BaseViewer implements IModalViewer {
             root.getChildren().addAll(vbox);
             showStage(root, "Video");
         } catch (Exception e) {
-            e.printStackTrace();
+            utility.logError(e.getMessage());
         }
     }
 

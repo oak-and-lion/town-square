@@ -87,7 +87,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
                 for (String m : msgs) {
                     String[] m1 = m.split(Constants.FILE_DATA_SEPARATOR, 2);
                     long millis = Long.parseLong(m1[0]);
-                    allPosts.add(new PostMessage(millis, m));
+                    allPosts.add(new PostMessage(millis, m, utility));
                     if ((m.indexOf(Constants.IMAGE_MARKER) > Constants.NOT_FOUND_IN_STRING)
                             || (m.indexOf(Constants.FILE_MARKER) > Constants.NOT_FOUND_IN_STRING)
                             || (m.indexOf(Constants.VIDEO_MARKER) > Constants.NOT_FOUND_IN_STRING)) {

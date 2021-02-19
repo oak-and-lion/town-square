@@ -7,8 +7,10 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 public class ModalImageViewer extends BaseViewer implements IModalViewer {
-    public ModalImageViewer(Stage parentStage) {
+    private IUtility utility;
+    public ModalImageViewer(Stage parentStage, IUtility utility) {
         super(parentStage);
+        this.utility = utility;
     }
 
     public void show(String imageFile) {
@@ -25,7 +27,7 @@ public class ModalImageViewer extends BaseViewer implements IModalViewer {
             root.getChildren().add(imageView);  
             showStage(root, "Image");
         } catch (Exception e) {
-            e.printStackTrace();
+            utility.logError(e.getMessage());
         }
     }
 }

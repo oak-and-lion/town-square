@@ -14,9 +14,9 @@ public class Hub {
 
         app.start();
         ILogIt errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE,
-                factory.createUtility(Constants.BASE_UTILITY), app.getDialogController());
+                factory.createUtility(Constants.BASE_UTILITY, app.getDialogController()), app.getDialogController());
 
-        IUtility utility = factory.createUtility(Constants.BASE_UTILITY);
+        IUtility utility = factory.createUtility(Constants.BASE_UTILITY, app.getDialogController());
         while (!utility.checkFileExists("hub.exit")) {
             try {
                 Thread.sleep(1000);

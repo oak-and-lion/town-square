@@ -5,17 +5,9 @@ import java.security.PublicKey;
 import javafx.scene.control.TextField;
 
 public class Factory implements IFactory {
-    public ISquareKeyPair createSquareKeyPair(int type, PublicKey publicKey, PrivateKey privateKey) {
+    public ISquareKeyPair createSquareKeyPair(int type, PublicKey publicKey, PrivateKey privateKey, IUtility utility) {
         if (type == Constants.KEYS_SQUARE_KEY_PAIR) {
-            return new SquareKeyPair(publicKey, privateKey);
-        }
-
-        return null;
-    }
-
-    public ISquareKeyPair createSquareKeyPair(int type) {
-        if (type == Constants.BASE_SQUARE_KEY_PAIR) {
-            return new SquareKeyPair();
+            return new SquareKeyPair(publicKey, privateKey, utility);
         }
 
         return null;
@@ -62,9 +54,9 @@ public class Factory implements IFactory {
         return null;
     }
 
-    public IUtility createUtility(int type) {
+    public IUtility createUtility(int type, IDialogController controller) {
         if (type == Constants.BASE_UTILITY) {
-            return Utility.create();
+            return Utility.create(controller, this);
         }
 
         return null;
@@ -156,9 +148,9 @@ public class Factory implements IFactory {
 
     public IModalViewer createModalViewer(int type, IUtility utility, ISquare square) {
         if (type == Constants.BASE_MODAL_IMAGE_VIEWER) {
-            return new ModalImageViewer(square.getSampleController().getParent().getStage());
+            return new ModalImageViewer(square.getSampleController().getParent().getStage(), utility);
         } else if (type == Constants.BASE_MODAL_VIDEO_VIEWER) {
-            return new ModalVideoViewer(square.getSampleController().getParent().getStage());
+            return new ModalVideoViewer(square.getSampleController().getParent().getStage(), utility);
         } else if (type == Constants.BASE_MODAL_MEMBER_VIEWER) {
             return new ModalMembersList(utility, square, square.getSampleController().getParent().getStage());
         } else if (type == Constants.BASE_MODAL_LICENSE_VIEWER) {
