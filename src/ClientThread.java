@@ -35,7 +35,8 @@ public class ClientThread extends Thread implements IClientThread {
         this.app = app;
         tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
         tempKeys.setPrivateKeyFromBase64(utility.readFile(Constants.PRIVATE_KEY_FILE));
-        this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility, this.app.getDialogController());
+        this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility,
+                this.app.getDialogController());
     }
 
     private void getWaitTime() {
@@ -263,13 +264,15 @@ public class ClientThread extends Thread implements IClientThread {
                 String message = utility.concatStrings(sdf.format(new Date(Long.valueOf(post[0]))), Constants.SPACE,
                         Constants.OPEN_PARENS, memberName[0], Constants.CLOSE_PARENS, Constants.SPACE, Constants.COLON,
                         Constants.SPACE, post[1]);
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        square.getSampleController().addPostMessages(square, vbox, scrollPane, message,
-                                Long.parseLong(post[0]), memberName[4]);
-                    }
-                });
+                if (app.getDialogController().isGui()) {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            square.getSampleController().addPostMessages(square, vbox, scrollPane, message,
+                                    Long.parseLong(post[0]), memberName[4]);
+                        }
+                    });
+                }
             }
         }
     }

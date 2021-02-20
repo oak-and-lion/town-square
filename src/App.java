@@ -47,6 +47,7 @@ public class App extends Application implements IApp {
 
     @Override
     public void start(Stage primaryStage) {
+        utility = factory.createUtility(Constants.BASE_UTILITY, new DialogControllerEmpty());
         systemExit.setParent(this);
         if (checkCurrentState(alert)) {
             processStart(primaryStage);
@@ -68,8 +69,6 @@ public class App extends Application implements IApp {
         IVersionChecker versionChecker;
         ICommandController commandController;
 
-        keys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
-
         systemExit.setParent(this);
 
         try {
@@ -82,6 +81,7 @@ public class App extends Application implements IApp {
             controller = loader.<DialogController>getController();
 
             utility = factory.createUtility(Constants.BASE_UTILITY, controller);
+            keys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
             ICryptoUtils cryptoUtils = factory.createCryptoUtils(Constants.BASE_CRYPTO_UTILS, controller);
             logger = factory.createLogger(loggerType, Constants.MAIN_LOG_FILE, utility, controller);
 

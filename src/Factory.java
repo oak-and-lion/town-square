@@ -207,7 +207,7 @@ public class Factory implements IFactory {
 
     public ISquare findSquareByCommand(String command, String inviteId, IDialogController dialogController) {
         ISquare square;
-        if (command.equals(Constants.CHECK_VERSION_COMMAND) || command.equals(Constants.GET_APP_JAR_COMMAND)) {
+        if (command.equals(Constants.CHECK_VERSION_COMMAND) || command.equals(Constants.GET_APP_JAR_COMMAND) || command.equals(Constants.ACK_COMMAND)) {
             square = new SquareEmpty();
         } else {
             square = dialogController.getSquareByInvite(inviteId);

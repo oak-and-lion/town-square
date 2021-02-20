@@ -13,11 +13,13 @@ public class CommandWorkerAck extends CommandWorkerBase implements ICommandWorke
         String[] info = commandArgs.split(Constants.FILE_DATA_SEPARATOR);
         IClient client = factory.createClient(Constants.BASE_CLIENT, info[0], Integer.valueOf(info[1]), square.getInvite(), parent.getParent());
         String response = client.sendMessage(Constants.ACK_COMMAND, Constants.DO_NOT_ENCRYPT_CLIENT_TRANSFER, Constants.ACK_COMMAND);
+
         if (response.equals(Constants.EMPTY_STRING)) {
             result.add(new BooleanString(false, Constants.EMPTY_STRING));
         } else {
             result.add(new BooleanString(true, Constants.EMPTY_STRING));
         }
+
         return result;
     }
 }

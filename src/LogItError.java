@@ -1,3 +1,5 @@
+import javafx.application.Platform;
+
 public class LogItError implements ILogIt {
     private IDialogController dialogController;
     private ILogIt fileLogger;
@@ -6,10 +8,17 @@ public class LogItError implements ILogIt {
         fileLogger = LogItFile.create(utility, file, dialogController);
         this.dialogController = dialogController;
     }
-    
+
     public void logInfo(String msg) {
         fileLogger.logInfo(msg);
-        dialogController.showList(new String[] {msg}, "Error Encountered", "Error");
+        if (dialogController.isGui()) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    dialogController.showList(new String[] { msg }, "Error Encountered", "Error");
+                }
+            });
+        }
     }
 
     public IDialogController getDialogController() {
