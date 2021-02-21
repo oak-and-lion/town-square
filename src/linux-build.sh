@@ -36,7 +36,7 @@ cp ../../../blocked-video.mp4 blocked-video.mp4
 
 mkdir package
 
-tar -a -c -f package/pkg-town-square_linux.tar.gz town-square-linux.sh App.jar Hub.jar javafx-linux.zip OpenJDK11U-jdk_x64_linux_hotspot_11.0.10_9.tar.gz blocked-image.png blocked-video.mp4
+tar -a -c -f package/pkg-town-square_linux.tar.gz town-square-linux.sh town-square-linux-hub.sh App.jar Hub.jar javafx-linux.zip OpenJDK11U-jdk_x64_linux_hotspot_11.0.10_9.tar.gz blocked-image.png blocked-video.mp4
 
 cd package
 
