@@ -32,7 +32,7 @@ cp ../../../blocked-image.png blocked-image.png
 cp ../../../blocked-video.mp4 blocked-video.mp4
 
 ../../$JAVA_PATH/jar -c -v -m ../Manifest.txt -f App.jar ../*.class ../sample.fxml
-../../$JAVA_PATH/jar -c -v -m ../ManifestHub.txt -f App.jar ../*.class
+../../$JAVA_PATH/jar -c -v -m ../ManifestHub.txt -f Hub.jar ../*.class
 
 mkdir package
 
