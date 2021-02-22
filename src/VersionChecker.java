@@ -85,7 +85,7 @@ public class VersionChecker extends Thread implements IVersionChecker {
                 utility.encrypt(Constants.CHECK_VERSION_COMMAND, password));
         String result = client.sendMessage(encryptedData, Constants.ENCRYPT_CLIENT_TRANSFER, Constants.CHECK_VERSION_COMMAND);
 
-        if (result.equals(Constants.EMPTY_STRING)) {
+        if (result == null || result.equals(Constants.EMPTY_STRING)) {
             return;
         }
 

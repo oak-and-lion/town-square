@@ -36,7 +36,7 @@ public class Utility implements IUtility {
 
     private Utility(IDialogController controller, IFactory factory) {
         random = new Random();
-        this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility, controller);
+        this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, this, controller);
     }
 
     public static IUtility create(IDialogController controller, IFactory factory) {

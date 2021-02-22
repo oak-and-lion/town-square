@@ -28,24 +28,39 @@ public class ModalMembersList extends BaseViewer implements IModalViewer {
         boolean first = true;
         ICommandController controller = square.getSampleController().getCommandController();
 
+        MemberInfoList membersInfoList = new MemberInfoList();
         for (String member : membersSplit) {
+            membersInfoList.add(new MemberInfo(member, utility));
+        }
+
+        String current = Constants.EMPTY_STRING;
+        String spacing;
+        for (MemberInfo member : membersInfoList.getAll()) {
             if (!first) {
                 members.append(Constants.NEWLINE);
-                members.append("-------------------");
-                members.append(Constants.NEWLINE);
+                if (!current.equals(member.getPublicKey())) {
+                    members.append("-------------------");
+                    members.append(Constants.NEWLINE);
+                }
             } else {
                 first = false;
             }
-            String[] m = member.split(Constants.FILE_DATA_SEPARATOR);
 
-            String ack = Constants.ACK_COMMAND;
+            if (!current.equals(member.getPublicKey())) {
+                current = member.getPublicKey();
+                spacing = Constants.EMPTY_STRING;
+            } else {
+                spacing = Constants.FOUR_SPACES;
+            }
+
+            String ack;
             String myIp = utility.readFile(Constants.IP_FILE);
             String myPort = utility.readFile(Constants.PORT_FILE);
-            if (m[2].equals(myIp) && m[3].equals(myPort)) {
-                // do nothing
+            if (member.getIp().equals(myIp) && member.getPort().equals(myPort)) {
+                spacing = utility.concatStrings(Constants.THREE_STRINGS, Constants.HASHTAG);
             } else {
-                ack = utility.concatStrings(Constants.FORWARD_SLASH, Constants.ACK_COMMAND, Constants.SPACE, m[2],
-                        Constants.FILE_DATA_SEPARATOR, m[3]);
+                ack = utility.concatStrings(Constants.FORWARD_SLASH, Constants.ACK_COMMAND, Constants.SPACE,
+                        member.getIp(), Constants.FILE_DATA_SEPARATOR, member.getPort());
 
                 BooleanString[] ackResult = controller.processCommand(ack, square);
                 if (ackResult[0].getBoolean()) {
@@ -53,17 +68,17 @@ public class ModalMembersList extends BaseViewer implements IModalViewer {
                     members.append(Constants.STAR);
                 }
             }
-            members.append(m[0]);
+            members.append(spacing);
+            members.append(member.getName());
             members.append(Constants.SPACE);
             members.append(Constants.DASH);
             members.append(Constants.SPACE);
-            members.append(m[2]);
+            members.append(member.getIp());
             members.append(Constants.COLON);
-            members.append(m[3]);
+            members.append(member.getPort());
         }
         Text label = new Text(members.toString());
 
-        // label.setPadding(new Insets(5, 5, 5, 5));
         vbox.getChildren().add(label);
         // setting group and scene
         Group root = new Group();

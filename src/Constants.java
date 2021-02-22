@@ -70,7 +70,10 @@ public class Constants {
     public static final String UNDERSCORE = "_";
     public static final String DASH = "-";
     public static final String SPACE = " ";
+    public static final String FOUR_SPACES = "    ";
+    public static final String THREE_STRINGS = "   ";
     public static final String PERCENT = "%";
+    public static final String HASHTAG = "#";
     public static final String PERIOD_SPLIT = "\\.";
     public static final int JOIN_TYPE = 1;
     public static final int CREATE_TYPE = 2;
