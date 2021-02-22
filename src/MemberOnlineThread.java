@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class MemberOnlineThread extends Thread implements IMemberOnlineThread {
     private MemberInfo member;
     private IUtility utility;
@@ -25,7 +27,7 @@ public class MemberOnlineThread extends Thread implements IMemberOnlineThread {
                 member.setOnline(result[0].getBoolean());
             }
         } catch (Exception e) {
-            // add logging
+            utility.logError(utility.concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
         }
         done = true;
     }
