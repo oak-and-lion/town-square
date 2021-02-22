@@ -7,6 +7,7 @@ public class MemberInfo implements Comparable<MemberInfo> {
     private String port;
     private String uniqueId;
     private IUtility utility;
+    private Boolean online;
 
     public MemberInfo(String info, IUtility utility) {
         String[] split = info.split(Constants.FILE_DATA_SEPARATOR);
@@ -17,6 +18,7 @@ public class MemberInfo implements Comparable<MemberInfo> {
         port = split[3];
         uniqueId = split[4];
         this.utility = utility;
+        online = false;
     }
 
     public MemberInfo(String name, String publicKey, String ip, String port, String uniqueId, IUtility utility) {
@@ -46,6 +48,14 @@ public class MemberInfo implements Comparable<MemberInfo> {
 
     public String getUniqueId() {
         return uniqueId;
+    }
+
+    public Boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(Boolean value) {
+        online = value;
     }
 
     public String toString() {

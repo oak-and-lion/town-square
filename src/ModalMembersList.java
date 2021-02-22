@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
@@ -26,11 +28,27 @@ public class ModalMembersList extends BaseViewer implements IModalViewer {
         String[] membersSplit = utility.readFile(file).split(Constants.READ_FILE_DATA_SEPARATOR);
         StringBuilder members = new StringBuilder();
         boolean first = true;
-        ICommandController controller = square.getSampleController().getCommandController();
 
+        ArrayList<MemberOnlineThread> membersOnline = new ArrayList<>();
         MemberInfoList membersInfoList = new MemberInfoList();
+
         for (String member : membersSplit) {
-            membersInfoList.add(new MemberInfo(member, utility));
+            MemberInfo memberInfo = new MemberInfo(member, utility);
+            membersInfoList.add(memberInfo);
+            MemberOnlineThread thread = new MemberOnlineThread(memberInfo, utility, square);
+            thread.start();
+            membersOnline.add(thread);
+        }
+
+        Boolean allDone = false;
+        while (!allDone) {
+            allDone = true;
+            for (MemberOnlineThread thread : membersOnline) {
+                if (!thread.isDone()) {
+                    allDone = false;
+                    break;
+                }
+            }
         }
 
         String current = Constants.EMPTY_STRING;
@@ -53,17 +71,12 @@ public class ModalMembersList extends BaseViewer implements IModalViewer {
                 spacing = Constants.FOUR_SPACES;
             }
 
-            String ack;
             String myIp = utility.readFile(Constants.IP_FILE);
             String myPort = utility.readFile(Constants.PORT_FILE);
             if (member.getIp().equals(myIp) && member.getPort().equals(myPort)) {
                 spacing = utility.concatStrings(Constants.THREE_STRINGS, Constants.HASHTAG);
             } else {
-                ack = utility.concatStrings(Constants.FORWARD_SLASH, Constants.ACK_COMMAND, Constants.SPACE,
-                        member.getIp(), Constants.FILE_DATA_SEPARATOR, member.getPort());
-
-                BooleanString[] ackResult = controller.processCommand(ack, square);
-                if (ackResult[0].getBoolean()) {
+                if (member.isOnline()) {
                     members.append(Constants.STAR);
                     members.append(Constants.STAR);
                 }
