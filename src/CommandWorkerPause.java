@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javafx.application.Platform;
@@ -36,7 +37,7 @@ public class CommandWorkerPause extends CommandWorkerBase implements ICommandWor
                     }
                 });
             } catch (Exception e) {
-                errorLogger.logInfo(e.getMessage());
+                errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
             }
         }
 

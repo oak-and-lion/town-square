@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javafx.scene.control.ScrollPane;
@@ -77,7 +78,7 @@ public class Square implements ISquare {
             Thread.sleep(millis);
             clientThread.start();
         } catch (InterruptedException ie) {
-            this.errorLogger.logInfo(ie.getMessage());
+            this.errorLogger.logInfo(utility.concatStrings(ie.getMessage(), Constants.NEWLINE, Arrays.toString(ie.getStackTrace())));
             Thread.currentThread().interrupt();
         }
     }

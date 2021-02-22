@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Hub {
     public static void main(String[] args) {
         String loggerFlag = Constants.EMPTY_STRING;
@@ -22,7 +24,7 @@ public class Hub {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ie) {
-                errorLogger.logInfo(ie.getMessage());
+                errorLogger.logInfo(utility.concatStrings(ie.getMessage(), Constants.NEWLINE, Arrays.toString(ie.getStackTrace())));
                 Thread.currentThread().interrupt();
             }
         }

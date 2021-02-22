@@ -1,5 +1,6 @@
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Arrays;
 
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -27,7 +28,7 @@ public class ModalImageViewer extends BaseViewer implements IModalViewer {
             root.getChildren().add(imageView);  
             showStage(root, "Image");
         } catch (Exception e) {
-            utility.logError(e.getMessage());
+            utility.logError(utility.concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
         }
     }
 }

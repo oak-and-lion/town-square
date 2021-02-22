@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.Arrays;
 
 /**
  * This thread is responsible to handle client connection.
@@ -52,7 +53,7 @@ public class ServerThread extends Thread implements IServerThread {
             logger.logInfo(utility.concatStrings("Client Disconnected: ", socket.getInetAddress().getHostAddress()));
             socket.close();
         } catch (IOException ex) {
-            errorLogger.logInfo(ex.getMessage());
+            errorLogger.logInfo(utility.concatStrings(ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
         }
     }
 }

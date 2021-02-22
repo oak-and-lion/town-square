@@ -8,6 +8,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 
 public class Client implements IClient {
     private int port;
@@ -63,22 +64,22 @@ public class Client implements IClient {
             return result;
         } catch (SocketException se) {
             if (se.getMessage().equals("Connection refused: connect")) {
-                logger.logInfo(
-                        utility.concatStrings(guid, Constants.SPACE, CLIENT_PREFIX, squareId, "' not available"));
+                utility.logError(
+                        utility.concatStrings(guid, Constants.SPACE, CLIENT_PREFIX, squareId, "' not available", Constants.NEWLINE, Arrays.toString(se.getStackTrace())));
             } else if (se.getMessage().equals("Connection timed out: connect")) {
-                logger.logInfo(utility.concatStrings(guid, Constants.SPACE, CLIENT_PREFIX, hostName, Constants.COLON,
-                        Integer.toString(port), "' not available"));
+                utility.logError(utility.concatStrings(guid, Constants.SPACE, CLIENT_PREFIX, hostName, Constants.COLON,
+                        Integer.toString(port), "' not available", Constants.NEWLINE, Arrays.toString(se.getStackTrace())));
             } else {
-                logger.logInfo(utility.concatStrings(guid, Constants.SPACE, CLIENT_PREFIX, hostName, Constants.COLON,
-                        Integer.toString(port), Constants.SINGLE_QUOTE, Constants.SPACE, se.getMessage()));
+                utility.logError(utility.concatStrings(guid, Constants.SPACE, CLIENT_PREFIX, hostName, Constants.COLON,
+                        Integer.toString(port), Constants.SINGLE_QUOTE, Constants.SPACE, se.getMessage(), Constants.NEWLINE, Arrays.toString(se.getStackTrace())));
             }
         } catch (UnknownHostException ex) {
-            logger.logInfo(utility.concatStrings(guid, " Server not found: ", ex.getMessage()));
+            utility.logError(utility.concatStrings(guid, " Server not found: ", ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
         } catch (IOException ex) {
-            logger.logInfo(utility.concatStrings(guid, " I/O error: ", ex.getMessage()));
+            utility.logError(utility.concatStrings(guid, " I/O error: ", ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
         } catch (Exception e) {
-            logger.logInfo(utility.concatStrings(guid, Constants.SPACE, CLIENT_PREFIX, hostName, Constants.COLON,
-                    Integer.toString(port), Constants.SINGLE_QUOTE, Constants.SPACE, e.getMessage()));
+            utility.logError(utility.concatStrings(guid, Constants.SPACE, CLIENT_PREFIX, hostName, Constants.COLON,
+                    Integer.toString(port), Constants.SINGLE_QUOTE, Constants.SPACE, e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
         }
 
         return Constants.EMPTY_STRING;
@@ -103,7 +104,7 @@ public class Client implements IClient {
             return readServerReply(input);
         } catch (Exception e) {
             logger.logInfo(utility.concatStrings(CLIENT_PREFIX, hostName, Constants.COLON, Integer.toString(port),
-                    Constants.SINGLE_QUOTE, Constants.SPACE, e.getMessage()));
+                    Constants.SINGLE_QUOTE, Constants.SPACE, e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
         }
 
         return Constants.EMPTY_STRING;
@@ -114,7 +115,7 @@ public class Client implements IClient {
             return reader.readLine();
         } catch (IOException ioe) {
             logger.logInfo(utility.concatStrings(CLIENT_PREFIX, hostName, Constants.COLON, Integer.toString(port),
-                    Constants.SINGLE_QUOTE, Constants.SPACE, ioe.getMessage()));
+                    Constants.SINGLE_QUOTE, Constants.SPACE, ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
         }
 
         return Constants.EMPTY_STRING;

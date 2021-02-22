@@ -2,6 +2,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SquareWorkerGetFile extends SquareWorkerBase implements ISquareWorker {
     private IFactory factory;
@@ -67,9 +68,9 @@ public class SquareWorkerGetFile extends SquareWorkerBase implements ISquareWork
             result = utility.concatStrings(tempKeys.encryptToBase64(password), Constants.COMMAND_DATA_SEPARATOR,
                     temp.toString());
         } catch (IOException ioe) {
-            errorLogger.logInfo(ioe.getMessage());
+            errorLogger.logInfo(utility.concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
         } catch (Exception e) {
-            errorLogger.logInfo(e.getMessage());
+            errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
         }
 
         return result;

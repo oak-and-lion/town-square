@@ -8,6 +8,7 @@ import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Arrays;
 import java.util.Base64;
 
 import javax.crypto.BadPaddingException;
@@ -129,15 +130,15 @@ public class SquareKeyPair implements ISquareKeyPair {
             byte[] bytes = cipher.doFinal(data);
             return new String(bytes);
         } catch (IllegalBlockSizeException ibse) {
-            utility.logError(ibse.getMessage());
+            utility.logError(utility.concatStrings(ibse.getMessage(), Constants.NEWLINE, Arrays.toString(ibse.getStackTrace())));
         } catch (InvalidKeyException ike) {
-            utility.logError(ike.getMessage());
+            utility.logError(utility.concatStrings(ike.getMessage(), Constants.NEWLINE, Arrays.toString(ike.getStackTrace())));
         } catch (BadPaddingException bpe) {
-            utility.logError(bpe.getMessage());
+            utility.logError(utility.concatStrings(bpe.getMessage(), Constants.NEWLINE, Arrays.toString(bpe.getStackTrace())));
         } catch (NoSuchAlgorithmException nsae) {
-            utility.logError(nsae.getMessage());
+            utility.logError(utility.concatStrings(nsae.getMessage(), Constants.NEWLINE, Arrays.toString(nsae.getStackTrace())));
         } catch (NoSuchPaddingException nspe) {
-            utility.logError(nspe.getMessage());
+            utility.logError(utility.concatStrings(nspe.getMessage(), Constants.NEWLINE, Arrays.toString(nspe.getStackTrace())));
         }
 
         return Constants.EMPTY_STRING;

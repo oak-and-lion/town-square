@@ -12,6 +12,7 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CryptoUtils implements ICryptoUtils {
@@ -83,7 +84,7 @@ public class CryptoUtils implements ICryptoUtils {
         try {
             kpg = KeyPairGenerator.getInstance(Constants.RSA);
         } catch (NoSuchAlgorithmException e) {
-            errorLogger.logInfo(e.getMessage());
+            errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
         }
         if (kpg != null) {
             kpg.initialize(2048);

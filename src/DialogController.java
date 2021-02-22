@@ -7,6 +7,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -820,11 +821,11 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                         desktop.browse(uri);
                     }
                 } catch (NullPointerException npe) {
-                    errorLogger.logInfo(npe.getMessage());
+                    errorLogger.logInfo(utility.concatStrings(npe.getMessage(), Constants.NEWLINE, Arrays.toString(npe.getStackTrace())));
                 } catch (IOException ioe) {
-                    errorLogger.logInfo(ioe.getMessage());
+                    errorLogger.logInfo(utility.concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
                 } catch (URISyntaxException use) {
-                    errorLogger.logInfo(use.getMessage());
+                    errorLogger.logInfo(utility.concatStrings(use.getMessage(), Constants.NEWLINE, Arrays.toString(use.getStackTrace())));
                 }
             }
         });
@@ -861,9 +862,9 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                     File f = new File(file);
                     Desktop.getDesktop().open(f);
                 } catch (NullPointerException npe) {
-                    errorLogger.logInfo(npe.getMessage());
+                    errorLogger.logInfo(utility.concatStrings(npe.getMessage(), Constants.NEWLINE, Arrays.toString(npe.getStackTrace())));
                 } catch (IOException ioe) {
-                    errorLogger.logInfo(ioe.getMessage());
+                    errorLogger.logInfo(utility.concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
                 }
             }
         });
@@ -944,7 +945,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             }
             images.add(imageView);
         } catch (Exception e) {
-            errorLogger.logInfo(e.getMessage());
+            errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
         }
     }
 
@@ -974,7 +975,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                         Image i = new Image(stream);
                         image.setImage(i);
                     } catch (Exception e) {
-                        errorLogger.logInfo(e.getMessage());
+                        errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
                     }
                     return;
                 }

@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 
 public class Server extends Thread implements IServer {
     private int port;
@@ -55,7 +56,7 @@ public class Server extends Thread implements IServer {
             }
 
         } catch (IOException ex) {
-            errorLogger.logInfo(ex.getMessage());
+            errorLogger.logInfo(utility.concatStrings(ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
             parent.closeApp(Constants.SYSTEM_EXIT_PORT_IN_USE, Constants.SYSTEM_EXIT_PORT_IN_USE);
         }
     }
@@ -78,7 +79,7 @@ public class Server extends Thread implements IServer {
             serverThread.start();
 
         } catch (Exception e) {
-            errorLogger.logInfo(e.getMessage());
+            errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
             result = false;
         }
 

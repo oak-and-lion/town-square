@@ -115,7 +115,7 @@ public class ClientThread extends Thread implements IClientThread {
                 count = checkCount(count);
             }
         } catch (InterruptedException ie) {
-            errorLogger.logInfo(ie.getMessage());
+            errorLogger.logInfo(utility.concatStrings(ie.getMessage(), Constants.NEWLINE, Arrays.toString(ie.getStackTrace())));
             Thread.currentThread().interrupt();
         }
     }
@@ -152,7 +152,7 @@ public class ClientThread extends Thread implements IClientThread {
             try {
                 Thread.sleep(Constants.TINY_PAUSE);
             } catch (InterruptedException ie) {
-                errorLogger.logInfo(ie.getMessage());
+                errorLogger.logInfo(utility.concatStrings(ie.getMessage(), Constants.NEWLINE, Arrays.toString(ie.getStackTrace())));
                 Thread.currentThread().interrupt();
             }
         }

@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Arrays;
 
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -44,7 +45,7 @@ public class ModalVideoViewer extends BaseViewer implements IModalViewer {
             root.getChildren().addAll(vbox);
             showStage(root, "Video");
         } catch (Exception e) {
-            utility.logError(e.getMessage());
+            utility.logError(utility.concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
         }
     }
 

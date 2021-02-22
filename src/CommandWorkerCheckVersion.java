@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CommandWorkerCheckVersion extends CommandWorkerBase implements ICommandWorker {
@@ -19,7 +20,7 @@ public class CommandWorkerCheckVersion extends CommandWorkerBase implements ICom
             try {
                 Thread.sleep(Constants.DEFAULT_WAIT_TIME);
             } catch (InterruptedException ie) {
-                errorLogger.logInfo(ie.getMessage());
+                errorLogger.logInfo(utility.concatStrings(ie.getMessage(), Constants.NEWLINE, Arrays.toString(ie.getStackTrace())));
                 Thread.currentThread().interrupt();
             }
         }

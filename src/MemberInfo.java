@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class MemberInfo implements Comparable<MemberInfo> {
     private String name;
     private String publicKey;
@@ -84,7 +86,7 @@ public class MemberInfo implements Comparable<MemberInfo> {
             try {
                 m = (MemberInfo)o;
             } catch (Exception e) {
-                utility.logError(e.getMessage());
+                utility.logError(utility.concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
                 return false;
             }
 

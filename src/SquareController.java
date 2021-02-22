@@ -70,7 +70,7 @@ public class SquareController implements ISquareController {
                 result.add(inviteId);
                 result.addAll(Arrays.asList(data));
             } catch (Exception e) {
-                errorLogger.logInfo(e.getMessage());
+                errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
             }
         }
 

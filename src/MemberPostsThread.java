@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MemberPostsThread extends Thread implements IMemberPostsThread {
     private String info;
@@ -39,7 +40,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
         try {
             getPostsFromOtherMembers();
         } catch (Exception ie) {
-            errorLogger.logInfo(ie.getMessage());
+            errorLogger.logInfo(utility.concatStrings(ie.getMessage(), Constants.NEWLINE, Arrays.toString(ie.getStackTrace())));
             Thread.currentThread().interrupt();
         }
     }

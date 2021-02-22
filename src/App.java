@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -171,7 +172,7 @@ public class App extends Application implements IApp {
             return controller;
 
         } catch (IOException ioe) {
-            logger.logInfo(ioe.getMessage());
+            logger.logInfo(utility.concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
             systemExit.handleExit(Constants.SYSTEM_EXIT_FAIL);
         }
 

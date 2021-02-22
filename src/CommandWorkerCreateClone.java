@@ -2,6 +2,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipOutputStream;
@@ -119,9 +120,9 @@ public class CommandWorkerCreateClone extends CommandWorkerBase implements IComm
             }
             zipOut.close();
         } catch (FileNotFoundException fnfe) {
-            errorLogger.logInfo(fnfe.getMessage());
+            errorLogger.logInfo(utility.concatStrings(fnfe.getMessage(), Constants.NEWLINE, Arrays.toString(fnfe.getStackTrace())));
         } catch (IOException ioe) {
-            errorLogger.logInfo(ioe.getMessage());
+            errorLogger.logInfo(utility.concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
         }
     }
 }

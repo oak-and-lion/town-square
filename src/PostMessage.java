@@ -1,3 +1,4 @@
+import java.util.Arrays;
 
 public class PostMessage implements Comparable<PostMessage> {
     private long millis;
@@ -41,7 +42,7 @@ public class PostMessage implements Comparable<PostMessage> {
             try {
                 m = (PostMessage)o;
             } catch (Exception e) {
-                utility.logError(e.getMessage());
+                utility.logError(utility.concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
                 return false;
             }
 
