@@ -36,7 +36,8 @@ public class Constants {
     public static final int SYSTEM_EXIT_ALREADY_RUNNING = 2;
     public static final int SYSTEM_EXIT_PORT_IN_USE = 3;
     public static final int BASE_COMMAND_CONTROLLER = 1;
-    public static final int BASE_MEMBER_POSTS_THREAD = 1; 
+    public static final int BASE_MEMBER_POSTS_THREAD = 1;
+    public static final int BASE_SYNC_CLONE = 1;
     public static final int NULL_OBJECT_TYPE = Integer.MAX_VALUE;
     public static final String SQUARE_FILE_EXT = ".square";
     public static final String UNIQUE_ID_FILE = "unique.id";
@@ -266,4 +267,6 @@ public class Constants {
     public static final String REGISTER_HUB = "reghub";
     public static final String SEND_MESSAGE = "send";
     public static final String ERROR_LOG_FILE = "_error.log";
+    public static final String SYNC_CLONE = "syncclone";
+    public static final int SYNC_CLONE_WAIT = 10000;
 }

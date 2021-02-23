@@ -114,4 +114,8 @@ public class xxMockFactory implements IFactory {
     public IDialogController createDialogController(int type, IApp app, IUtility utility) {
         return new ServerDialogController(app, utility, this);
     }
+
+    public ISyncClone createSyncClone(int type, IUtility utility, IApp parent, ILogIt logger) {
+        return null;
+    }
 }
