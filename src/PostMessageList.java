@@ -3,7 +3,7 @@ import java.util.Collections;
 
 public class PostMessageList {
 
-    private ArrayList<PostMessage> internalList = new ArrayList<PostMessage>();
+    private ArrayList<PostMessage> internalList = new ArrayList<>();
 
     public void addAll(PostMessage[] messages) {
         for(PostMessage m : messages) {
@@ -38,11 +38,16 @@ public class PostMessageList {
     }
 
     public String[] getAllMessages() {
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
         for(PostMessage msg : internalList) {
             result.add(msg.getMessage());
         }
 
         return result.toArray(new String[result.size()]);
+    }
+
+    public Boolean removeFirstPost() {
+        internalList.remove(0);
+        return true;
     }
 }

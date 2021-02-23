@@ -269,4 +269,5 @@ public class Constants {
     public static final String ERROR_LOG_FILE = "_error.log";
     public static final String SYNC_CLONE = "syncclone";
     public static final int SYNC_CLONE_WAIT = 10000;
+    public static final int MAX_POSTS_ALLOWED = 1000;
 }

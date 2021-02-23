@@ -293,7 +293,7 @@ public class ClientThread extends Thread implements IClientThread {
         if (utility.checkFileExists(Constants.HUB_REGISTRATION_FILE)) {
             postToHub(message);
         } else {
-            posts.add(message);
+            addPostLocal(message);
         }
     }
 
@@ -319,8 +319,18 @@ public class ClientThread extends Thread implements IClientThread {
                 // need code
             } else {
                 // backup locally, in case it doesn't work
-                posts.add(message);
+                addPostLocal(message);
             }
         }
+    }
+
+    private void addPostLocal(PostMessage message) {
+        if (posts.size() >= Constants.MAX_POSTS_ALLOWED) {
+            for (int i = posts.size() - 1; i >= Constants.MAX_POSTS_ALLOWED - 1; i--) {
+                posts.removeFirstPost();
+            }
+        }
+
+        posts.add(message);
     }
 }
