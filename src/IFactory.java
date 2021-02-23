@@ -37,4 +37,5 @@ public interface IFactory {
     ICommandWorker createCommandWorker(String cmd, IUtility utility, ISquare square, IDialogController dialogController);
     IApp createApp(String loggerFlag, IAlertBox alertbox, ISystemExit exit, IFactory f);
     IDialogController createDialogController(int type, IApp app, IUtility utility);
+    ISyncClone createSyncClone(int type, IUtility utility, IApp parent, ILogIt logger);
 }

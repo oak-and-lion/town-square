@@ -32,6 +32,9 @@ public class Server extends Thread implements IServer {
         this.squareController = controller;
         this.logger = logger;
         this.factory = factory;
+        if (this.logger.getDialogController().getFactory() == null) {
+            this.logger.getDialogController().setFactory(this.factory);
+        }
         this.parent = parent;
         this.utility = factory.createUtility(Constants.BASE_UTILITY, parent.getDialogController());
         this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility, this.logger.getDialogController());
@@ -74,6 +77,10 @@ public class Server extends Thread implements IServer {
                 logger.logInfo("Not serving requests right now.");
             }
             
+            if (logger.getDialogController().getFactory() == null) {
+                logger.getDialogController().setFactory(factory);
+            }
+
             serverThread = factory.createServerThread(Constants.BASE_SERVER_THREAD, socket, squareController, logger,
                     factory.createUtility(Constants.BASE_UTILITY, parent.getDialogController()), requester);
             serverThread.start();

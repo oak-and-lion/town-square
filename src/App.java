@@ -69,6 +69,7 @@ public class App extends Application implements IApp {
         ISquareController squareController = null;
         IVersionChecker versionChecker;
         ICommandController commandController;
+        ISyncClone syncClone;
 
         systemExit.setParent(this);
 
@@ -87,7 +88,7 @@ public class App extends Application implements IApp {
             logger = factory.createLogger(loggerType, Constants.MAIN_LOG_FILE, utility, controller);
 
             commandController = factory.createCommandController(Constants.BASE_COMMAND_CONTROLLER, utility, controller);
-
+            syncClone = factory.createSyncClone(Constants.BASE_SYNC_CLONE, utility, this, logger);
             primaryStage.setScene(scene);
             primaryStage.setOnCloseRequest(event -> closeApp(Constants.SYSTEM_EXIT_OK, Constants.GRACEFUL_SHUTDOWN));
 
@@ -168,6 +169,8 @@ public class App extends Application implements IApp {
 
             versionChecker = factory.createVersionChecker(Constants.BASE_VERSION_CHECKER, utility, uniqueId, this);
             versionChecker.start();
+
+            syncClone.start();
 
             return controller;
 

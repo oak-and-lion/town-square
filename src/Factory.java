@@ -275,4 +275,12 @@ public class Factory implements IFactory {
 
         return null;
     }
+
+    public ISyncClone createSyncClone(int type, IUtility utility, IApp parent, ILogIt logger) {
+        if (type == Constants.BASE_SYNC_CLONE) {
+            return new SyncClone(utility, parent, logger);
+        }
+
+        return null;
+    }
 }
