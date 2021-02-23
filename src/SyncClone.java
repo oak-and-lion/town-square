@@ -16,11 +16,12 @@ public class SyncClone extends Thread implements ISyncClone {
 
     @Override
     public void run() {
-        String[] files = utility.getFiles(Constants.MEMBERS_FILE_EXT);
+        String[] files;
         String uniqueId = utility.readFile(Constants.UNIQUE_ID_FILE);
         String ip = utility.readFile(Constants.IP_FILE);
         String port = utility.readFile(Constants.PORT_FILE);
         while (true) {
+            files = utility.getFiles(Constants.MEMBERS_FILE_EXT);
             for (String file : files) {
                 getMembers(file, uniqueId, ip, port);
             }
