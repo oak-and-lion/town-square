@@ -74,7 +74,11 @@ public class ModalMembersList extends BaseViewer implements IModalViewer {
             String myIp = utility.readFile(Constants.IP_FILE);
             String myPort = utility.readFile(Constants.PORT_FILE);
             if (member.getIp().equals(myIp) && member.getPort().equals(myPort)) {
+                if (spacing.length() > 0) {
                 spacing = utility.concatStrings(Constants.THREE_STRINGS, Constants.HASHTAG);
+                } else {
+                    spacing = Constants.HASHTAG;
+                }
             } else {
                 if (member.isOnline()) {
                     members.append(Constants.STAR);

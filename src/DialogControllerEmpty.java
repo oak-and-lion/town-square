@@ -6,6 +6,10 @@ import javafx.stage.Stage;
 public class DialogControllerEmpty implements IDialogController {
     private ICommandController commandController;
     private IFactory factory;
+
+    public DialogControllerEmpty() {
+        this.factory = new Factory();
+    }
     
     public ISquare getSquareByInvite(String id){
         return new SquareEmpty(this);
