@@ -121,9 +121,6 @@ public class ServerDialogController implements IDialogController {
     public void buildSquares() {
         String[] files = utility.getFiles(Constants.SQUARE_FILE_EXT);
         for (String file : files) {
-            if (file.equals(utility.concatStrings(Constants.MY_SQUARE_DEFAULT, Constants.SQUARE_FILE_EXT))) {
-                continue;
-            }
             String contents = utility.readFile(file);
             ISquare square = new Square(contents, port, remoteIP,
                     factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
@@ -132,6 +129,8 @@ public class ServerDialogController implements IDialogController {
                             factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
                     utility, this, uniqueId, factory, getParent());
 
+            squares.add(square);
+            squareInvites.add(square.getInvite());
             app.logMessge(utility.concatStrings("Invitation: e~", remoteIP, Constants.TILDE, port, Constants.TILDE, square.getInvite()));
         }
     }

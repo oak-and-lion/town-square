@@ -283,4 +283,12 @@ public class Factory implements IFactory {
 
         return null;
     }
+
+    public ISetup createSetup(int type, IUtility utility, IApp app) {
+        if (type == Constants.HUB_SETUP_CONTROLLER) {
+            return new SetupHubController(utility, this, app);
+        }
+
+        return null;
+    }
 }

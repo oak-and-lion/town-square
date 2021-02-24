@@ -11,4 +11,10 @@ public class BooleanString {
     public String getString() {
         return string;
     }
+    public void setBoolean(Boolean value) {
+        bool = value;
+    }
+    public void setString(String value) {
+        string = value;
+    }
 }

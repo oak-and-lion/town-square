@@ -31,21 +31,28 @@ public class AppBase extends Thread implements IApp {
         this.utility = factory.createUtility(Constants.BASE_UTILITY, new DialogControllerEmpty());
         controller = factory.createDialogController(Constants.SERVER_DIALOG_CONTROLLER, this, utility);
         
-        if (!utility.checkFileExists(Constants.PORT_FILE)) {
-            utility.writeFile(Constants.PORT_FILE, Constants.DEFAULT_PORT);
-        }
+        ISetup setup = factory.createSetup(Constants.HUB_SETUP_CONTROLLER, utility, this);
+        setup.runSetup();
         port = utility.readFile(Constants.PORT_FILE);
         controller.setUtilityController(utility);
         logger = factory.createLogger(loggerType, Constants.MAIN_LOG_FILE, utility, controller);
         ICommandController commandController = factory.createCommandController(Constants.BASE_COMMAND_CONTROLLER, utility, controller);
         controller.setCommandController(commandController);
         
+        keyPair = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility);
         ISquareController squareController = factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, controller, logger, keyPair);
         this.server = factory.createServer(Constants.BASE_SERVER, Integer.parseInt(port), squareController, logger, this);
         hidingServer = false;
         this.defaultName = utility.readFile(Constants.DEFAULT_NAME_FILE);
 
         controller.buildSquares();
+
+        ISquare square = controller.getSquareByInvite(utility.readFile(Constants.DEFAULT_SQUARE_FILE).split(Constants.COMMA)[1]);
+
+        if (!utility.checkFileExists(utility.concatStrings(square.getSafeLowerName(), Constants.DNA_FILE_EXT))) {
+            BooleanString password = setup.setupDNAPassword(utility.concatStrings(square.getSafeLowerName(), Constants.DNA_FILE_EXT));
+            commandController.processCommand(utility.concatStrings(Constants.FORWARD_SLASH, Constants.DNA_COMMAND, Constants.SPACE, password.getString()), square);
+        }
     }
 
     @Override

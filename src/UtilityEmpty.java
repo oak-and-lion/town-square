@@ -66,10 +66,10 @@ public class UtilityEmpty implements IUtility {
     public String createIdFile(String file) {
         return Constants.EMPTY_STRING;
     }
-    public String getRemoteIP(ILogIt logger) {
+    public String getRemoteIP() {
         return Constants.EMPTY_STRING;
     }
-    public IPAddress[] getLocalIPs(ILogIt logger) {
+    public IPAddress[] getLocalIPs() {
         return new IPAddress[0];
     }
     public boolean deleteFile(String file) {

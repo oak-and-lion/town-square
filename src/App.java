@@ -62,7 +62,7 @@ public class App extends Application implements IApp {
         ISquare defaultSquare = null;
         String port = Constants.DEFAULT_PORT;
         String ip = Constants.DEFAULT_IP;
-        String remoteIP = utility.getRemoteIP(logger);
+        String remoteIP = utility.getRemoteIP();
         defaultName = Constants.DEFAULT_USER_NAME;
         hidingServer = false;
 
@@ -157,7 +157,7 @@ public class App extends Application implements IApp {
 
             ObservableList<IPAddress> ipAddresses = FXCollections.observableArrayList();
             ipAddresses.add(new IPAddress(remoteIP, remoteIP));
-            ipAddresses.addAll(utility.getLocalIPs(logger));
+            ipAddresses.addAll(utility.getLocalIPs());
 
             initializeController(controller, uniqueId, port, ip, ipAddresses, defaultSquare, commandController);
 

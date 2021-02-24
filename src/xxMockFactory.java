@@ -118,4 +118,8 @@ public class xxMockFactory implements IFactory {
     public ISyncClone createSyncClone(int type, IUtility utility, IApp parent, ILogIt logger) {
         return null;
     }
+
+    public ISetup createSetup(int type, IUtility utility, IApp app) {
+        return null;
+    }
 }

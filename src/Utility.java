@@ -55,7 +55,7 @@ public class Utility implements IUtility {
         return UUID.randomUUID().toString();
     }
 
-    public String getRemoteIP(ILogIt logger) {
+    public String getRemoteIP() {
         String result = Constants.EMPTY_STRING;
         try {
             URL whatismyip = new URL(Constants.REMOTE_IP_URL);
@@ -71,7 +71,7 @@ public class Utility implements IUtility {
         return result.replace(Constants.HELLO_WORLD, Constants.EMPTY_STRING);
     }
 
-    public IPAddress[] getLocalIPs(ILogIt logger) {
+    public IPAddress[] getLocalIPs() {
         ArrayList<IPAddress> result = new ArrayList<>();
 
         Enumeration<NetworkInterface> n;

@@ -20,8 +20,8 @@ public interface IUtility {
     int countLinesInFile(String file);
     int findFirstOccurence(String file, String value, boolean startsWith, boolean notFoundReturnZero);
     String createIdFile(String file);
-    String getRemoteIP(ILogIt logger);
-    IPAddress[] getLocalIPs(ILogIt logger);
+    String getRemoteIP();
+    IPAddress[] getLocalIPs();
     boolean deleteFile(String file);
     boolean deleteFiles(String match);
     String convertToBase64(byte[] bytes);

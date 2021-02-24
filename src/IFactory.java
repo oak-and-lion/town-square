@@ -38,4 +38,5 @@ public interface IFactory {
     IApp createApp(String loggerFlag, IAlertBox alertbox, ISystemExit exit, IFactory f);
     IDialogController createDialogController(int type, IApp app, IUtility utility);
     ISyncClone createSyncClone(int type, IUtility utility, IApp parent, ILogIt logger);
+    ISetup createSetup(int type, IUtility utility, IApp app);
 }

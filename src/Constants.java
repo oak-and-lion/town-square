@@ -271,4 +271,6 @@ public class Constants {
     public static final int SYNC_CLONE_WAIT = 10000;
     public static final int MAX_POSTS_ALLOWED = 1000;
     public static final String HUB_EXIT_FILE = "hub.exit";
+    public static final String HUB_SETUP_FILE = "hub.setup";
+    public static final int HUB_SETUP_CONTROLLER = 2;
 }
