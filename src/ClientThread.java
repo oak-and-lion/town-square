@@ -161,8 +161,8 @@ public class ClientThread extends Thread implements IClientThread {
     private String[] getAllMembers(String memberFile) {
         ArrayList<String> memberWork = new ArrayList<>();
 
-        if (utility.checkFileExists(Constants.HUB_REGISTRATION_FILE)) {
-            String hubInfo = utility.readFile(Constants.HUB_REGISTRATION_FILE);
+        if (utility.checkFileExists(utility.concatStrings(square.getSafeLowerName(), Constants.HUB_REGISTRATION_FILE_EXT))) {
+            String hubInfo = utility.readFile(utility.concatStrings(square.getSafeLowerName(), Constants.HUB_REGISTRATION_FILE_EXT));
             String[] members = utility.searchFile(memberFile, utility.readFile(Constants.UNIQUE_ID_FILE),
                     Constants.SEARCH_CONTAINS);
             if (members.length > 0) {
@@ -290,7 +290,7 @@ public class ClientThread extends Thread implements IClientThread {
     }
 
     public void addPostMessage(PostMessage message) {
-        if (utility.checkFileExists(Constants.HUB_REGISTRATION_FILE)) {
+        if (utility.checkFileExists(utility.concatStrings(square.getSafeLowerName(), Constants.HUB_REGISTRATION_FILE_EXT))) {
             postToHub(message);
         } else {
             addPostLocal(message);
@@ -298,7 +298,7 @@ public class ClientThread extends Thread implements IClientThread {
     }
 
     private void postToHub(PostMessage message) {
-        String hubInfo = utility.readFile(Constants.HUB_REGISTRATION_FILE);
+        String hubInfo = utility.readFile(utility.concatStrings(square.getSafeLowerName(), Constants.HUB_REGISTRATION_FILE_EXT));
         String[] members = utility.searchFile(
                 utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT),
                 utility.readFile(Constants.UNIQUE_ID_FILE), Constants.SEARCH_CONTAINS);

@@ -13,7 +13,7 @@ public class CommandWorkerRegisterHub extends CommandWorkerBase implements IComm
     }
 
     boolean registerHub(String address) {
-        FileWriteResponse result = utility.writeFile(Constants.HUB_REGISTRATION_FILE, address);
+        FileWriteResponse result = utility.writeFile(Constants.HUB_REGISTRATION_FILE_EXT, address);
 
         return result.isSuccessful();
     }
