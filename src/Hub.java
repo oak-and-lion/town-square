@@ -20,7 +20,7 @@ public class Hub {
                 factory.createUtility(Constants.BASE_UTILITY, app.getDialogController()), app.getDialogController());
 
         IUtility utility = factory.createUtility(Constants.BASE_UTILITY, app.getDialogController());
-        while (!utility.checkFileExists("hub.exit")) {
+        while (!utility.checkFileExists(Constants.HUB_EXIT_FILE)) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ie) {

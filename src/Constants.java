@@ -211,7 +211,7 @@ public class Constants {
     public static final String VERSION_TEXT_PREFIX = "Version: ";
     public static final String COMMANDS_HEADER = "All Commands start with a '/' (forward slash)";
     public static final String PAUSED_TAB_NOTIFICATION = " (paused)";
-    public static final String CLOSING_LOG_MESSAGE = "Closing";
+    public static final String CLOSING_LOG_MESSAGE = "Closing Connections";
     public static final int NO_BUTTON = -1;
     public static final int PRIMARY_BUTTON = 1;
     public static final int SECONDARY_BUTTON = 2;
@@ -270,4 +270,5 @@ public class Constants {
     public static final String SYNC_CLONE = "syncclone";
     public static final int SYNC_CLONE_WAIT = 10000;
     public static final int MAX_POSTS_ALLOWED = 1000;
+    public static final String HUB_EXIT_FILE = "hub.exit";
 }

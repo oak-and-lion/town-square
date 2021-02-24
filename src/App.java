@@ -271,6 +271,7 @@ public class App extends Application implements IApp {
     public void stop() {
         if (server != null) {
             server.teardown();
+            server = null;
         }
     }
 
@@ -373,6 +374,10 @@ public class App extends Application implements IApp {
 
     public int getLoggerType() {
         return loggerType;
+    }
+
+    public void logMessge(String msg) {
+        logger.logInfo(msg);
     }
 
     public IDialogController getDialogController() {
