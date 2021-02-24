@@ -27,7 +27,7 @@ cd output
 cp ../../../javafx-linux.zip javafx-linux.zip
 cp ../../../OpenJDK11U-jdk_x64_linux_hotspot_11.0.10_9.tar.gz OpenJDK11U-jdk_x64_linux_hotspot_11.0.10_9.tar.gz
 cp ../../../town-square-linux.sh town-square-linux.sh
-cp ../../../town-square-mac-hub.sh town-square-mac-hub.sh
+cp ../../../town-square-linux-hub.sh town-square-linux-hub.sh
 cp ../../../blocked-image.png blocked-image.png
 cp ../../../blocked-video.mp4 blocked-video.mp4
 
