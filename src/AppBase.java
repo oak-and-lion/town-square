@@ -44,6 +44,8 @@ public class AppBase extends Thread implements IApp {
         this.server = factory.createServer(Constants.BASE_SERVER, Integer.parseInt(port), squareController, logger, this);
         hidingServer = false;
         this.defaultName = utility.readFile(Constants.DEFAULT_NAME_FILE);
+
+        controller.buildSquares();
     }
 
     @Override
@@ -55,6 +57,7 @@ public class AppBase extends Thread implements IApp {
     public void stopIt() {
         if (server != null) {
             server.teardown();
+            server = null;
         }
         utility.deleteFile("hub.exit");
     }
@@ -86,6 +89,10 @@ public class AppBase extends Thread implements IApp {
 
     public int getLoggerType() {
         return loggerType;
+    }
+
+    public void logMessge(String msg) {
+        logger.logInfo(msg);
     }
 
     public void sendPort(String port) {

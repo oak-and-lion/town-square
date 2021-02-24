@@ -63,4 +63,8 @@ public class xxMockIApp implements IApp {
     public void start() {
         start(null);
     }
+
+    public void logMessge(String msg) {
+        // not needed
+    }
 }
