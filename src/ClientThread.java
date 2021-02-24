@@ -163,7 +163,7 @@ public class ClientThread extends Thread implements IClientThread {
 
         if (utility.checkFileExists(utility.concatStrings(square.getSafeLowerName(), Constants.HUB_REGISTRATION_FILE_EXT))) {
             String hubInfo = utility.readFile(utility.concatStrings(square.getSafeLowerName(), Constants.HUB_REGISTRATION_FILE_EXT));
-            String[] members = utility.searchFile(memberFile, utility.readFile(Constants.UNIQUE_ID_FILE),
+            String[] members = utility.searchFile(memberFile, utility.readFile(hubInfo),
                     Constants.SEARCH_CONTAINS);
             if (members.length > 0) {
                 String[] memberInfo = members[0].split(Constants.FILE_DATA_SEPARATOR);
@@ -301,7 +301,7 @@ public class ClientThread extends Thread implements IClientThread {
         String hubInfo = utility.readFile(utility.concatStrings(square.getSafeLowerName(), Constants.HUB_REGISTRATION_FILE_EXT));
         String[] members = utility.searchFile(
                 utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT),
-                utility.readFile(Constants.UNIQUE_ID_FILE), Constants.SEARCH_CONTAINS);
+                hubInfo, Constants.SEARCH_CONTAINS);
         if (members.length > 0) {
             String[] hub = hubInfo.split(Constants.FILE_DATA_SEPARATOR);
             String[] memberInfo = members[0].split(Constants.FILE_DATA_SEPARATOR);
