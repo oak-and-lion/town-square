@@ -6,12 +6,16 @@ public class SyncClone extends Thread implements ISyncClone {
     private MemberInfoList memberInfoList;
     private ILogIt logger;
     private ArrayList<String> squareIds;
+    private ArrayList<String> squareInfos;
+    private IApp parent;
 
     public SyncClone(IUtility utility, IApp parent, ILogIt logger) {
         this.utility = utility;
         this.memberInfoList = new MemberInfoList();
         this.logger = logger;
+        this.parent = parent;
         squareIds = new ArrayList<>();
+        squareInfos = new ArrayList<>();
     }
 
     @Override
@@ -28,13 +32,22 @@ public class SyncClone extends Thread implements ISyncClone {
 
             files = utility.getFiles(Constants.SQUARE_FILE_EXT);
             squareIds.clear();
-            for (String file: files ) {
+            squareInfos.clear();
+            for (String file : files) {
                 getKnownSquares(file);
             }
 
+            ICommandController cmdController = parent.getDialogController().getCommandController();
+            IFactory factory = parent.getDialogController().getFactory();
+
             for (MemberInfo member : memberInfoList.getAll()) {
-                logger.logInfo(utility.concatStrings("Syncing clone: ", member.getName(), Constants.SPACE,
-                        member.getIp(), Constants.SPACE, member.getPort()));
+                ISquare square = factory.createSquare(Constants.BASE_SQUARE, squareInfos.get(0), port, ip,
+                        factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility,
+                                parent.getDialogController(), logger,
+                                factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
+                        utility, parent.getDialogController(), uniqueId, parent);
+                cmdController.processCommand(utility.concatStrings(Constants.FORWARD_SLASH, Constants.NULL_TEXT),
+                        square);
             }
 
             try {
@@ -64,5 +77,7 @@ public class SyncClone extends Thread implements ISyncClone {
         String squareInfo = utility.readFile(file);
         String[] si = squareInfo.split(Constants.COMMA);
         squareIds.add(si[1]);
+
+        squareInfos.add(squareInfo);
     }
 }
