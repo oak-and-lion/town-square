@@ -11,7 +11,7 @@ public class ServerDialogController implements IDialogController {
     private String publicKey;
     private IUtility utility;
     private IFactory factory;
-    ICommandController commandController;
+    private ICommandController commandController;
     private String uniqueId;
     private List<ISquare> squares;
     private List<String> squareInvites;
