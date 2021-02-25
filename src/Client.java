@@ -76,7 +76,11 @@ public class Client implements IClient {
         } catch (UnknownHostException ex) {
             utility.logError(utility.concatStrings(guid, " Server not found: ", ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
         } catch (IOException ex) {
-            utility.logError(utility.concatStrings(guid, " I/O error: ", ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
+            if (ex.getMessage().equals("connect timed out")) {
+                // do nothing
+            } else {
+                utility.logError(utility.concatStrings(guid, " I/O error: ", ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
+            }
         } catch (Exception e) {
             utility.logError(utility.concatStrings(guid, Constants.SPACE, CLIENT_PREFIX, hostName, Constants.COLON,
                     Integer.toString(port), Constants.SINGLE_QUOTE, Constants.SPACE, e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
