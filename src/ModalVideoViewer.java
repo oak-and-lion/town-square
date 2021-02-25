@@ -51,6 +51,7 @@ public class ModalVideoViewer extends BaseViewer implements IModalViewer {
 
     @Override
     void close() {
+        super.close();
         if (mediaPlayer != null) {
             mediaPlayer.stop();
         }

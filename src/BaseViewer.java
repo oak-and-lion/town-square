@@ -13,7 +13,7 @@ public class BaseViewer {
     }
 
     void close() {
-        // override in inherited class
+        primaryStage = new Stage();
     }
 
     void showStage(Group root, String title) {
