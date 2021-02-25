@@ -18,6 +18,26 @@ echo copying manifest file
 copy Manifest.txt staging\Manifest.txt
 copy ManifestHub.txt staging\ManifestHub.txt
 
+set /a increment=1
+set /p Major=<ver-major.txt
+set /p Minor=<ver-minor.txt
+set /p Build=<ver-build.txt
+set /a Build=%Build%+%increment%
+if %Build% gtr 99 (
+    set /a Build=0
+    set /a Minor=%Minor%+%increment%
+    if %Minor% gtr 99 (
+        set /a Minor=0
+        set /a Major=%Major%+%increment%
+    )
+)
+
+echo %Build%>ver-build.txt
+echo %Minor%>ver-minor.txt
+echo %Major%>ver-major.txt
+echo public class ConstantVersion {private ConstantVersion(){}public static final String VERSION = "%Major: =%.%Minor: =%.%Build: =%";}>ConstantVersion.java
+echo version %Major%.%Minor%.%Build%
+
 cd staging
 
 mkdir output

@@ -241,7 +241,7 @@ public class App extends Application implements IApp {
         controller.setParent(this);
         controller.setUniqueId(uniqueId);
         controller.setDefaultName(defaultName);
-        controller.setVersion(Constants.VERSION);
+        controller.setVersion(ConstantVersion.VERSION);
         controller.setRemoteIP(ipAddresses, ip);
         controller.setPort(port);
         controller.setTabSquare(defaultSquare);

@@ -4,6 +4,6 @@ public class SquareWorkerCheckVersion extends SquareWorkerBase implements ISquar
     }
 
     public SquareResponse doWork(ISquare square, String[] args) {
-        return new SquareResponse(buildResult(Constants.OK_RESULT, Constants.VERSION));
+        return new SquareResponse(buildResult(Constants.OK_RESULT, ConstantVersion.VERSION));
     }
 }

@@ -143,6 +143,6 @@ public class VersionChecker extends Thread implements IVersionChecker {
             return utility.readFile(Constants.NEW_APP_VER_FILE);
         }
 
-        return Constants.VERSION;
+        return ConstantVersion.VERSION;
     }
 }

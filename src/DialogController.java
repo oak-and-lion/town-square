@@ -216,7 +216,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
     public void showAbout() {
         IAlertBox alertBox = factory.createAlertBox(Constants.BASE_ALERT_BOX);
         alertBox.createAlert(Constants.ABOUT_TITLE, Constants.ABOUT_HEADER,
-                utility.concatStrings(Constants.VERSION_TEXT_PREFIX, Constants.VERSION, Constants.NEWLINE,
+                utility.concatStrings(Constants.VERSION_TEXT_PREFIX, ConstantVersion.VERSION, Constants.NEWLINE,
                         Constants.DEVELOPED_BY, Constants.DEVELOPER_ONE_NAME, Constants.NEWLINE, Constants.GITHUB_REPO),
                 AlertType.INFORMATION);
     }

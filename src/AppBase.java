@@ -38,7 +38,7 @@ public class AppBase extends Thread implements IApp {
         controller.setUtilityController(utility);
         logger = factory.createLogger(loggerType, Constants.MAIN_LOG_FILE, utility, controller);
         mainLogger = factory.createLogger(Constants.CONSOLE_LOGGER, Constants.EMPTY_STRING, utility, controller);
-        mainLogger.logInfo(utility.concatStrings("Version: ", Constants.VERSION));
+        mainLogger.logInfo(utility.concatStrings("Version: ", ConstantVersion.VERSION));
         ICommandController commandController = factory.createCommandController(Constants.BASE_COMMAND_CONTROLLER, utility, controller);
         controller.setCommandController(commandController);
         
