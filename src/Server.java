@@ -48,10 +48,14 @@ public class Server extends Thread implements IServer {
         serverThread = null;
     }
 
+    private Boolean isRunning() {
+        return running;
+    }
+
     @Override
     public void run() {
         running = true;
-        while (running) {
+        while (isRunning()) {
             try (ServerSocket serverSocket = new ServerSocket(port)) {
 
                 logger.logInfo(utility.concatStrings("Listening: ", Integer.toString(port)));

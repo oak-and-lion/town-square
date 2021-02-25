@@ -38,6 +38,7 @@ public class AppBase extends Thread implements IApp {
         controller.setUtilityController(utility);
         logger = factory.createLogger(loggerType, Constants.MAIN_LOG_FILE, utility, controller);
         mainLogger = factory.createLogger(Constants.CONSOLE_LOGGER, Constants.EMPTY_STRING, utility, controller);
+        mainLogger.logInfo(utility.concatStrings("Version: ", Constants.VERSION));
         ICommandController commandController = factory.createCommandController(Constants.BASE_COMMAND_CONTROLLER, utility, controller);
         controller.setCommandController(commandController);
         
@@ -55,6 +56,8 @@ public class AppBase extends Thread implements IApp {
             BooleanString password = setup.setupDNAPassword(utility.concatStrings(square.getSafeLowerName(), Constants.DNA_FILE_EXT));
             commandController.processCommand(utility.concatStrings(Constants.FORWARD_SLASH, Constants.DNA_COMMAND, Constants.SPACE, password.getString()), square);
         }
+
+        mainLogger.logInfo(utility.concatStrings("Listening: ", port));
     }
 
     @Override
