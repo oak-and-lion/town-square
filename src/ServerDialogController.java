@@ -131,7 +131,7 @@ public class ServerDialogController implements IDialogController {
 
             squares.add(square);
             squareInvites.add(square.getInvite());
-            app.logMessge(utility.concatStrings("Invitation: e~", remoteIP, Constants.TILDE, port, Constants.TILDE, square.getInvite()));
+            app.logMessage(utility.concatStrings("Invitation: e~", remoteIP, Constants.TILDE, port, Constants.TILDE, square.getInvite()));
         }
     }
 

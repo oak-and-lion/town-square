@@ -10,6 +10,7 @@ public class AppBase extends Thread implements IApp {
     private IServer server;
     private String port;
     private ILogIt logger;
+    private ILogIt mainLogger;
     private ISquareKeyPair keyPair;
     private String defaultName;
     private Stage stage;
@@ -36,6 +37,7 @@ public class AppBase extends Thread implements IApp {
         port = utility.readFile(Constants.PORT_FILE);
         controller.setUtilityController(utility);
         logger = factory.createLogger(loggerType, Constants.MAIN_LOG_FILE, utility, controller);
+        mainLogger = factory.createLogger(Constants.CONSOLE_LOGGER, Constants.EMPTY_STRING, utility, controller);
         ICommandController commandController = factory.createCommandController(Constants.BASE_COMMAND_CONTROLLER, utility, controller);
         controller.setCommandController(commandController);
         
@@ -98,8 +100,8 @@ public class AppBase extends Thread implements IApp {
         return loggerType;
     }
 
-    public void logMessge(String msg) {
-        logger.logInfo(msg);
+    public void logMessage(String msg) {
+        mainLogger.logInfo(msg);
     }
 
     public void sendPort(String port) {

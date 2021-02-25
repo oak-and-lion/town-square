@@ -285,7 +285,7 @@ public class ClientThread extends Thread implements IClientThread {
         if (posts.size() == 0) {
             return;
         }
-        utility.deleteFile(file);
+        
         utility.writeFile(file, String.join(Constants.NEWLINE, posts.getAllMessages()));
     }
 

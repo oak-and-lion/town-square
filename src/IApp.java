@@ -17,5 +17,5 @@ public interface IApp {
     void start(Stage stage);
     void start();
     IDialogController getDialogController();
-    void logMessge(String msg);
+    void logMessage(String msg);
 }

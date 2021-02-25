@@ -376,7 +376,7 @@ public class App extends Application implements IApp {
         return loggerType;
     }
 
-    public void logMessge(String msg) {
+    public void logMessage(String msg) {
         logger.logInfo(msg);
     }
 
