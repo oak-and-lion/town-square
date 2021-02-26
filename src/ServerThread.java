@@ -24,17 +24,64 @@ public class ServerThread extends Thread implements IServerThread {
         this.utility = utility;
         this.requester = requester;
         this.factory = logger.getDialogController().getFactory();
-        this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility, logger.getDialogController());
+        this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility,
+                logger.getDialogController());
     }
 
     @Override
     public void run() {
-        try {
-            InputStream input = socket.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+        try (InputStream input = socket.getInputStream()) {
+            buildReader(input);
+        } catch (IOException ex) {
+            if (!socket.isClosed()) {
+                try {
+                    socket.close();
+                } catch (Exception e) {
+                    errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE,
+                            Arrays.toString(e.getStackTrace())));
+                }
+            }
+            errorLogger.logInfo(
+                    utility.concatStrings(ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
+        }
+    }
 
-            OutputStream output = socket.getOutputStream();
-            PrintWriter writer = new PrintWriter(output, true);
+    private void buildReader(InputStream input) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
+            buildOutputStream(reader);
+        } catch (IOException ex) {
+            if (!socket.isClosed()) {
+                try {
+                    socket.close();
+                } catch (Exception e) {
+                    errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE,
+                            Arrays.toString(e.getStackTrace())));
+                }
+            }
+            errorLogger.logInfo(
+                    utility.concatStrings(ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
+        }
+    }
+
+    private void buildOutputStream(BufferedReader reader) {
+        try (OutputStream output = socket.getOutputStream()) {
+            a(output, reader);
+        } catch (IOException ex) {
+            if (!socket.isClosed()) {
+                try {
+                    socket.close();
+                } catch (Exception e) {
+                    errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE,
+                            Arrays.toString(e.getStackTrace())));
+                }
+            }
+            errorLogger.logInfo(
+                    utility.concatStrings(ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
+        }
+    }
+
+    private void a(OutputStream output, BufferedReader reader) {
+        try (PrintWriter writer = new PrintWriter(output, true)) {
 
             String text;
 
@@ -51,9 +98,20 @@ public class ServerThread extends Thread implements IServerThread {
 
             } while (text != null && !text.equals("bye"));
             logger.logInfo(utility.concatStrings("Client Disconnected: ", socket.getInetAddress().getHostAddress()));
-            socket.close();
+            if (!socket.isClosed()) {
+                socket.close();
+            }
         } catch (IOException ex) {
-            errorLogger.logInfo(utility.concatStrings(ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
+            if (!socket.isClosed()) {
+                try {
+                    socket.close();
+                } catch (Exception e) {
+                    errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE,
+                            Arrays.toString(e.getStackTrace())));
+                }
+            }
+            errorLogger.logInfo(
+                    utility.concatStrings(ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
         }
     }
 }
