@@ -43,10 +43,12 @@ public class ServerThread extends Thread implements IServerThread {
                 try {
                     socket.close();
                 } catch (Exception e) {
+                    done = true;
                     errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE,
                             Arrays.toString(e.getStackTrace())));
                 }
             }
+            done = true;
             errorLogger.logInfo(
                     utility.concatStrings(ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
         }
@@ -61,10 +63,12 @@ public class ServerThread extends Thread implements IServerThread {
                 try {
                     socket.close();
                 } catch (Exception e) {
+                    done = true;
                     errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE,
                             Arrays.toString(e.getStackTrace())));
                 }
             }
+            done = true;
             errorLogger.logInfo(
                     utility.concatStrings(ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
         }
@@ -78,10 +82,12 @@ public class ServerThread extends Thread implements IServerThread {
                 try {
                     socket.close();
                 } catch (Exception e) {
+                    done = true;
                     errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE,
                             Arrays.toString(e.getStackTrace())));
                 }
             }
+            done = true;
             errorLogger.logInfo(
                     utility.concatStrings(ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
         }
@@ -113,10 +119,12 @@ public class ServerThread extends Thread implements IServerThread {
                 try {
                     socket.close();
                 } catch (Exception e) {
+                    done = true;
                     errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE,
                             Arrays.toString(e.getStackTrace())));
                 }
             }
+            done = true;
             errorLogger.logInfo(
                     utility.concatStrings(ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
         }
