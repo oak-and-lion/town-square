@@ -4,20 +4,7 @@ del /F /Q staging\*.*
 rmdir /S /Q staging
 mkdir staging
 
-echo building javac class files
-SET JAVAFX_PATH="C:/java/javafx/lib"
-javac --module-path %JAVAFX_PATH% --add-modules "javafx.controls,javafx.fxml,javafx.media" -d staging *.java
-
-del staging\xx*
-del staging\test.class
-del staging\clientcmdtest.class
-
-echo copying sample.xml
-copy sample.fxml staging\sample.fxml
-echo copying manifest file
-copy Manifest.txt staging\Manifest.txt
-copy ManifestHub.txt staging\ManifestHub.txt
-
+echo updating version number
 set /a increment=1
 set /a reset=0
 set /p Major=<ver-major.txt
@@ -34,13 +21,25 @@ if %Build% gtr 99 (
         set /a Major=%Major%+%increment%
     )
 )
-
-echo %Build%.
 echo "%Build%"> ver-build.txt
 echo "%Minor%"> ver-minor.txt
 echo "%Major%"> ver-major.txt
 echo public class ConstantVersion {private ConstantVersion(){}public static final String VERSION = "%Major: =%.%Minor: =%.%Build: =%";}>ConstantVersion.java
-echo version %Major%.%Minor%.%Build%
+echo version: %Major%.%Minor%.%Build%
+
+echo building javac class files
+SET JAVAFX_PATH="C:/java/javafx/lib"
+javac --module-path %JAVAFX_PATH% --add-modules "javafx.controls,javafx.fxml,javafx.media" -d staging *.java
+
+del staging\xx*
+del staging\test.class
+del staging\clientcmdtest.class
+
+echo copying sample.xml
+copy sample.fxml staging\sample.fxml
+echo copying manifest file
+copy Manifest.txt staging\Manifest.txt
+copy ManifestHub.txt staging\ManifestHub.txt
 
 cd staging
 
