@@ -15,6 +15,7 @@ public class ServerThread extends Thread implements IServerThread {
     private RequesterInfo requester;
     private ILogIt errorLogger;
     private IFactory factory;
+    private boolean done;
 
     public ServerThread(Socket socket, ISquareController squareController, ILogIt logger, IUtility utility,
             RequesterInfo requester) {
@@ -28,8 +29,13 @@ public class ServerThread extends Thread implements IServerThread {
                 logger.getDialogController());
     }
 
+    public Boolean isDone() {
+        return done;
+    }
+
     @Override
     public void run() {
+        done = false;
         try (InputStream input = socket.getInputStream()) {
             buildReader(input);
         } catch (IOException ex) {
@@ -44,6 +50,7 @@ public class ServerThread extends Thread implements IServerThread {
             errorLogger.logInfo(
                     utility.concatStrings(ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
         }
+        done = true;
     }
 
     private void buildReader(InputStream input) {

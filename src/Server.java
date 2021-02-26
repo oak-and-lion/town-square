@@ -1,13 +1,14 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Server extends Thread implements IServer {
     private int port;
     private boolean running;
     private static IServer iserver;
-    private IServerThread serverThread;
+    private ArrayList<IServerThread> serverThreads;
     private ISquareController squareController;
     private ILogIt logger;
     private ILogIt errorLogger;
@@ -39,13 +40,13 @@ public class Server extends Thread implements IServer {
         this.utility = factory.createUtility(Constants.BASE_UTILITY, parent.getDialogController());
         this.errorLogger = factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility,
                 this.logger.getDialogController());
+        this.serverThreads = new ArrayList<>();
     }
 
     public void teardown() {
         logger.logInfo("Ending Server");
         running = false;
-
-        serverThread = null;
+        serverThreads.clear();
     }
 
     private Boolean isRunning() {
@@ -63,19 +64,30 @@ public class Server extends Thread implements IServer {
     @Override
     public void run() {
         startRunning();
-        while (isRunning()) {
-            try (ServerSocket serverSocket = new ServerSocket(port)) {
-                serverSocket.accept()
+
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            while (isRunning()) {
                 logger.logInfo(utility.concatStrings("Listening: ", Integer.toString(port)));
 
                 setRunning(startServer(serverSocket));
 
-            } catch (IOException ex) {
-                errorLogger.logInfo(
-                        utility.concatStrings(ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
-                parent.closeApp(Constants.SYSTEM_EXIT_PORT_IN_USE, Constants.SYSTEM_EXIT_PORT_IN_USE);
+                ArrayList<IServerThread> doneThreads = new ArrayList<>();
+                for (IServerThread s : serverThreads) {
+                    if (s.isDone()) {
+                        doneThreads.add(s);
+                    }
+                }
+                for (IServerThread s : doneThreads) {
+                    serverThreads.remove(s);
+                }
+                doneThreads.clear();
             }
+        } catch (IOException ex) {
+            errorLogger.logInfo(
+                    utility.concatStrings(ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
+            parent.closeApp(Constants.SYSTEM_EXIT_PORT_IN_USE, Constants.SYSTEM_EXIT_PORT_IN_USE);
         }
+
     }
 
     private boolean startServer(ServerSocket serverSocket) {
@@ -95,8 +107,9 @@ public class Server extends Thread implements IServer {
                 logger.getDialogController().setFactory(factory);
             }
 
-            serverThread = factory.createServerThread(Constants.BASE_SERVER_THREAD, socket, squareController, logger,
+            IServerThread serverThread = factory.createServerThread(Constants.BASE_SERVER_THREAD, socket, squareController, logger,
                     factory.createUtility(Constants.BASE_UTILITY, parent.getDialogController()), requester);
+            serverThreads.add(serverThread);
             serverThread.start();
         } catch (Exception e) {
             errorLogger.logInfo(
