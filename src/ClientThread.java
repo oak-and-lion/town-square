@@ -319,6 +319,7 @@ public class ClientThread extends Thread implements IClientThread {
                 // need code
             } else {
                 // backup locally, in case it doesn't work
+                message.appendToMessage(" [local backup]");
                 addPostLocal(message);
             }
         }

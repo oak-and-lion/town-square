@@ -19,6 +19,10 @@ public class PostMessage implements Comparable<PostMessage> {
         return message;
     }
 
+    public void appendToMessage(String append) {
+        message += append;
+    }
+
     @Override
     public int compareTo(PostMessage m) {
         if (m.getMillis() == getMillis()) {
