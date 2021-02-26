@@ -52,15 +52,23 @@ public class Server extends Thread implements IServer {
         return running;
     }
 
+    private void startRunning() {
+        setRunning(true);
+    }
+
+    private void setRunning(Boolean value) {
+        running = value;
+    }
+
     @Override
     public void run() {
-        running = true;
+        startRunning();
         while (isRunning()) {
             try (ServerSocket serverSocket = new ServerSocket(port)) {
-
+                serverSocket.accept()
                 logger.logInfo(utility.concatStrings("Listening: ", Integer.toString(port)));
 
-                running = startServer(serverSocket);
+                setRunning(startServer(serverSocket));
 
             } catch (IOException ex) {
                 errorLogger.logInfo(
@@ -90,7 +98,6 @@ public class Server extends Thread implements IServer {
             serverThread = factory.createServerThread(Constants.BASE_SERVER_THREAD, socket, squareController, logger,
                     factory.createUtility(Constants.BASE_UTILITY, parent.getDialogController()), requester);
             serverThread.start();
-
         } catch (Exception e) {
             errorLogger.logInfo(
                     utility.concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));

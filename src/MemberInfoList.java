@@ -26,13 +26,14 @@ public class MemberInfoList {
         if (!found) {
             members.add(memberInfo);
             uniqueIds.add(memberInfo.getUniqueId());
-            names.add(memberInfo.getName());
+            names.add(memberInfo.getName().toLowerCase());
             Collections.sort(members, null);
         }
     }
 
     public boolean containsName(String name, String uniqueId) {
-        boolean sameUniqueId = uniqueIds.contains(uniqueId);
+        name = name.toLowerCase();
+        boolean sameUniqueId = containsUniqueId(uniqueId);
 
         if (sameUniqueId) return false;
 
