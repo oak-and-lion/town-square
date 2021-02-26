@@ -115,18 +115,19 @@ public class ServerThread extends Thread implements IServerThread {
                 socket.close();
             }
         } catch (IOException ex) {
+            String add = socket.getRemoteSocketAddress().toString();
             if (!socket.isClosed()) {
                 try {
                     socket.close();
                 } catch (Exception e) {
                     done = true;
-                    errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE,
+                    errorLogger.logInfo(utility.concatStrings("[", add, "] - ", e.getMessage(), Constants.NEWLINE,
                             Arrays.toString(e.getStackTrace())));
                 }
             }
             done = true;
             errorLogger.logInfo(
-                    utility.concatStrings(ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
+                    utility.concatStrings("[", add, "] - ", ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
         }
     }
 }
