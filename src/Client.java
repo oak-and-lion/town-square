@@ -11,8 +11,6 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 
-import javax.net.ssl.HostnameVerifier;
-
 public class Client implements IClient {
     private int port;
     private String hostName;
