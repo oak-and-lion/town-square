@@ -1,6 +1,13 @@
 import javafx.stage.Stage;
 
 public class xxMockIApp implements IApp {
+    private Boolean debug = false;
+    public Boolean isDebug() {
+        return debug;
+    }
+    public void setDebug(Boolean value) {
+        debug = value;
+    }
     public void close(int i) {
         // not needed
     }

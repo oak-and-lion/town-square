@@ -18,4 +18,6 @@ public interface IApp {
     void start();
     IDialogController getDialogController();
     void logMessage(String msg);
+    Boolean isDebug();
+    void setDebug(Boolean value);
 }

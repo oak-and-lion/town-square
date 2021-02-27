@@ -29,8 +29,9 @@ public class App extends Application implements IApp {
     private String stageTitle;
     private Stage theStage;
     private IDialogController controller;
+    private static Boolean debug;
 
-    private static void setUpDependencies(IAlertBox alertbox, ISystemExit exit, IFactory f, String logFlag) {
+    private static void setUpDependencies(IAlertBox alertbox, ISystemExit exit, IFactory f, String logFlag, boolean debugFlag) {
         alert = alertbox;
         systemExit = exit;
         factory = f;
@@ -40,6 +41,7 @@ public class App extends Application implements IApp {
         } else if (logFlag.equals("-cl")) {
             loggerType = Constants.CONSOLE_LOGGER;
         }
+        debug = debugFlag;
     }
 
     public void start() {
@@ -115,9 +117,9 @@ public class App extends Application implements IApp {
             if (utility.checkFileExists(Constants.DEFAULT_SQUARE_FILE)) {
                 defaultSquareInfo = utility.readFile(Constants.DEFAULT_SQUARE_FILE);
             } else {
-                defaultSquareInfo = utility.concatStrings(Constants.DEFAULT_SQUARE_NAME, Constants.COMMA, utility.createUUID()
-                        , Constants.COMMA, Constants.DEFAULT_SQUARE_TAB_NAME, Constants.COMMA, Constants.NOT_PRIVATE
-                        , Constants.COMMA, Constants.NO_PASSWORD_VALUE);
+                defaultSquareInfo = utility.concatStrings(Constants.DEFAULT_SQUARE_NAME, Constants.COMMA,
+                        utility.createUUID(), Constants.COMMA, Constants.DEFAULT_SQUARE_TAB_NAME, Constants.COMMA,
+                        Constants.NOT_PRIVATE, Constants.COMMA, Constants.NO_PASSWORD_VALUE);
                 utility.writeFile(Constants.DEFAULT_SQUARE_FILE, defaultSquareInfo);
             }
             if (utility.checkFileExists(Constants.PUBLIC_KEY_FILE)
@@ -131,8 +133,9 @@ public class App extends Application implements IApp {
             }
             if (!utility.checkFileExists(Constants.DEFAULT_SQUARE_ME_FILE)) {
                 utility.writeFile(Constants.DEFAULT_SQUARE_ME_FILE,
-                utility.concatStrings(defaultName, Constants.DATA_SEPARATOR, keys.getPublicKeyBase64(), Constants.DATA_SEPARATOR
-                                , remoteIP, Constants.DATA_SEPARATOR, port, Constants.DATA_SEPARATOR, uniqueId));
+                        utility.concatStrings(defaultName, Constants.DATA_SEPARATOR, keys.getPublicKeyBase64(),
+                                Constants.DATA_SEPARATOR, remoteIP, Constants.DATA_SEPARATOR, port,
+                                Constants.DATA_SEPARATOR, uniqueId));
             }
 
             primaryStage.addEventHandler(WindowEvent.WINDOW_SHOWN, new EventHandler<WindowEvent>() {
@@ -175,7 +178,8 @@ public class App extends Application implements IApp {
             return controller;
 
         } catch (IOException ioe) {
-            logger.logInfo(utility.concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
+            logger.logInfo(
+                    utility.concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
             systemExit.handleExit(Constants.SYSTEM_EXIT_FAIL);
         }
 
@@ -224,7 +228,8 @@ public class App extends Application implements IApp {
         primaryStage.heightProperty().addListener(listener);
     }
 
-    private void initializeSquareController(ISquareController squareController, String port, IDialogController controller) {
+    private void initializeSquareController(ISquareController squareController, String port,
+            IDialogController controller) {
         if (squareController != null) {
             server = factory.createServer(Constants.BASE_SERVER, Integer.parseInt(port), squareController,
                     factory.createLogger(loggerType, Constants.SERVER_LOG_FILE, utility, controller), this);
@@ -233,8 +238,7 @@ public class App extends Application implements IApp {
     }
 
     private void initializeController(IDialogController controller, String uniqueId, String port, String ip,
-            ObservableList<IPAddress> ipAddresses, ISquare defaultSquare,
-            ICommandController commandController) {
+            ObservableList<IPAddress> ipAddresses, ISquare defaultSquare, ICommandController commandController) {
         controller.setFactory(factory);
         controller.setUtilityController(utility);
         controller.setCommandController(commandController);
@@ -297,7 +301,7 @@ public class App extends Application implements IApp {
         utility.writeFile(Constants.DEFAULT_NAME_FILE, defaultName);
         this.defaultName = defaultName;
         this.stageTitle = setTitle();
-        
+
         if (this.isHidingServer()) {
             this.theStage.setTitle(utility.concatStrings(stageTitle, Constants.SERVER_HIDING_TITLE));
         } else {
@@ -306,8 +310,8 @@ public class App extends Application implements IApp {
     }
 
     private String setTitle() {
-        return utility.concatStrings(Constants.APP_TITLE, Constants.SPACE, Constants.OPEN_PARENS, defaultName
-                    , Constants.CLOSE_PARENS);
+        return utility.concatStrings(Constants.APP_TITLE, Constants.SPACE, Constants.OPEN_PARENS, defaultName,
+                Constants.CLOSE_PARENS);
     }
 
     public void sendPort(String port) {
@@ -384,20 +388,35 @@ public class App extends Application implements IApp {
         return controller;
     }
 
+    public void setDebug(Boolean value) {
+        // not overridable
+        // pass it in with the command line args
+    }
+
+    public Boolean isDebug() {
+        return debug;
+    }
+
     public static void main(String[] args) {
         String loggerFlag = Constants.EMPTY_STRING;
+        Boolean debugFlag = false;
         if (args.length > 0) {
             loggerFlag = args[0];
         }
+        if (args.length > 1 && args[1].equals("-d")){
+            debugFlag = true;
+        }
+
         IFactory factory = new Factory();
         setUpDependencies(factory.createAlertBox(Constants.BASE_ALERT_BOX),
-                factory.createSystemExit(Constants.BASE_SYSTEM_EXIT), factory, loggerFlag);
+                factory.createSystemExit(Constants.BASE_SYSTEM_EXIT), factory, loggerFlag, debugFlag);
         launch(args);
     }
 
     public static void execute(IAlertBox alertbox, ISystemExit systemExit, IFactory factory) {
-        setUpDependencies(alertbox, systemExit, factory, Constants.EMPTY_STRING);
+        setUpDependencies(alertbox, systemExit, factory, Constants.EMPTY_STRING, true);
         App app = new App();
+        app.setDebug(true);
         app.start(null);
     }
 }

@@ -11,6 +11,8 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 
+import javax.net.ssl.HostnameVerifier;
+
 public class Client implements IClient {
     private int port;
     private String hostName;
@@ -20,6 +22,7 @@ public class Client implements IClient {
     private IApp appParent;
 
     private static final String CLIENT_PREFIX = "Client '";
+    private static final String CONNECTION_TIMEOUT_MSG = "connect timed out";
 
     public Client(String hostName, int port, String squareId, IFactory factory, IApp appParent) {
         this.hostName = hostName;
@@ -35,14 +38,15 @@ public class Client implements IClient {
         hostName = square.getIP();
         squareId = square.getId();
         this.utility = factory.createUtility(Constants.BASE_UTILITY, appParent.getDialogController());
-        
+
         createLogger(factory, square.getSampleController().getParent().getLoggerType());
     }
 
     private void createLogger(IFactory factory, int loggerType) {
         logger = factory.createLogger(loggerType,
                 utility.concatStrings(Constants.CLIENT_LOG_PREFIX, squareId, Constants.LOG_FILE_EXT),
-                factory.createUtility(Constants.BASE_UTILITY, appParent.getDialogController()), appParent.getDialogController());
+                factory.createUtility(Constants.BASE_UTILITY, appParent.getDialogController()),
+                appParent.getDialogController());
     }
 
     public String sendMessage(String text, boolean encrypt, String command) {
@@ -64,30 +68,50 @@ public class Client implements IClient {
                     Integer.toString(port), "] "));
             return result;
         } catch (SocketTimeoutException ste) {
-            utility.logError(utility.concatStrings(guid, " Socket timeout: ", ste.getMessage(), Constants.NEWLINE, Arrays.toString(ste.getStackTrace())));
-        
+            if (ste.getMessage().contains(CONNECTION_TIMEOUT_MSG)) {
+                if (appParent.isDebug()) {
+                    utility.logError(utility.concatStrings(guid, "[", hostName, Constants.COLON, Integer.toString(port), "] STE Socket timeout: ", ste.getMessage(), Constants.NEWLINE,
+                        Arrays.toString(ste.getStackTrace())));
+                }
+            } else {
+                utility.logError(utility.concatStrings(guid, " Socket timeout: ", ste.getMessage(), Constants.NEWLINE,
+                        Arrays.toString(ste.getStackTrace())));
+            }
         } catch (SocketException se) {
             if (se.getMessage().equals("Connection refused: connect")) {
-                utility.logError(
-                        utility.concatStrings(guid, Constants.SPACE, CLIENT_PREFIX, squareId, "' not available", Constants.NEWLINE, Arrays.toString(se.getStackTrace())));
+                utility.logError(utility.concatStrings(guid, Constants.SPACE, CLIENT_PREFIX, squareId,
+                        "' not available", Constants.NEWLINE, Arrays.toString(se.getStackTrace())));
             } else if (se.getMessage().equals("Connection timed out: connect")) {
                 utility.logError(utility.concatStrings(guid, Constants.SPACE, CLIENT_PREFIX, hostName, Constants.COLON,
-                        Integer.toString(port), "' not available", Constants.NEWLINE, Arrays.toString(se.getStackTrace())));
+                        Integer.toString(port), "' not available", Constants.NEWLINE,
+                        Arrays.toString(se.getStackTrace())));
+            } else if (se.getMessage().contains(CONNECTION_TIMEOUT_MSG)) {
+                if (appParent.isDebug()) {
+                    utility.logError(utility.concatStrings(guid, " Socket Exception Socket timeout: ", se.getMessage(), Constants.NEWLINE,
+                        Arrays.toString(se.getStackTrace())));
+                }
             } else {
                 utility.logError(utility.concatStrings(guid, Constants.SPACE, CLIENT_PREFIX, hostName, Constants.COLON,
-                        Integer.toString(port), Constants.SINGLE_QUOTE, Constants.SPACE, se.getMessage(), Constants.NEWLINE, Arrays.toString(se.getStackTrace())));
+                        Integer.toString(port), Constants.SINGLE_QUOTE, Constants.SPACE, se.getMessage(),
+                        Constants.NEWLINE, Arrays.toString(se.getStackTrace())));
             }
         } catch (UnknownHostException ex) {
-            utility.logError(utility.concatStrings(guid, " Server not found: ", ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
+            utility.logError(utility.concatStrings(guid, " Server not found: ", ex.getMessage(), Constants.NEWLINE,
+                    Arrays.toString(ex.getStackTrace())));
         } catch (IOException ex) {
-            if (ex.getMessage().equals("connect timed out")) {
-                // do nothing
+            if (ex.getMessage().contains(CONNECTION_TIMEOUT_MSG)) {
+                if (appParent.isDebug()) {
+                    utility.logError(utility.concatStrings(guid, " I/O Socket timeout: ", ex.getMessage(), Constants.NEWLINE,
+                        Arrays.toString(ex.getStackTrace())));
+                }
             } else {
-                utility.logError(utility.concatStrings(guid, " I/O error: ", ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
+                utility.logError(utility.concatStrings(guid, " I/O error: ", ex.getMessage(), Constants.NEWLINE,
+                        Arrays.toString(ex.getStackTrace())));
             }
         } catch (Exception e) {
             utility.logError(utility.concatStrings(guid, Constants.SPACE, CLIENT_PREFIX, hostName, Constants.COLON,
-                    Integer.toString(port), Constants.SINGLE_QUOTE, Constants.SPACE, e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
+                    Integer.toString(port), Constants.SINGLE_QUOTE, Constants.SPACE, e.getMessage(), Constants.NEWLINE,
+                    Arrays.toString(e.getStackTrace())));
         }
 
         return Constants.EMPTY_STRING;
@@ -113,7 +137,8 @@ public class Client implements IClient {
             return readServerReply(input);
         } catch (Exception e) {
             logger.logInfo(utility.concatStrings(CLIENT_PREFIX, hostName, Constants.COLON, Integer.toString(port),
-                    Constants.SINGLE_QUOTE, Constants.SPACE, e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
+                    Constants.SINGLE_QUOTE, Constants.SPACE, e.getMessage(), Constants.NEWLINE,
+                    Arrays.toString(e.getStackTrace())));
         }
 
         return Constants.EMPTY_STRING;
@@ -124,7 +149,8 @@ public class Client implements IClient {
             return reader.readLine();
         } catch (IOException ioe) {
             logger.logInfo(utility.concatStrings(CLIENT_PREFIX, hostName, Constants.COLON, Integer.toString(port),
-                    Constants.SINGLE_QUOTE, Constants.SPACE, ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
+                    Constants.SINGLE_QUOTE, Constants.SPACE, ioe.getMessage(), Constants.NEWLINE,
+                    Arrays.toString(ioe.getStackTrace())));
         }
 
         return Constants.EMPTY_STRING;

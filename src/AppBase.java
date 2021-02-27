@@ -15,12 +15,14 @@ public class AppBase extends Thread implements IApp {
     private String defaultName;
     private Stage stage;
     private IDialogController controller;
+    private Boolean debug;
 
     public AppBase(String loggerFlag, IAlertBox alertbox, ISystemExit exit, IFactory f) {
         setUpDependencies(alertbox, exit, f, loggerFlag);
     }
 
     private void setUpDependencies(IAlertBox alertbox, ISystemExit exit, IFactory factory, String logFlag) {
+        this.debug = false;
         systemExit = exit;
         loggerType = Constants.FILE_LOGGER;
         if (logFlag.equals("-nl")) {
@@ -166,5 +168,13 @@ public class AppBase extends Thread implements IApp {
 
     public IDialogController getDialogController() {
         return controller;
+    }
+
+    public void setDebug(Boolean value) {
+        debug = value;
+    }
+
+    public Boolean isDebug() {
+        return debug;
     }
 }

@@ -138,8 +138,15 @@ public class ServerThread extends Thread implements IServerThread {
                 }
             }
             done = true;
-            errorLogger.logInfo(utility.concatStrings("[", add, "] - I/O error ", ex.getMessage(), Constants.NEWLINE,
+            if (ex.getMessage().contains("Connection reset")) {
+                if (controller.getLogger().getDialogController().getParent().isDebug()) {
+                    utility.logError(utility.concatStrings("[", add, "] - Connection reset: ", ex.getMessage(), Constants.NEWLINE,
+                        Arrays.toString(ex.getStackTrace())));
+                }
+            } else {
+                errorLogger.logInfo(utility.concatStrings("[", add, "] - I/O error ", ex.getMessage(), Constants.NEWLINE,
                     Arrays.toString(ex.getStackTrace())));
+            }
         }
     }
 }

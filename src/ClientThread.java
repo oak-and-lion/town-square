@@ -100,12 +100,17 @@ public class ClientThread extends Thread implements IClientThread {
                 performWork(memberThreads);
 
                 int postsLength = posts.size();
+                PostMessage lastPost = new PostMessage(0, Constants.EMPTY_STRING, utility);
+
+                if (postsLength > 0) {
+                    lastPost = posts.get(postsLength - 1);
+                }
 
                 for (IMemberPostsThread mt : memberThreads) {
                     posts.addAll(mt.getAllPosts());
                 }
 
-                if (posts.size() > postsLength) {
+                if (posts.size() > 0 && !posts.get(posts.size() - 1).equals(lastPost)) {
                     updatePosts(file);
                 }
 
