@@ -33,6 +33,18 @@ public class ServerThread extends Thread implements IServerThread {
         return done;
     }
 
+    public void closeSocket() {
+        if (!socket.isClosed()) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                done = true;
+                errorLogger.logInfo(
+                        utility.concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
+            }
+        }
+    }
+
     @Override
     public void run() {
         done = false;
@@ -42,7 +54,7 @@ public class ServerThread extends Thread implements IServerThread {
             if (!socket.isClosed()) {
                 try {
                     socket.close();
-                } catch (Exception e) {
+                } catch (IOException e) {
                     done = true;
                     errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE,
                             Arrays.toString(e.getStackTrace())));
@@ -62,7 +74,7 @@ public class ServerThread extends Thread implements IServerThread {
             if (!socket.isClosed()) {
                 try {
                     socket.close();
-                } catch (Exception e) {
+                } catch (IOException e) {
                     done = true;
                     errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE,
                             Arrays.toString(e.getStackTrace())));
@@ -81,7 +93,7 @@ public class ServerThread extends Thread implements IServerThread {
             if (!socket.isClosed()) {
                 try {
                     socket.close();
-                } catch (Exception e) {
+                } catch (IOException e) {
                     done = true;
                     errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE,
                             Arrays.toString(e.getStackTrace())));
@@ -119,15 +131,15 @@ public class ServerThread extends Thread implements IServerThread {
             if (!socket.isClosed()) {
                 try {
                     socket.close();
-                } catch (Exception e) {
+                } catch (IOException e) {
                     done = true;
-                    errorLogger.logInfo(utility.concatStrings("[", add, "] - ", e.getMessage(), Constants.NEWLINE,
-                            Arrays.toString(e.getStackTrace())));
+                    errorLogger.logInfo(utility.concatStrings("[", add, "] - close socket error ", e.getMessage(),
+                            Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
                 }
             }
             done = true;
-            errorLogger.logInfo(
-                    utility.concatStrings("[", add, "] - ", ex.getMessage(), Constants.NEWLINE, Arrays.toString(ex.getStackTrace())));
+            errorLogger.logInfo(utility.concatStrings("[", add, "] - I/O error ", ex.getMessage(), Constants.NEWLINE,
+                    Arrays.toString(ex.getStackTrace())));
         }
     }
 }

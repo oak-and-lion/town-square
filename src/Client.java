@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 
@@ -62,6 +63,9 @@ public class Client implements IClient {
             logger.logInfo(utility.concatStrings(guid, " Client request response: [", hostName, Constants.COLON,
                     Integer.toString(port), "] "));
             return result;
+        } catch (SocketTimeoutException ste) {
+            utility.logError(utility.concatStrings(guid, " Socket timeout: ", ste.getMessage(), Constants.NEWLINE, Arrays.toString(ste.getStackTrace())));
+        
         } catch (SocketException se) {
             if (se.getMessage().equals("Connection refused: connect")) {
                 utility.logError(
@@ -104,6 +108,7 @@ public class Client implements IClient {
     private String communicateWithServer(String text, PrintWriter writer, Socket socket) {
         try {
             writer.println(text);
+            writer.flush();
             InputStream input = socket.getInputStream();
             return readServerReply(input);
         } catch (Exception e) {

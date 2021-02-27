@@ -99,11 +99,15 @@ public class ClientThread extends Thread implements IClientThread {
 
                 performWork(memberThreads);
 
+                int postsLength = posts.size();
+
                 for (IMemberPostsThread mt : memberThreads) {
                     posts.addAll(mt.getAllPosts());
                 }
 
-                updatePosts(file);
+                if (posts.size() > postsLength) {
+                    updatePosts(file);
+                }
 
                 raw = utility.readFile(file, lastKnownPost);
                 if (!raw.equals(Constants.EMPTY_STRING)) {
@@ -115,7 +119,8 @@ public class ClientThread extends Thread implements IClientThread {
                 count = checkCount(count);
             }
         } catch (InterruptedException ie) {
-            errorLogger.logInfo(utility.concatStrings(ie.getMessage(), Constants.NEWLINE, Arrays.toString(ie.getStackTrace())));
+            errorLogger.logInfo(
+                    utility.concatStrings(ie.getMessage(), Constants.NEWLINE, Arrays.toString(ie.getStackTrace())));
             Thread.currentThread().interrupt();
         }
     }
@@ -152,7 +157,8 @@ public class ClientThread extends Thread implements IClientThread {
             try {
                 Thread.sleep(Constants.TINY_PAUSE);
             } catch (InterruptedException ie) {
-                errorLogger.logInfo(utility.concatStrings(ie.getMessage(), Constants.NEWLINE, Arrays.toString(ie.getStackTrace())));
+                errorLogger.logInfo(
+                        utility.concatStrings(ie.getMessage(), Constants.NEWLINE, Arrays.toString(ie.getStackTrace())));
                 Thread.currentThread().interrupt();
             }
         }
@@ -161,10 +167,11 @@ public class ClientThread extends Thread implements IClientThread {
     private String[] getAllMembers(String memberFile) {
         ArrayList<String> memberWork = new ArrayList<>();
 
-        if (utility.checkFileExists(utility.concatStrings(square.getSafeLowerName(), Constants.HUB_REGISTRATION_FILE_EXT))) {
-            String hubInfo = utility.readFile(utility.concatStrings(square.getSafeLowerName(), Constants.HUB_REGISTRATION_FILE_EXT));
-            String[] members = utility.searchFile(memberFile, utility.readFile(hubInfo),
-                    Constants.SEARCH_CONTAINS);
+        if (utility.checkFileExists(
+                utility.concatStrings(square.getSafeLowerName(), Constants.HUB_REGISTRATION_FILE_EXT))) {
+            String hubInfo = utility
+                    .readFile(utility.concatStrings(square.getSafeLowerName(), Constants.HUB_REGISTRATION_FILE_EXT));
+            String[] members = utility.searchFile(memberFile, utility.readFile(hubInfo), Constants.SEARCH_CONTAINS);
             if (members.length > 0) {
                 String[] memberInfo = members[0].split(Constants.FILE_DATA_SEPARATOR);
                 String m = utility.concatStrings(memberInfo[0], Constants.FILE_DATA_SEPARATOR, memberInfo[1],
@@ -285,12 +292,13 @@ public class ClientThread extends Thread implements IClientThread {
         if (posts.size() == 0) {
             return;
         }
-        
+
         utility.writeFile(file, String.join(Constants.NEWLINE, posts.getAllMessages()));
     }
 
     public void addPostMessage(PostMessage message) {
-        if (utility.checkFileExists(utility.concatStrings(square.getSafeLowerName(), Constants.HUB_REGISTRATION_FILE_EXT))) {
+        if (utility.checkFileExists(
+                utility.concatStrings(square.getSafeLowerName(), Constants.HUB_REGISTRATION_FILE_EXT))) {
             postToHub(message);
         } else {
             addPostLocal(message);
@@ -298,10 +306,11 @@ public class ClientThread extends Thread implements IClientThread {
     }
 
     private void postToHub(PostMessage message) {
-        String hubInfo = utility.readFile(utility.concatStrings(square.getSafeLowerName(), Constants.HUB_REGISTRATION_FILE_EXT));
+        String hubInfo = utility
+                .readFile(utility.concatStrings(square.getSafeLowerName(), Constants.HUB_REGISTRATION_FILE_EXT));
         String[] members = utility.searchFile(
-                utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT),
-                hubInfo, Constants.SEARCH_CONTAINS);
+                utility.concatStrings(square.getSafeLowerName(), Constants.MEMBERS_FILE_EXT), hubInfo,
+                Constants.SEARCH_CONTAINS);
         if (members.length > 0) {
             String[] hub = hubInfo.split(Constants.FILE_DATA_SEPARATOR);
             String[] memberInfo = members[0].split(Constants.FILE_DATA_SEPARATOR);

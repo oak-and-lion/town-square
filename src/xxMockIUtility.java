@@ -2,7 +2,11 @@ import java.util.zip.ZipOutputStream;
 
 public class xxMockIUtility implements IUtility {
     private static final String SEARCH_VALUE = "searchFound";
+    private static final long LONG_ZERO = 0;
 
+    public long getFileSize(String file) {
+        return LONG_ZERO;
+    }
     public String createUUID() {
         return Constants.EMPTY_STRING;
     }

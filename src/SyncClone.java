@@ -20,35 +20,10 @@ public class SyncClone extends Thread implements ISyncClone {
 
     @Override
     public void run() {
-        String[] files;
-        String uniqueId = utility.readFile(Constants.UNIQUE_ID_FILE);
-        String ip = utility.readFile(Constants.IP_FILE);
-        String port = utility.readFile(Constants.PORT_FILE);
         while (true) {
-            files = utility.getFiles(Constants.MEMBERS_FILE_EXT);
-            for (String file : files) {
-                getMembers(file, uniqueId, ip, port);
-            }
-
-            files = utility.getFiles(Constants.SQUARE_FILE_EXT);
-            squareIds.clear();
-            squareInfos.clear();
-            for (String file : files) {
-                getKnownSquares(file);
-            }
-
-            ICommandController cmdController = parent.getDialogController().getCommandController();
-            IFactory factory = parent.getDialogController().getFactory();
-
-            for (MemberInfo member : memberInfoList.getAll()) {
-                ISquare square = factory.createSquare(Constants.BASE_SQUARE, squareInfos.get(0), port, ip,
-                        factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility,
-                                parent.getDialogController(), logger,
-                                factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, utility)),
-                        utility, parent.getDialogController(), uniqueId, parent);
-                cmdController.processCommand(utility.concatStrings(Constants.FORWARD_SLASH, Constants.NULL_TEXT),
-                        square);
-            }
+            // not sure what to do here
+            // basically, need to go to each member and tell them the squares we already have
+            // then that member returns the squares that we don't
 
             try {
                 Thread.sleep(Constants.SYNC_CLONE_WAIT);

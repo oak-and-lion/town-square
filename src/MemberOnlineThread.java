@@ -27,6 +27,7 @@ public class MemberOnlineThread extends Thread implements IMemberOnlineThread {
                 member.setOnline(result[0].getBoolean());
             }
         } catch (Exception e) {
+            done = true;
             utility.logError(utility.concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
         }
         done = true;

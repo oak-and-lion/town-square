@@ -78,6 +78,7 @@ public class Server extends Thread implements IServer {
                     }
                 }
                 for (IServerThread s : doneThreads) {
+                    s.closeSocket();
                     serverThreads.remove(s);
                 }
                 doneThreads.clear();

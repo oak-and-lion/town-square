@@ -55,6 +55,23 @@ public class Utility implements IUtility {
         return UUID.randomUUID().toString();
     }
 
+    public long getFileSize(String file) {
+        if (!checkFileExists(file)) {
+            return 0;
+        }
+        try {
+            String fp = getFilePath(file);
+            Path path = Paths.get(fp);
+            return Files.size(path);
+        } catch (IOException ioe) {
+            logError(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
+        } catch (SecurityException se) {
+            concatStrings(se.getMessage(), Constants.NEWLINE, Arrays.toString(se.getStackTrace()));
+        }
+
+        return -1;
+    }
+
     public String getRemoteIP() {
         String result = Constants.EMPTY_STRING;
         try {
@@ -65,7 +82,8 @@ public class Utility implements IUtility {
                 result = bufferedReaderRead(in);
             }
         } catch (MalformedURLException mue) {
-            errorLogger.logInfo(concatStrings(mue.getMessage(), Constants.NEWLINE, Arrays.toString(mue.getStackTrace())));
+            errorLogger
+                    .logInfo(concatStrings(mue.getMessage(), Constants.NEWLINE, Arrays.toString(mue.getStackTrace())));
         }
 
         return result.replace(Constants.HELLO_WORLD, Constants.EMPTY_STRING);
@@ -123,7 +141,8 @@ public class Utility implements IUtility {
         try {
             result = in.readLine(); // you get the IP as a String
         } catch (IOException ioe) {
-            errorLogger.logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
+            errorLogger
+                    .logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
         }
 
         return result;
@@ -167,7 +186,8 @@ public class Utility implements IUtility {
             try {
                 Files.delete(f.toPath());
             } catch (IOException se) {
-                errorLogger.logInfo(concatStrings(se.getMessage(), Constants.NEWLINE, Arrays.toString(se.getStackTrace())));
+                errorLogger.logInfo(
+                        concatStrings(se.getMessage(), Constants.NEWLINE, Arrays.toString(se.getStackTrace())));
                 result = false;
             }
         }
@@ -187,7 +207,8 @@ public class Utility implements IUtility {
             result.setLineCount(byteRead);
             result.setSuccessful(true);
         } catch (IOException ioe) {
-            errorLogger.logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
+            errorLogger
+                    .logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
         }
 
         return result;
@@ -213,7 +234,8 @@ public class Utility implements IUtility {
             result.setLineCount(s.size());
             result.setSuccessful(true);
         } catch (IOException ioe) {
-            errorLogger.logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
+            errorLogger
+                    .logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
         } catch (SecurityException se) {
             errorLogger.logInfo(concatStrings(se.getMessage(), Constants.NEWLINE, Arrays.toString(se.getStackTrace())));
         }
@@ -235,7 +257,8 @@ public class Utility implements IUtility {
                 result.setLineCount(s.size());
                 result.setSuccessful(true);
             } catch (IOException ioe) {
-                errorLogger.logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
+                errorLogger.logInfo(
+                        concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
             }
         }
 
@@ -258,7 +281,8 @@ public class Utility implements IUtility {
         } catch (SecurityException se) {
             errorLogger.logInfo(concatStrings(se.getMessage(), Constants.NEWLINE, Arrays.toString(se.getStackTrace())));
         } catch (IOException ioe) {
-            errorLogger.logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
+            errorLogger
+                    .logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
         }
     }
 
@@ -271,9 +295,11 @@ public class Utility implements IUtility {
         try {
             return Files.readAllBytes(path);
         } catch (IOException ioe) {
-            errorLogger.logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
+            errorLogger
+                    .logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
         } catch (OutOfMemoryError oome) {
-            errorLogger.logInfo(concatStrings(oome.getMessage(), Constants.NEWLINE, Arrays.toString(oome.getStackTrace())));
+            errorLogger.logInfo(
+                    concatStrings(oome.getMessage(), Constants.NEWLINE, Arrays.toString(oome.getStackTrace())));
         } catch (SecurityException se) {
             errorLogger.logInfo(concatStrings(se.getMessage(), Constants.NEWLINE, Arrays.toString(se.getStackTrace())));
         }
@@ -314,7 +340,8 @@ public class Utility implements IUtility {
                 count++;
             }
         } catch (IOException ioe) {
-            errorLogger.logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
+            errorLogger
+                    .logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
         }
 
         return result.toString();
@@ -352,7 +379,8 @@ public class Utility implements IUtility {
                 count++;
             }
         } catch (IOException ioe) {
-            errorLogger.logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
+            errorLogger
+                    .logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
         }
 
         return temp.toArray(new String[temp.size()]);
@@ -389,7 +417,8 @@ public class Utility implements IUtility {
                 result++;
             }
         } catch (IOException ioe) {
-            errorLogger.logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
+            errorLogger
+                    .logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
         }
 
         return result;
@@ -415,7 +444,8 @@ public class Utility implements IUtility {
                 result = line;
             }
         } catch (IOException ioe) {
-            errorLogger.logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
+            errorLogger
+                    .logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
         }
 
         return result;
@@ -454,7 +484,8 @@ public class Utility implements IUtility {
                 count++;
             }
         } catch (IOException ioe) {
-            errorLogger.logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
+            errorLogger
+                    .logInfo(concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
         }
 
         if (!notFoundReturnZero && !found) {
@@ -603,7 +634,7 @@ public class Utility implements IUtility {
 
     public String memberEncrypt(IFactory factory, String data, String memberPublicKey) {
         ISquareKeyPair tempKeys = factory.createSquareKeyPair(Constants.UTILITY_SQUARE_KEY_PAIR, this);
-        
+
         tempKeys.setPublicKeyFromBase64(memberPublicKey);
 
         return tempKeys.encryptToBase64(data);

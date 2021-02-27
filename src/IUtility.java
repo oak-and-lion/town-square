@@ -32,4 +32,5 @@ public interface IUtility {
     int add(int... ints);
     String memberEncrypt(IFactory factory, String memberPublicKey, String data);
     void logError(String msg);
+    long getFileSize(String file);
 }

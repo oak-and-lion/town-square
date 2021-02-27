@@ -41,7 +41,9 @@ public class ModalMembersList extends BaseViewer implements IModalViewer {
         }
 
         Boolean allDone = false;
-        while (!allDone) {
+        int count = 0;
+        while (!allDone || count < 10000) {
+            count++;
             allDone = true;
             for (MemberOnlineThread thread : membersOnline) {
                 if (!thread.isDone()) {

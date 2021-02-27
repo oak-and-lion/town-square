@@ -1,24 +1,29 @@
-import javafx.application.Platform;
-
 public class LogItError implements ILogIt {
     private IDialogController dialogController;
-    private ILogIt fileLogger;
+    private IFileLogger fileLogger;
+    private String file;
+    private IUtility utility;
+
+    private static final long MAX_ERROR_FILE_SIZE = 100000;
 
     public LogItError(IUtility utility, String file, IDialogController dialogController) {
-        fileLogger = LogItFile.create(utility, file, dialogController);
+        fileLogger = LogItFile.createFileLogger(utility, file, dialogController);
         this.dialogController = dialogController;
+        this.file = file;
+        this.utility = utility;
     }
 
     public void logInfo(String msg) {
-        fileLogger.logInfo(msg);
-        if (dialogController.isGui()) {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    dialogController.showList(new String[] { msg }, "Error Encountered", "Error");
-                }
-            });
+        Boolean newFile = false;
+        if (utility.getFileSize(file) > MAX_ERROR_FILE_SIZE) {
+            newFile = true;
         }
+        logInfo(msg, newFile);
+        // update the ui in some way?
+    }
+
+    public void logInfo(String msg, Boolean newFile) {
+        fileLogger.logInfo(msg, newFile);
     }
 
     public IDialogController getDialogController() {

@@ -54,6 +54,7 @@ public class Constants {
     public static final String APP_TITLE = "Town Square";
     public static final String DEFAULT_SQUARE_NAME = "My Square";
     public static final String COMMA = ",";
+    public static final String PERIOD = ".";
     public static final String OPEN_PARENS = "(";
     public static final String CLOSE_PARENS = ")";
     public static final String NOT_PRIVATE = "0";
