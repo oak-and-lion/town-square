@@ -89,7 +89,7 @@ public class Factory implements IFactory {
             return new LogItError(utility, file, dialogController);
         }
 
-        return LogItEmpty.create();
+        return LogItEmpty.create(dialogController);
     }
 
     public IClientThread createClientThread(int type, ISquare square, IUtility utility, String uniqueId, IApp app) {

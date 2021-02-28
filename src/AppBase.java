@@ -31,9 +31,9 @@ public class AppBase extends Thread implements IApp {
             loggerType = Constants.CONSOLE_LOGGER;
         }
 
-        this.utility = factory.createUtility(Constants.BASE_UTILITY, new DialogControllerEmpty());
+        this.utility = factory.createUtility(Constants.BASE_UTILITY, new DialogControllerEmpty(this));
         controller = factory.createDialogController(Constants.SERVER_DIALOG_CONTROLLER, this, utility);
-        
+        utility.setDialogController(controller);
         ISetup setup = factory.createSetup(Constants.HUB_SETUP_CONTROLLER, utility, this);
         setup.runSetup();
         port = utility.readFile(Constants.PORT_FILE);

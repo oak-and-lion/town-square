@@ -51,6 +51,10 @@ public class Utility implements IUtility {
         return new Utility(controller, factory);
     }
 
+    public void setDialogController(IDialogController controller) {
+        // not needed
+    }
+
     public String createUUID() {
         return UUID.randomUUID().toString();
     }

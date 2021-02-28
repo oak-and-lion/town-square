@@ -6,9 +6,11 @@ import javafx.stage.Stage;
 public class DialogControllerEmpty implements IDialogController {
     private ICommandController commandController;
     private IFactory factory;
+    private IApp parent;
 
-    public DialogControllerEmpty() {
+    public DialogControllerEmpty(IApp parent) {
         this.factory = new Factory();
+        this.parent = parent;
     }
     
     public ISquare getSquareByInvite(String id){
@@ -100,7 +102,7 @@ public class DialogControllerEmpty implements IDialogController {
     }
 
     public IApp getParent() {
-        return null;
+        return parent;
     }
 
     public void showLicense() {

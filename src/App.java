@@ -50,7 +50,7 @@ public class App extends Application implements IApp {
 
     @Override
     public void start(Stage primaryStage) {
-        utility = factory.createUtility(Constants.BASE_UTILITY, new DialogControllerEmpty());
+        utility = factory.createUtility(Constants.BASE_UTILITY, new DialogControllerEmpty(this));
         systemExit.setParent(this);
         if (checkCurrentState(alert)) {
             processStart(primaryStage);

@@ -122,4 +122,8 @@ public class UtilityEmpty implements IUtility {
     public void logError(String msg) {
         // not needed
     }
+
+    public void setDialogController(IDialogController controller) {
+        // not needed
+    }
 }

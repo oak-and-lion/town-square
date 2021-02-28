@@ -33,4 +33,5 @@ public interface IUtility {
     String memberEncrypt(IFactory factory, String memberPublicKey, String data);
     void logError(String msg);
     long getFileSize(String file);
+    void setDialogController(IDialogController controller);
 }
