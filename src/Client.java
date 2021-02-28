@@ -71,11 +71,6 @@ public class Client implements IClient {
                     utility.logError(utility.concatStrings(guid, "[", hostName, Constants.COLON, Integer.toString(port), "] STE Socket timeout: ", ste.getMessage(), Constants.NEWLINE,
                         Arrays.toString(ste.getStackTrace())));
                 }
-            } else if (ste.getMessage().contains("No route to host")) {
-                if (appParent.isDebug()) {
-                    utility.logError(utility.concatStrings(guid, "[", hostName, Constants.COLON, Integer.toString(port), "] STE Socket timeout: ", ste.getMessage(), Constants.NEWLINE,
-                        Arrays.toString(ste.getStackTrace())));
-                }
             } else {
                 utility.logError(utility.concatStrings(guid, " Socket timeout: ", ste.getMessage(), Constants.NEWLINE,
                         Arrays.toString(ste.getStackTrace())));
@@ -90,7 +85,12 @@ public class Client implements IClient {
                         Arrays.toString(se.getStackTrace())));
             } else if (se.getMessage().contains(CONNECTION_TIMEOUT_MSG)) {
                 if (appParent.isDebug()) {
-                    utility.logError(utility.concatStrings(guid, " Socket Exception Socket timeout: ", se.getMessage(), Constants.NEWLINE,
+                    utility.logError(utility.concatStrings(guid, " Socket Exception: ", se.getMessage(), Constants.NEWLINE,
+                        Arrays.toString(se.getStackTrace())));
+                }
+            } else if (se.getMessage().contains("No route to host")) {
+                if (appParent.isDebug()) {
+                    utility.logError(utility.concatStrings(guid, "[", hostName, Constants.COLON, Integer.toString(port), "] STE Socket timeout: ", se.getMessage(), Constants.NEWLINE,
                         Arrays.toString(se.getStackTrace())));
                 }
             } else {
@@ -112,7 +112,7 @@ public class Client implements IClient {
                         Arrays.toString(ex.getStackTrace())));
             }
         } catch (Exception e) {
-            utility.logError(utility.concatStrings(guid, Constants.SPACE, CLIENT_PREFIX, hostName, Constants.COLON,
+            utility.logError(utility.concatStrings(guid, "General exception: ", Constants.SPACE, CLIENT_PREFIX, hostName, Constants.COLON,
                     Integer.toString(port), Constants.SINGLE_QUOTE, Constants.SPACE, e.getMessage(), Constants.NEWLINE,
                     Arrays.toString(e.getStackTrace())));
         }
