@@ -71,6 +71,11 @@ public class Client implements IClient {
                     utility.logError(utility.concatStrings(guid, "[", hostName, Constants.COLON, Integer.toString(port), "] STE Socket timeout: ", ste.getMessage(), Constants.NEWLINE,
                         Arrays.toString(ste.getStackTrace())));
                 }
+            } else if (ste.getMessage().contains("No route to host")) {
+                if (appParent.isDebug()) {
+                    utility.logError(utility.concatStrings(guid, "[", hostName, Constants.COLON, Integer.toString(port), "] STE Socket timeout: ", ste.getMessage(), Constants.NEWLINE,
+                        Arrays.toString(ste.getStackTrace())));
+                }
             } else {
                 utility.logError(utility.concatStrings(guid, " Socket timeout: ", ste.getMessage(), Constants.NEWLINE,
                         Arrays.toString(ste.getStackTrace())));
