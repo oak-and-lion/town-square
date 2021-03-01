@@ -647,4 +647,8 @@ public class Utility implements IUtility {
     public void logError(String msg) {
         errorLogger.logInfo(msg);
     }
+
+    public boolean isWindows() {
+        return System.getProperty("os.name").toLowerCase().startsWith("windows");
+    }
 }

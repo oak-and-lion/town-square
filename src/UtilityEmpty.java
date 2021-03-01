@@ -126,4 +126,8 @@ public class UtilityEmpty implements IUtility {
     public void setDialogController(IDialogController controller) {
         // not needed
     }
+
+    public boolean isWindows() {
+        return System.getProperty("os.name").toLowerCase().startsWith("windows");
+    }
 }

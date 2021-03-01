@@ -34,4 +34,5 @@ public interface IUtility {
     void logError(String msg);
     long getFileSize(String file);
     void setDialogController(IDialogController controller);
+    boolean isWindows();
 }
