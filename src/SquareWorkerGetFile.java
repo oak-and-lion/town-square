@@ -27,7 +27,7 @@ public class SquareWorkerGetFile extends SquareWorkerBase implements ISquareWork
             return Constants.EMPTY_STRING;
         }
 
-        String fileRequest = split[3].trim().toLowerCase();
+        String fileRequest = split[3].trim();
         if (!utility.checkFileExists(fileRequest)) {
             return Constants.EMPTY_STRING;
         }
