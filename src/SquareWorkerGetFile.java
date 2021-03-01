@@ -14,7 +14,8 @@ public class SquareWorkerGetFile extends SquareWorkerBase implements ISquareWork
     }
 
     public SquareResponse doWork(ISquare square, String[] args) {
-        this.errorLogger = this.factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility, square.getSampleController());
+        this.errorLogger = this.factory.createLogger(Constants.ERROR_LOGGER, Constants.ERROR_LOG_FILE, utility,
+                square.getSampleController());
         return new SquareResponse(buildResult(Constants.OK_RESULT, processFileGetMessage(square, args)));
     }
 
@@ -31,11 +32,10 @@ public class SquareWorkerGetFile extends SquareWorkerBase implements ISquareWork
         if (!utility.checkFileExists(fileRequest)) {
             return Constants.EMPTY_STRING;
         }
-        
+
         if (fileRequest.endsWith(Constants.KEY_FILE_EXT) || fileRequest.endsWith(Constants.BLOCK_FILE_EXT)
-                || fileRequest.endsWith(Constants.MEMBERS_FILE_EXT)
-                || fileRequest.endsWith(Constants.POSTS_FILE_EXT) || fileRequest.endsWith(Constants.LOG_FILE_EXT)
-                || fileRequest.endsWith(Constants.ID_FILE_EXT) || fileRequest.endsWith(Constants.TXT_FILE_EXT)
+                || fileRequest.endsWith(Constants.MEMBERS_FILE_EXT) || fileRequest.endsWith(Constants.POSTS_FILE_EXT)
+                || fileRequest.endsWith(Constants.LOG_FILE_EXT) || fileRequest.endsWith(Constants.ID_FILE_EXT)
                 || fileRequest.endsWith(Constants.SH_FILE_EXT) || fileRequest.endsWith(Constants.BAT_FILE_EXT)
                 || fileRequest.endsWith(Constants.SQUARE_FILE_EXT) || fileRequest.endsWith(Constants.CLONE_FILE_EXT)) {
             return Constants.GO_AWAY;
@@ -68,9 +68,11 @@ public class SquareWorkerGetFile extends SquareWorkerBase implements ISquareWork
             result = utility.concatStrings(tempKeys.encryptToBase64(password), Constants.COMMAND_DATA_SEPARATOR,
                     temp.toString());
         } catch (IOException ioe) {
-            errorLogger.logInfo(utility.concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
+            errorLogger.logInfo(
+                    utility.concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
         } catch (Exception e) {
-            errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
+            errorLogger.logInfo(
+                    utility.concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
         }
 
         return result;
