@@ -143,8 +143,13 @@ public class ServerThread extends Thread implements IServerThread {
                     utility.logError(utility.concatStrings("[", add, "] - Connection reset: ", ex.getMessage(), Constants.NEWLINE,
                         Arrays.toString(ex.getStackTrace())));
                 }
+            } else if (ex.getMessage().contains("No route to host")) {
+                if (controller.getLogger().getDialogController().getParent().isDebug()) {
+                    utility.logError(utility.concatStrings("[", add, "] I/P error: ", ex.getMessage(), Constants.NEWLINE,
+                        Arrays.toString(ex.getStackTrace())));
+                }
             } else {
-                errorLogger.logInfo(utility.concatStrings("[", add, "] - I/O error ", ex.getMessage(), Constants.NEWLINE,
+                errorLogger.logInfo(utility.concatStrings("[", add, "] - I/O error: ", ex.getMessage(), Constants.NEWLINE,
                     Arrays.toString(ex.getStackTrace())));
             }
         }
