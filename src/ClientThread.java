@@ -329,8 +329,12 @@ public class ClientThread extends Thread implements IClientThread {
                     square.getInvite(), app);
             String a = message.getAttachment();
             if (a != null && !a.equals(Constants.EMPTY_STRING)) {
-                String encryptedAttachment = utility.encrypt(a, password);
-                String attachResult = client.sendMessage(encryptedAttachment, Constants.ENCRYPT_CLIENT_TRANSFER, Constants.SEND_ATTACHMENT);
+                String encryptedAttachment = utility.encrypt(
+                        utility.concatStrings(Constants.SEND_ATTACHMENT, Constants.COMMAND_DATA_SEPARATOR, a),
+                        password);
+                String attachResult = client.sendMessage(
+                        utility.concatStrings(encryptedPassword, Constants.COMMAND_DATA_SEPARATOR, encryptedAttachment),
+                        Constants.ENCRYPT_CLIENT_TRANSFER, Constants.SEND_ATTACHMENT);
                 SquareResponse attachResponse = new SquareResponse(attachResult);
                 if (!attachResponse.getCode().equals(Constants.OK_RESULT)) {
                     // need code
