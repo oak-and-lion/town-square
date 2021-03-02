@@ -116,7 +116,7 @@ public class xxMockIDialogController implements IDialogController {
         // not needed
     }
 
-    public void postTheMessage(ISquare newSquare, String msg) {
+    public void postTheMessage(ISquare newSquare, String msg, String fileName) {
         // not needed
     }
 }

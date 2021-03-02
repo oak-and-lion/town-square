@@ -131,7 +131,7 @@ public class ServerDialogController implements IDialogController {
 
             squares.add(square);
             squareInvites.add(square.getInvite());
-            app.logMessage(utility.concatStrings("Invitation: e~", remoteIP, Constants.TILDE, port, Constants.TILDE, square.getInvite()));
+            app.logMessage(utility.concatStrings(Constants.INVITATION_LABEL_TEXT, Constants.SPACE, Constants.ENCRYPTED_FLAG, Constants.TILDE, remoteIP, Constants.TILDE, port, Constants.TILDE, square.getInvite()));
         }
     }
 
@@ -286,7 +286,7 @@ public class ServerDialogController implements IDialogController {
         return s.replace(Constants.SPACE, Constants.UNDERSCORE).toLowerCase();
     }
 
-    public void postTheMessage(ISquare newSquare, String msg) {
+    public void postTheMessage(ISquare newSquare, String msg, String fileName) {
         if (msg.startsWith(Constants.COMMAND_PREFIX)) {
             commandController.processCommand(msg, newSquare);
         } else {

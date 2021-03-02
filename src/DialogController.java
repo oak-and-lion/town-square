@@ -248,7 +248,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             if (!utility.checkFileExists(target.getName())) {
                 Files.copy(file.toPath(), target.toPath());
             }
-            postTheMessage(square, utility.concatStrings(marker, target.getName()));
+            postTheMessage(square, utility.concatStrings(marker, target.getName()), target.getName());
         } catch (IOException ioe) {
             errorLogger.logInfo(ioe.getLocalizedMessage());
         }
@@ -270,7 +270,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             return;
         }
 
-        postTheMessage(square, utility.concatStrings(Constants.FILE_MARKER, input));
+        postTheMessage(square, utility.concatStrings(Constants.URL_MARKER, input), Constants.EMPTY_STRING);
     }
 
     public void updatePauseNotification(ISquare square, boolean paused) {
@@ -516,7 +516,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                 Constants.POST_BUTTON_TEXT, square, postsTextField);
         postsButton.setOnAction(event -> {
             ISquare newSquare = postsButton.getSquare();
-            postTheMessage(newSquare, postsButton.getPostMessage());
+            postTheMessage(newSquare, postsButton.getPostMessage(), Constants.EMPTY_STRING);
             postsButton.clearPostMessage();
         });
 
@@ -539,7 +539,7 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
         return generatePostControls;
     }
 
-    public void postTheMessage(ISquare newSquare, String msg) {
+    public void postTheMessage(ISquare newSquare, String msg, String fileName) {
         if (newSquare == null) {
             return;
         }
@@ -549,7 +549,12 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             long currentMillis = System.currentTimeMillis();
             String data = utility.concatStrings(Long.toString(currentMillis), Constants.FILE_DATA_SEPARATOR, msg,
                     Constants.FILE_DATA_SEPARATOR, uniqueId.getText());
-            newSquare.addPostMessage(new PostMessage(currentMillis, data, utility));
+            String file = Constants.EMPTY_STRING;
+            if (!fileName.equals(Constants.EMPTY_STRING)) {
+                file = utility.concatStrings(fileName, Constants.FILE_DATA_SEPARATOR,
+                        utility.convertToBase64(utility.readBinaryFile(fileName)));
+            }
+            newSquare.addPostMessage(new PostMessage(currentMillis, data, utility, file));
         }
     }
 
@@ -821,11 +826,14 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                         desktop.browse(uri);
                     }
                 } catch (NullPointerException npe) {
-                    errorLogger.logInfo(utility.concatStrings(npe.getMessage(), Constants.NEWLINE, Arrays.toString(npe.getStackTrace())));
+                    errorLogger.logInfo(utility.concatStrings(npe.getMessage(), Constants.NEWLINE,
+                            Arrays.toString(npe.getStackTrace())));
                 } catch (IOException ioe) {
-                    errorLogger.logInfo(utility.concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
+                    errorLogger.logInfo(utility.concatStrings(ioe.getMessage(), Constants.NEWLINE,
+                            Arrays.toString(ioe.getStackTrace())));
                 } catch (URISyntaxException use) {
-                    errorLogger.logInfo(utility.concatStrings(use.getMessage(), Constants.NEWLINE, Arrays.toString(use.getStackTrace())));
+                    errorLogger.logInfo(utility.concatStrings(use.getMessage(), Constants.NEWLINE,
+                            Arrays.toString(use.getStackTrace())));
                 }
             }
         });
@@ -862,9 +870,11 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                     File f = new File(file);
                     Desktop.getDesktop().open(f);
                 } catch (NullPointerException npe) {
-                    errorLogger.logInfo(utility.concatStrings(npe.getMessage(), Constants.NEWLINE, Arrays.toString(npe.getStackTrace())));
+                    errorLogger.logInfo(utility.concatStrings(npe.getMessage(), Constants.NEWLINE,
+                            Arrays.toString(npe.getStackTrace())));
                 } catch (IOException ioe) {
-                    errorLogger.logInfo(utility.concatStrings(ioe.getMessage(), Constants.NEWLINE, Arrays.toString(ioe.getStackTrace())));
+                    errorLogger.logInfo(utility.concatStrings(ioe.getMessage(), Constants.NEWLINE,
+                            Arrays.toString(ioe.getStackTrace())));
                 }
             }
         });
@@ -945,7 +955,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             }
             images.add(imageView);
         } catch (Exception e) {
-            errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
+            errorLogger.logInfo(
+                    utility.concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
         }
     }
 
@@ -975,7 +986,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
                         Image i = new Image(stream);
                         image.setImage(i);
                     } catch (Exception e) {
-                        errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
+                        errorLogger.logInfo(utility.concatStrings(e.getMessage(), Constants.NEWLINE,
+                                Arrays.toString(e.getStackTrace())));
                     }
                     return;
                 }

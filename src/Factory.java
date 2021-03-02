@@ -200,6 +200,8 @@ public class Factory implements IFactory {
             return new SquareWorkerMember(utility, command);
         } else if (command.equals(Constants.SEND_MESSAGE)) {
             return new SquareWorkerSendMessage(utility, command);
+        } else if (command.equals(Constants.SEND_ATTACHMENT)) {
+            return new SquareWorkerSendAttachment(utility, command);
         }
 
         return new SquareWorkerEmpty(utility, command);

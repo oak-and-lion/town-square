@@ -266,6 +266,7 @@ public class Constants {
     public static final String HUB_REGISTRATION_FILE_EXT = ".hub";
     public static final String REGISTER_HUB = "reghub";
     public static final String SEND_MESSAGE = "send";
+    public static final String SEND_ATTACHMENT = "sendattach";
     public static final String ERROR_LOG_FILE = "_error.log";
     public static final String SYNC_CLONE_COMMAND = "syncclone";
     public static final int SYNC_CLONE_WAIT = 10000;

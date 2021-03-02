@@ -33,7 +33,7 @@ public interface IDialogController {
     boolean isGui();
     void showCloneMessage();
     void setTabName(ISquare square, String oldName, String newName);
-    void postTheMessage(ISquare newSquare, String msg);
+    void postTheMessage(ISquare newSquare, String msg, String fileName);
     IFactory getFactory();
     void initErrorLogger();
 }

@@ -4,11 +4,20 @@ public class PostMessage implements Comparable<PostMessage> {
     private long millis;
     private String message;
     private IUtility utility;
+    private String attachment;
 
     public PostMessage(long millis, String message, IUtility utility) {
+        initialize(millis, message, utility, Constants.EMPTY_STRING);
+    }
+    public PostMessage(long millis, String message, IUtility utility, String attachment) {
+        initialize(millis, message, utility, attachment);
+    }
+
+    private void initialize(long millis, String message, IUtility utility, String attachment) {
         this.millis = millis;
         this.message = message;
         this.utility = utility;
+        this.attachment = attachment;
     }
 
     public long getMillis() {
@@ -17,6 +26,10 @@ public class PostMessage implements Comparable<PostMessage> {
 
     public String getMessage() {
         return message;
+    }
+
+    public String getAttachment() {
+        return attachment;
     }
 
     public void appendToMessage(String append) {
