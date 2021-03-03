@@ -349,6 +349,8 @@ public class ClientThread extends Thread implements IClientThread {
                 message.appendToMessage(" [local backup]");
                 addPostLocal(message);
             }
+        } else {
+            square.getSampleController().showList(new String[] {"Hub not found in members list.", "Check your hub settings and members settings."}, "Hub not found", "Hub Error");
         }
     }
 
