@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -65,7 +66,9 @@ public class Server extends Thread implements IServer {
     public void run() {
         startRunning();
 
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
+        try (ServerSocket serverSocket = new ServerSocket()) {
+            serverSocket.setReuseAddress(true);
+            serverSocket.bind(new InetSocketAddress(port));
             while (isRunning()) {
                 logger.logInfo(utility.concatStrings("Listening: ", Integer.toString(port)));
 
