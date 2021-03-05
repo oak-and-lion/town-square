@@ -1,7 +1,7 @@
 import 'constants.dart';
 
 class IUtility {
-  Future<bool> init() async {
+  Future<bool> init(Function() f) async {
     return false;
   }
 
