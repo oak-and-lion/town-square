@@ -1,1 +1,3 @@
-class IApp {}
+class IApp {
+  void setName(String name) {}
+}

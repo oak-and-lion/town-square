@@ -1,8 +1,21 @@
+import 'dart:math';
+import 'dart:typed_data';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/about.dart';
+import 'package:mobile/settings_tab.dart';
+import 'package:mobile/update_values.dart';
 import 'package:mobile/utililty.dart';
+import 'package:mobile/waiting_screen.dart';
+import 'package:pointycastle/key_generators/rsa_key_generator.dart';
+import 'package:pointycastle/pointycastle.dart';
+import 'package:pointycastle/random/fortuna_random.dart';
 import 'constants.dart';
 import 'iutility.dart';
 import 'utililty.dart';
+import 'iapp.dart';
+import 'package:pointycastle/asymmetric/api.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,37 +40,90 @@ class MyTabbedPage extends StatefulWidget {
   _MyAppState createState() => new _MyAppState(new Utility());
 }
 
-class _MyAppState extends State<MyTabbedPage> {
+class _MyAppState extends State<MyTabbedPage>
+    with SingleTickerProviderStateMixin
+    implements IApp {
   final IUtility _utility;
-  String _titleText;
   bool _isLoading;
+  UpdateValues _updateValues;
+  List<Widget> _tabChildren;
+  int _numberOfTabs;
+  int _initialTabIndex;
+  TabController _tabController;
+  List<Tab> _tabs;
+  SettingsTab _settingsTab;
 
   _MyAppState(this._utility) {
-    _titleText = "waiting";
     _isLoading = true;
+    _updateValues = new UpdateValues();
+    _initialTabIndex = 0;
+    _numberOfTabs = 1;
+    _tabController = null;
+    _tabChildren = [];
+    _tabs = [];
+    _tabs.add(Tab(icon: Icon(Icons.info)));
+    _tabChildren.add(buildAbout());
+    _settingsTab = new SettingsTab(new TextEditingController(),
+        new TextEditingController(), new FocusNode(), this);
   }
 
   void initialize() {
-    if (!_utility.checkFileExists(Constants.uniqueIdFile)) {
-      _utility.writeFile(Constants.uniqueIdFile, _utility.createGUID());
+    if (!_utility.checkFileExists(Constants.UNIQUE_ID_FILE)) {
+      _utility.writeFile(Constants.UNIQUE_ID_FILE, _utility.createGUID());
     }
 
-    setValues(_utility.readFile(Constants.uniqueIdFile));
-    _isLoading = false;
+    _updateValues.setUniqueId(_utility.readFile(Constants.UNIQUE_ID_FILE));
+
+    if (!_utility.checkFileExists(Constants.PUBLIC_KEY_FILE)) {
+      var keyParams =
+          new RSAKeyGeneratorParameters(new BigInt.from(65537), 2048, 5);
+      var secureRandom = new FortunaRandom();
+      var random = new Random.secure();
+      List<int> seeds = [];
+      for (int i = 0; i < 32; i++) {
+        seeds.add(random.nextInt(255));
+      }
+      secureRandom.seed(new KeyParameter(new Uint8List.fromList(seeds)));
+
+      var rngParams = new ParametersWithRandom(keyParams, secureRandom);
+      var k = RSAKeyGenerator()..init(rngParams);
+      AsymmetricKeyPair<PublicKey, PrivateKey> keyPair = k.generateKeyPair();
+      RSAPrivateKey privateKey = keyPair.privateKey;
+      RSAPublicKey publicKey = keyPair.publicKey;
+      print(privateKey.privateExponent); // prints private exponent
+      print(publicKey.n); // prints modulus
+    }
+
+    setState(() {
+      _tabChildren.add(buildSettingsTab());
+      _tabs.add(Tab(icon: Icon(Icons.settings)));
+      _numberOfTabs = _tabChildren.length;
+      _isLoading = false;
+    });
+
+    setValues();
   }
 
   Future<void> initFutures() async {
     List<Future<void>> futures = [];
 
-    futures[0] = _utility.init(initialize);
+    if (_isLoading) {
+      futures[0] = _utility.init(initialize);
+    }
 
     await Future.wait(futures);
   }
 
-  void setValues(String titleText) {
+  void setValues() {
     setState(() {
-      _titleText = titleText;
+      _settingsTab.setNameValue(_updateValues.getName());
+      _settingsTab.setUniqueIdValue(_updateValues.getUniqueId());
     });
+  }
+
+  void setName(String value) {
+    _updateValues.setName(value);
+    setValues();
   }
 
   @override
@@ -77,7 +143,7 @@ class _MyAppState extends State<MyTabbedPage> {
       return FutureBuilder(
           future: initFutures(),
           builder: (BuildContext context, AsyncSnapshot<void> m) {
-            return buildMain();
+            return new Waiting();
           });
     } else {
       return buildMain();
@@ -85,13 +151,31 @@ class _MyAppState extends State<MyTabbedPage> {
   }
 
   Widget buildMain() {
+    if (_tabController == null) {
+      _tabController = new TabController(
+          length: _numberOfTabs, vsync: this, initialIndex: _initialTabIndex);
+    }
     return MaterialApp(
-        title: Constants.title,
+        title: Constants.TITLE,
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
         home: Scaffold(
-            appBar: AppBar(title: Text(Constants.title)),
-            body: Center(child: Text(_titleText))));
+            appBar: AppBar(
+              title: Text(Constants.TITLE),
+              bottom: TabBar(controller: _tabController, tabs: _tabs),
+            ),
+            body: TabBarView(
+              children: _tabChildren,
+              controller: _tabController,
+            )));
+  }
+
+  Widget buildSettingsTab() {
+    return _settingsTab;
+  }
+
+  Widget buildAbout() {
+    return new About();
   }
 }

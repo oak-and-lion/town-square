@@ -28,6 +28,7 @@ dependencies:
   android_intent: ^0.3.7+2
   ext_storage: ^1.0.3
   permission_handler: ^5.0.1+1
+  pointycastle: ^2.0.1
 
 
   # The following adds the Cupertino Icons font to your application.

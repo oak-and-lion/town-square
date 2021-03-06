@@ -14,10 +14,10 @@ class IUtility {
   }
 
   String readFile(String fileName) {
-    return Constants.emptyString;
+    return Constants.EMPTY_STRING;
   }
 
   String createGUID() {
-    return Constants.emptyString;
+    return Constants.EMPTY_STRING;
   }
 }

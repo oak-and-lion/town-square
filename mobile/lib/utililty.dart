@@ -15,10 +15,10 @@ class Utility implements IUtility {
     _directory = null;
   }
 
-  Future<bool> init(Function() f) async {
+  Future<bool> init(Function() callback) async {
     _directory = await _getPathToDownload();
 
-    f();
+    callback();
     return true;
   }
 
@@ -33,7 +33,7 @@ class Utility implements IUtility {
   }
 
   String convertPath(String path) {
-    String p = Constants.emptyString;
+    String p = Constants.EMPTY_STRING;
     if (_directory != null) {
       if (!_directory.endsWith("/")) {
         _directory += "/";
@@ -59,7 +59,7 @@ class Utility implements IUtility {
       return io.File(syncPath).readAsStringSync();
     }
 
-    return Constants.emptyFile;
+    return Constants.EMPTY_FILE;
   }
 
   bool writeFile(String fileName, String data) {
