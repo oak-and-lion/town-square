@@ -21,6 +21,7 @@ class Constants {
   static const TILDE = "~";
   static const COMMA = ",";
   static const COLON = ":";
+  static const FORWARD_SLASH = "/";
   static const int BASE_CLIENT_TYPE = 1;
   static const int BASE_SQUARE_TYPE = 1;
   static const OK_CODE = "200";

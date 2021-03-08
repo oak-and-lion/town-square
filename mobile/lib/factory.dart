@@ -19,7 +19,7 @@ class TownSquareFactory implements IFactory {
   ISquare createSquare(int type, String squareInfo, IApp app) {
     if (type == Constants.BASE_SQUARE_TYPE) {
       List<String> info = squareInfo.split(Constants.COMMA);
-      return Square(info[0], info[1], info[2], info[3], info[4], app, this);
+      return Square(info[0], info[1], info[2], info[3], info[4], app);
     }
 
     return ISquare();

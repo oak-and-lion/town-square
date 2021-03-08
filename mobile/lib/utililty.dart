@@ -1,3 +1,5 @@
+import 'package:uuid/uuid.dart';
+
 import 'istorage.dart';
 import 'iutility.dart';
 import 'dart:io' as io;
@@ -19,8 +21,8 @@ class Utility implements IUtility {
   String convertPath(String path) {
     String p = Constants.EMPTY_STRING;
     if (_directory != null) {
-      if (!_directory.endsWith("/")) {
-        _directory += "/";
+      if (!_directory.endsWith(Constants.FORWARD_SLASH)) {
+        _directory += Constants.FORWARD_SLASH;
       }
       p = _directory;
     }
@@ -82,6 +84,7 @@ class Utility implements IUtility {
   }
 
   String createGUID() {
-    return '12345';
+    var uuid = Uuid();
+    return uuid.v4();
   }
 }

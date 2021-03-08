@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:steel_crypt/steel_crypt.dart';
 import 'client_message_package.dart';
 import 'square_response.dart';
@@ -33,15 +31,19 @@ class App implements IApp {
           _helper.encodePublicKeyToPem(keyPair.publicKey));
     }
 
+    // test the key files
     var pk = _utility.readFile(Constants.PUBLIC_KEY_FILE);
     _helper.parsePublicKeyFromPem(pk);
-    String test =
-        _helper.encrypt("_thisisapassword", _helper.parsePublicKeyFromPem(pk));
-    sendMessage(test);
+    String encrypted =
+        _helper.encrypt("this is a test", _helper.parsePublicKeyFromPem(pk));
     pk = _utility.readFile(Constants.PRIVATE_KEY_FILE);
     _helper.parsePrivateKeyFromPem(pk);
-    String dtest = _helper.decrypt(test, _helper.parsePrivateKeyFromPem(pk));
-    sendMessage(dtest);
+    String decrypted =
+        _helper.decrypt(encrypted, _helper.parsePrivateKeyFromPem(pk));
+
+    sendMessage("this is a test");
+    sendMessage(decrypted);
+
     buildSquares();
   }
 

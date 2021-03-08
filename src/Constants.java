@@ -63,6 +63,7 @@ public class Constants {
     public static final String NO_PASSWORD_VALUE = "~~~~~~~";
     public static final String DATA_SEPARATOR = "~_~";
     public static final String DEFAULT_IP = "127.0.0.1";
+    public static final String IGNORE_IP = "1.1.1.1";
     public static final String POST_BUTTON_TEXT = "Post";
     public static final String TILDE = "~";
     public static final String NEWLINE = "\n";

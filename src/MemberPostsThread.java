@@ -50,7 +50,7 @@ public class MemberPostsThread extends Thread implements IMemberPostsThread {
     }
 
     private void getPostsFromOtherMembers() {
-        if (!(info.contains(uniqueId) && (info.contains(ip) && info.contains(port)))
+        if (!(info.contains(uniqueId) && (info.contains(ip) && info.contains(port)) && !info.contains(Constants.IGNORE_IP))
                 && !info.startsWith(Constants.STAR)) {
             String[] member = info.split(Constants.DATA_SEPARATOR);
             tempKeys.setPublicKeyFromBase64(member[1]);
