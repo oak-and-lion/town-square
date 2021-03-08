@@ -716,7 +716,8 @@ public class DialogController implements ITextDialogBoxCallback, IDialogControll
             utility.writeFile(utility.concatStrings(squareSafeName, Constants.MEMBERS_FILE_EXT),
                     response.getMessage().replace(Constants.COMMAND_DATA_SEPARATOR, Constants.NEWLINE));
             String info = utility.concatStrings(responseData[3], Constants.COMMA, client.getSquareId(), Constants.COMMA,
-                    Constants.TAB_PREFIX, squareSafeName, Constants.COMMA, Constants.ZERO, Constants.NO_PASSWORD_VALUE);
+                    Constants.TAB_PREFIX, squareSafeName, Constants.COMMA, Constants.ZERO, Constants.COMMA,
+                    Constants.NO_PASSWORD_VALUE);
             ISquare square = factory.createSquare(Constants.BASE_SQUARE, info, port.getText(),
                     remoteIP.getValue().getDisplay(),
                     factory.createSquareController(Constants.BASE_SQUARE_CONTROLLER, utility, this,
