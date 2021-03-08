@@ -16,7 +16,7 @@ class Constants {
   static const PUBLIC_KEY_FILE = "public.key";
   static const PRIVATE_KEY_FILE = "private.key";
   static const SQUARE_FILE_EXT = ".square";
-  static const FILE_DATA_SEPERATOR = "~__~";
+  static const FILE_DATA_SEPERATOR = "~_~";
   static const COMMAND_SEPERATOR = "%%%";
   static const TILDE = "~";
   static const COMMA = ",";

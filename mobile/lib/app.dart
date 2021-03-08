@@ -32,7 +32,7 @@ class App implements IApp {
     }
 
     // test the key files
-    var pk = _utility.readFile(Constants.PUBLIC_KEY_FILE);
+    /*var pk = _utility.readFile(Constants.PUBLIC_KEY_FILE);
     _helper.parsePublicKeyFromPem(pk);
     String encrypted =
         _helper.encrypt("this is a test", _helper.parsePublicKeyFromPem(pk));
@@ -42,7 +42,7 @@ class App implements IApp {
         _helper.decrypt(encrypted, _helper.parsePrivateKeyFromPem(pk));
 
     sendMessage("this is a test");
-    sendMessage(decrypted);
+    sendMessage(decrypted);*/
 
     buildSquares();
   }
@@ -93,6 +93,7 @@ class App implements IApp {
         .replaceAll("200:terminated", Constants.EMPTY_STRING));
     sendMessage(response.getData());
     List<String> invite = package.getUserData().split(Constants.TILDE);
+    var fortunaKey = CryptKey().genFortuna();
     String password = "_thisisapassword";
     RsaKeyHelper tempHelper = RsaKeyHelper();
     String encryptedPassword = tempHelper.encrypt(
@@ -103,7 +104,9 @@ class App implements IApp {
             _utility.readFile(Constants.PUBLIC_KEY_FILE) +
             "%%%1.1.1.1%%%1%%%" +
             _utility.readFile(Constants.UNIQUE_ID_FILE),
+        password + password,
         password);
+
     String message = "e%%%" +
         invite[3] +
         Constants.COMMAND_SEPERATOR +
@@ -144,18 +147,30 @@ class App implements IApp {
 
   void noSquares() {}
 
-  String encryptData(String data, String password) {
-    var fortunaKey = CryptKey()
-        .genFortuna(); //generate 32 byte key with Fortuna; you can also enter your own
-    /*var nonce = CryptKey().genDart(
-        len:
-            12); //generate IV for AES with Dart Random.secure(); you can also enter your own*/
+  String encryptData(String data, String password, String nonce) {
+    //generate 32 byte key with Fortuna; you can also enter your own
+    //var nonce = "1234567890123456"; //CryptKey().genDart(
+    //len:
+    //  16); //generate IV for AES with Dart Random.secure(); you can also enter your own
     var aesEncrypter = AesCrypt(
-        key: fortunaKey,
+        key: password,
         padding: PaddingAES
             .pkcs7); //generate AES encrypter with key and PKCS7 padding
     String encrypted =
-        aesEncrypter.gcm.encrypt(inp: data, iv: password); //encrypt using GCM
-    return encrypted;
+        aesEncrypter.cbc.encrypt(inp: data, iv: nonce); //encrypt using GCM
+    return nonce + Constants.FILE_DATA_SEPERATOR + encrypted;
+  }
+
+  String decryptData(String data, String password) {
+    var aesEncrypter = AesCrypt(key: password, padding: PaddingAES.pkcs7);
+    var split = data.split(Constants.FILE_DATA_SEPERATOR);
+    String iv = Constants.EMPTY_STRING;
+    String d = split[0];
+    if (split.length > 1) {
+      iv = split[0];
+      d = split[1];
+    }
+    String result = aesEncrypter.gcm.decrypt(enc: d, iv: iv);
+    return result;
   }
 }
