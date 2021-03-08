@@ -23,7 +23,6 @@ import java.util.Enumeration;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import java.net.*;
@@ -505,46 +504,13 @@ public class Utility implements IUtility {
     }
 
     public byte[] decryptToBinary(String data, String password) {
-        String iv = Constants.EMPTY_STRING;
-        String d = data;
-        String[] split = data.split(Constants.FILE_DATA_SEPARATOR);
-        if (split.length > 1) {
-            iv = split[0];
-            d = split[1];
-        }
-        String[] transformations = new String[4];
-        transformations[0] = Constants.TRANSFORMATION;
-        transformations[1] = Constants.TRANSFORMATION7;
-        transformations[2] = Constants.TRANSFORMATIONNOPADDING;
-        transformations[3] = Constants.TRANSFORMATION7NOPADDING;
-
-        for (int x = 0; x < 4; x++) {
-            try {
-                Cipher cipher = Cipher.getInstance(transformations[x]);
-                SecretKey secretKey = new SecretKeySpec(password.getBytes(), Constants.ALGORITHM);
-                if (iv.length() > 0) {
-                    cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv.getBytes()));
-                } else {
-                    cipher.init(Cipher.DECRYPT_MODE, secretKey);
-                }
-                return cipher.doFinal(convertFromBase64(d));
-            } catch (Exception e) {
-                errorLogger
-                        .logInfo(concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
-            }
-        }
-        return new byte[0];
-    }
-
-    public byte[] decryptToBinaryPKCS7(String data, String password) {
         try {
-            Cipher cipher = Cipher.getInstance(Constants.TRANSFORMATION7);
+            Cipher cipher = Cipher.getInstance(Constants.TRANSFORMATION);
             SecretKey secretKey = new SecretKeySpec(password.getBytes(), Constants.ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
             return cipher.doFinal(convertFromBase64(data));
         } catch (Exception e) {
             errorLogger.logInfo(concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
-
         }
         return new byte[0];
     }
