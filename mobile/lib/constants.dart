@@ -22,8 +22,9 @@ class Constants {
   static const COMMA = ",";
   static const COLON = ":";
   static const FORWARD_SLASH = "/";
-  static const int BASE_CLIENT_TYPE = 1;
-  static const int BASE_SQUARE_TYPE = 1;
+  static const ENCRYPTION_SCHEME = "RSA/PKCS1";
+  static const BASE_CLIENT_TYPE = 1;
+  static const BASE_SQUARE_TYPE = 1;
   static const OK_CODE = "200";
   static const INVALID_CODE = "400";
   static const ALREADY_REGISTERED_CODE = "460";

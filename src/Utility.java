@@ -509,8 +509,27 @@ public class Utility implements IUtility {
             SecretKey secretKey = new SecretKeySpec(password.getBytes(), Constants.ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
             return cipher.doFinal(convertFromBase64(data));
+        } catch (Exception e1) {
+            try {
+                return decryptToBinaryPKCS7(data, password);
+            } catch (Exception e) {
+                errorLogger
+                        .logInfo(concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
+            }
+        }
+        return new byte[0];
+    }
+
+    public byte[] decryptToBinaryPKCS7(String data, String password) {
+        try {
+            Cipher cipher = Cipher.getInstance(Constants.TRANSFORMATION7);
+            SecretKey secretKey = new SecretKeySpec(password.getBytes(), Constants.ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            return cipher.doFinal(convertFromBase64(data));
         } catch (Exception e) {
-            errorLogger.logInfo(concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
+                errorLogger
+                        .logInfo(concatStrings(e.getMessage(), Constants.NEWLINE, Arrays.toString(e.getStackTrace())));
+            
         }
         return new byte[0];
     }

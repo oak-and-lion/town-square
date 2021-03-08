@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import "package:pointycastle/export.dart";
 import "package:asn1lib/asn1lib.dart";
+import 'constants.dart';
 
 Uint8List decodePEM(String pem) {
   var startsWith = [
@@ -69,23 +70,27 @@ class RsaKeyHelper {
   }
 
   String encrypt(String plaintext, RSAPublicKey publicKey) {
-    var cipher = new RSAEngine()
-      ..init(true, new PublicKeyParameter<RSAPublicKey>(publicKey));
-    var encoder = PKCS1Encoding(cipher);
-    var cipherText =
-        encoder.process(new Uint8List.fromList(plaintext.codeUnits));
-    print(cipher.algorithmName);
+    var cipher = AsymmetricBlockCipher(Constants.ENCRYPTION_SCHEME);
+    cipher.init(true, new PublicKeyParameter<RSAPublicKey>(publicKey));
+    //var cipher = new RSAEngine()
+    //  ..init(true, new PublicKeyParameter<RSAPublicKey>(publicKey));
+    //var encoder = PKCS1Encoding(cipher);
     //var cipherText =
-    //    cipher.process(new Uint8List.fromList(plaintext.codeUnits));
+    //    encoder.process(new Uint8List.fromList(plaintext.codeUnits));
+    //print(cipher.algorithmName);
+    var cipherText =
+        cipher.process(new Uint8List.fromList(plaintext.codeUnits));
 
     return base64Encode(cipherText);
   }
 
   String decrypt(String ciphertext, RSAPrivateKey privateKey) {
-    var cipher = new RSAEngine()
+    var cipher = AsymmetricBlockCipher(Constants.ENCRYPTION_SCHEME);
+    cipher.init(false, new PrivateKeyParameter<RSAPrivateKey>(privateKey));
+    /*var cipher = new RSAEngine()
       ..init(false, new PrivateKeyParameter<RSAPrivateKey>(privateKey));
-    var decoder = PKCS1Encoding(cipher);
-    var decrypted = decoder.process(base64Decode(ciphertext));
+    var decoder = PKCS1Encoding(cipher);*/
+    var decrypted = cipher.process(base64Decode(ciphertext));
 
     return new String.fromCharCodes(decrypted);
   }
