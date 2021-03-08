@@ -156,9 +156,6 @@ class App implements IApp {
             .pkcs7); //generate AES encrypter with key and PKCS7 padding
     String encrypted =
         aesEncrypter.gcm.encrypt(inp: data, iv: password); //encrypt using GCM
-    String decrypted =
-        aesEncrypter.gcm.decrypt(enc: encrypted, iv: password); //decrypt
-    sendMessage(decrypted);
     return encrypted;
   }
 }
