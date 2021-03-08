@@ -17,7 +17,15 @@ class IUtility {
     return Constants.EMPTY_STRING;
   }
 
+  bool deleteFile(String fileName) {
+    return false;
+  }
+
   String createGUID() {
     return Constants.EMPTY_STRING;
+  }
+
+  List<String> getFiles(String pattern) {
+    return [];
   }
 }

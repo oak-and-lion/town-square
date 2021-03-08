@@ -1,35 +1,19 @@
-import 'dart:io';
-
-import 'package:ext_storage/ext_storage.dart';
-
+import 'istorage.dart';
 import 'iutility.dart';
-import 'package:uuid/uuid.dart';
 import 'dart:io' as io;
 import 'constants.dart';
-import 'package:path_provider/path_provider.dart';
 
 class Utility implements IUtility {
   String _directory;
+  IStorage _storage;
 
-  Utility() {
-    _directory = null;
-  }
+  Utility(this._storage, this._directory);
 
   Future<bool> init(Function() callback) async {
-    _directory = await _getPathToDownload();
+    _directory = await _storage.getPathToDownload();
 
     callback();
     return true;
-  }
-
-  Future<String> _getPathToDownload() async {
-    if (Platform.isAndroid) {
-      return await ExtStorage.getExternalStoragePublicDirectory(
-          ExtStorage.DIRECTORY_DOWNLOADS); // /storage/emulated/0/Download
-    } else if (Platform.isIOS) {
-      return (await getApplicationDocumentsDirectory()).path;
-    }
-    return (await getApplicationDocumentsDirectory()).path;
   }
 
   String convertPath(String path) {
@@ -42,6 +26,11 @@ class Utility implements IUtility {
     }
     p += path;
     return p;
+  }
+
+  List<String> getFiles(String pattern) {
+    io.Directory(convertPath(Constants.EMPTY_STRING)).listSync();
+    return [];
   }
 
   bool checkFileExists(String file) {
@@ -65,13 +54,7 @@ class Utility implements IUtility {
   bool writeFile(String fileName, String data) {
     var syncPath = convertPath(fileName);
 
-    var exists = io.File(syncPath).existsSync();
-
-    if (exists) {
-      try {
-        io.File(syncPath).deleteSync();
-      } catch (fd) {}
-    }
+    deleteFile(fileName);
 
     try {
       io.File(syncPath).writeAsStringSync(data);
@@ -82,9 +65,23 @@ class Utility implements IUtility {
     return true;
   }
 
-  String createGUID() {
-    var uuid = Uuid();
+  bool deleteFile(String fileName) {
+    var syncPath = convertPath(fileName);
 
-    return uuid.v1();
+    var exists = io.File(syncPath).existsSync();
+
+    if (exists) {
+      try {
+        io.File(syncPath).deleteSync();
+      } catch (fd) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  String createGUID() {
+    return '12345';
   }
 }

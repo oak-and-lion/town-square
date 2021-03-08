@@ -1,21 +1,16 @@
-import 'dart:math';
-import 'dart:typed_data';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/about.dart';
+import 'package:mobile/iapp.dart';
+import 'package:mobile/mobile_storage.dart';
 import 'package:mobile/settings_tab.dart';
 import 'package:mobile/update_values.dart';
 import 'package:mobile/utililty.dart';
 import 'package:mobile/waiting_screen.dart';
-import 'package:pointycastle/key_generators/rsa_key_generator.dart';
-import 'package:pointycastle/pointycastle.dart';
-import 'package:pointycastle/random/fortuna_random.dart';
 import 'constants.dart';
 import 'iutility.dart';
+import 'iview.dart';
 import 'utililty.dart';
-import 'iapp.dart';
-import 'package:pointycastle/asymmetric/api.dart';
 
 void main() {
   runApp(MyApp());
@@ -37,12 +32,13 @@ class MyTabbedPage extends StatefulWidget {
   const MyTabbedPage({Key key}) : super(key: key);
 
   @override
-  _MyAppState createState() => new _MyAppState(new Utility());
+  _MyAppState createState() =>
+      new _MyAppState(new Utility(new MobileStorage(), Constants.EMPTY_STRING));
 }
 
 class _MyAppState extends State<MyTabbedPage>
     with SingleTickerProviderStateMixin
-    implements IApp {
+    implements IView, IApp {
   final IUtility _utility;
   bool _isLoading;
   UpdateValues _updateValues;
@@ -67,33 +63,13 @@ class _MyAppState extends State<MyTabbedPage>
         new TextEditingController(), new FocusNode(), this);
   }
 
+  void sendMessage(String msg) {}
+
+  void noSquares() {}
+
+  void processInvitation(String invitation) {}
+
   void initialize() {
-    if (!_utility.checkFileExists(Constants.UNIQUE_ID_FILE)) {
-      _utility.writeFile(Constants.UNIQUE_ID_FILE, _utility.createGUID());
-    }
-
-    _updateValues.setUniqueId(_utility.readFile(Constants.UNIQUE_ID_FILE));
-
-    if (!_utility.checkFileExists(Constants.PUBLIC_KEY_FILE)) {
-      var keyParams =
-          new RSAKeyGeneratorParameters(new BigInt.from(65537), 2048, 5);
-      var secureRandom = new FortunaRandom();
-      var random = new Random.secure();
-      List<int> seeds = [];
-      for (int i = 0; i < 32; i++) {
-        seeds.add(random.nextInt(255));
-      }
-      secureRandom.seed(new KeyParameter(new Uint8List.fromList(seeds)));
-
-      var rngParams = new ParametersWithRandom(keyParams, secureRandom);
-      var k = RSAKeyGenerator()..init(rngParams);
-      AsymmetricKeyPair<PublicKey, PrivateKey> keyPair = k.generateKeyPair();
-      RSAPrivateKey privateKey = keyPair.privateKey;
-      RSAPublicKey publicKey = keyPair.publicKey;
-      print(privateKey.privateExponent); // prints private exponent
-      print(publicKey.n); // prints modulus
-    }
-
     setState(() {
       _tabChildren.add(buildSettingsTab());
       _tabs.add(Tab(icon: Icon(Icons.settings)));
@@ -125,6 +101,8 @@ class _MyAppState extends State<MyTabbedPage>
     _updateValues.setName(value);
     setValues();
   }
+
+  void start() {}
 
   @override
   void initState() {

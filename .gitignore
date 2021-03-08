@@ -58,3 +58,5 @@ prod/
 NameLetter.png
 Rumquila-Daiquarita.txt
 *.hub1
+.packages
+.dart_tool

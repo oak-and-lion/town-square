@@ -1,0 +1,15 @@
+name: townsquare
+version: 0.0.1
+description: >-
+  Secure peer-to-peer chat app
+homepage: https://github.com/oak-and-lion/town-square
+documentation: https://github.com/oak-and-lion/town-square
+environment:
+  sdk: '>=2.10.0 <3.0.0'
+dependencies:
+  uuid: ^3.0.1
+  pointycastle: ^2.0.1
+  asn1lib: ^0.8.1
+  steel_crypt: ^2.3.1+6
+dev_dependencies:
+  test: '>=1.15.0 <2.0.0'
