@@ -8,6 +8,7 @@ import '../mobile/lib/app.dart';
 import '../mobile/lib/rsa_pem.dart';
 import '../mobile/lib/ifactory.dart';
 import '../mobile/lib/factory.dart';
+import '../mobile/lib/constants.dart';
 import 'storage.dart';
 
 void main() async {
@@ -20,9 +21,20 @@ void main() async {
 
   await _utility
       .init(() => {consoleView.sendMessage("starting app..."), _app.start()});
-  consoleView.sendMessage("Enter invitation: ");
-  var line = stdin.readLineSync(encoding: Encoding.getByName('utf-8'));
-  _app.processInvitation(line);
+  String line = Constants.EMPTY_STRING;
+  while (line != 'done') {
+    consoleView.sendMessage("Enter command: ");
+    line = stdin.readLineSync(encoding: Encoding.getByName('utf-8'));
+    if (line.startsWith("invite")) {
+      await _app
+          .processInvitation(line.replaceAll("invite", Constants.EMPTY_STRING));
+    } else if (line.startsWith("reghub")) {
+      List<String> split = line
+          .replaceAll("reghub", Constants.EMPTY_STRING)
+          .split(Constants.SPACE);
+      _app.registerHub(split[0], split[1]);
+    }
+  }
 }
 
 class ConsoleView implements IView {

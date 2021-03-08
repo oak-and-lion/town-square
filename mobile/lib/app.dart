@@ -1,6 +1,4 @@
-import 'package:steel_crypt/steel_crypt.dart';
-import 'client_message_package.dart';
-import 'square_response.dart';
+import 'process_invitation.dart';
 import 'constants.dart';
 import 'ifactory.dart';
 import 'isquare.dart';
@@ -8,7 +6,6 @@ import 'iutility.dart';
 import 'iview.dart';
 import 'iapp.dart';
 import 'rsa_pem.dart';
-import 'iclient.dart';
 
 class App implements IApp {
   IView _view;
@@ -31,19 +28,6 @@ class App implements IApp {
           _helper.encodePublicKeyToPem(keyPair.publicKey));
     }
 
-    // test the key files
-    /*var pk = _utility.readFile(Constants.PUBLIC_KEY_FILE);
-    _helper.parsePublicKeyFromPem(pk);
-    String encrypted =
-        _helper.encrypt("this is a test", _helper.parsePublicKeyFromPem(pk));
-    pk = _utility.readFile(Constants.PRIVATE_KEY_FILE);
-    _helper.parsePrivateKeyFromPem(pk);
-    String decrypted =
-        _helper.decrypt(encrypted, _helper.parsePrivateKeyFromPem(pk));
-
-    sendMessage("this is a test");
-    sendMessage(decrypted);*/
-
     buildSquares();
   }
 
@@ -63,80 +47,14 @@ class App implements IApp {
     _view.sendMessage("start complete");
   }
 
+  void registerHub(String hubInfo, String hubName) {
+    _utility.writeFile(hubName + Constants.HUB_REGISTRATION_FILE_EXT, hubInfo);
+  }
+
   void processInvitation(String invitation) async {
-    List<String> invite = invitation.split(Constants.TILDE);
-    IClient client = _factory.createClient(
-        Constants.BASE_CLIENT_TYPE, invite[1], int.parse(invite[2]));
-    ClientMessagePackage package = ClientMessagePackage(
-        client,
-        processInviteCallback,
-        "u%%%" + invite[3] + "%%%pkey",
-        invitation,
-        Constants.EMPTY_STRING,
-        Constants.EMPTY_STRING);
-    client.sendMessage(package);
-  }
-
-  void processInviteCallback(ClientMessagePackage package) {
-    SquareResponse response = getResponse(package.getResult());
-    if (response.getCode() == Constants.OK_CODE ||
-        response.getCode() == Constants.ALREADY_REGISTERED_CODE) {
-      package.setClientPubKey(response.getData());
-      processJoin(package);
-    }
-  }
-
-  void processJoin(ClientMessagePackage package) {
-    sendMessage(package.getResult());
-    SquareResponse response = getResponse(package
-        .getResult()
-        .replaceAll("200:terminated", Constants.EMPTY_STRING));
-    sendMessage(response.getData());
-    List<String> invite = package.getUserData().split(Constants.TILDE);
-    var fortunaKey = CryptKey().genFortuna();
-    String password = "_thisisapassword";
-    RsaKeyHelper tempHelper = RsaKeyHelper();
-    String encryptedPassword = tempHelper.encrypt(
-        password, tempHelper.parsePublicKeyFromPem(response.getData()));
-
-    String encrypted = encryptData(
-        "%%%join%%%dart test%%%" +
-            _utility.readFile(Constants.PUBLIC_KEY_FILE) +
-            "%%%1.1.1.1%%%1%%%" +
-            _utility.readFile(Constants.UNIQUE_ID_FILE),
-        password + password,
-        password);
-
-    String message = "e%%%" +
-        invite[3] +
-        Constants.COMMAND_SEPERATOR +
-        encryptedPassword +
-        Constants.COMMAND_SEPERATOR +
-        encrypted;
-    package.setMessage(message);
-    sendMessage(message);
-    package.setCallback(processJoinCallback);
-    package.getClient().sendMessage(package);
-  }
-
-  void processJoinCallback(ClientMessagePackage package) {
-    SquareResponse response = getResponse(package.getResult());
-    sendMessage(package.getUserData());
-    sendMessage(response.getCode() + " " + response.getData());
-  }
-
-  SquareResponse getResponse(String data) {
-    List<String> result = data.split(Constants.COLON);
-    String code = Constants.INVALID_CODE;
-    String message = Constants.EMPTY_STRING;
-
-    if (result.length > 0) {
-      code = result[0];
-    }
-    if (result.length > 1) {
-      message = result[1];
-    }
-    return SquareResponse(code, message);
+    ProcessInvitation processInvitation =
+        ProcessInvitation(_factory, _utility, this);
+    await processInvitation.processInvitation(invitation);
   }
 
   void setName(String value) {}
@@ -146,31 +64,4 @@ class App implements IApp {
   }
 
   void noSquares() {}
-
-  String encryptData(String data, String password, String nonce) {
-    //generate 32 byte key with Fortuna; you can also enter your own
-    //var nonce = "1234567890123456"; //CryptKey().genDart(
-    //len:
-    //  16); //generate IV for AES with Dart Random.secure(); you can also enter your own
-    var aesEncrypter = AesCrypt(
-        key: password,
-        padding: PaddingAES
-            .pkcs7); //generate AES encrypter with key and PKCS7 padding
-    String encrypted =
-        aesEncrypter.cbc.encrypt(inp: data, iv: nonce); //encrypt using GCM
-    return nonce + Constants.FILE_DATA_SEPERATOR + encrypted;
-  }
-
-  String decryptData(String data, String password) {
-    var aesEncrypter = AesCrypt(key: password, padding: PaddingAES.pkcs7);
-    var split = data.split(Constants.FILE_DATA_SEPERATOR);
-    String iv = Constants.EMPTY_STRING;
-    String d = split[0];
-    if (split.length > 1) {
-      iv = split[0];
-      d = split[1];
-    }
-    String result = aesEncrypter.gcm.decrypt(enc: d, iv: iv);
-    return result;
-  }
 }

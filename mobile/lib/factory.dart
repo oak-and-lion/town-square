@@ -1,6 +1,8 @@
+import 'iprocess_invitation.dart';
+import 'iutility.dart';
+import 'process_invitation.dart';
 import 'square.dart';
 import 'ifactory.dart';
-
 import 'client.dart';
 import 'constants.dart';
 import 'iapp.dart';
@@ -23,5 +25,14 @@ class TownSquareFactory implements IFactory {
     }
 
     return ISquare();
+  }
+
+  IProcessInvitiation createProcessInvitation(
+      int type, IUtility utility, IApp app) {
+    if (type == Constants.BASE_PROCESS_INVITATION) {
+      return ProcessInvitation(this, utility, app);
+    }
+
+    return IProcessInvitiation();
   }
 }

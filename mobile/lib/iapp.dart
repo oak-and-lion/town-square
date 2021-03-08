@@ -8,4 +8,6 @@ class IApp {
   void noSquares() {}
 
   void processInvitation(String invitation) {}
+
+  void registerHub(String hubInfo, String hubName) {}
 }

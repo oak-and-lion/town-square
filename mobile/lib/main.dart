@@ -1,16 +1,22 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile/about.dart';
-import 'package:mobile/iapp.dart';
-import 'package:mobile/mobile_storage.dart';
-import 'package:mobile/settings_tab.dart';
-import 'package:mobile/update_values.dart';
-import 'package:mobile/utililty.dart';
-import 'package:mobile/waiting_screen.dart';
+import 'about.dart';
+import 'app.dart';
+import 'factory.dart';
+import 'iapp.dart';
+import 'ifactory.dart';
+import 'iprocess_invitation.dart';
+import 'isquare.dart';
+import 'mobile_storage.dart';
+import 'rsa_pem.dart';
+import 'settings_tab.dart';
+import 'update_values.dart';
+import 'utililty.dart';
+import 'waiting_screen.dart';
 import 'constants.dart';
 import 'iutility.dart';
 import 'iview.dart';
-import 'utililty.dart';
 
 void main() {
   runApp(MyApp());
@@ -32,13 +38,20 @@ class MyTabbedPage extends StatefulWidget {
   const MyTabbedPage({Key key}) : super(key: key);
 
   @override
-  _MyAppState createState() =>
-      new _MyAppState(new Utility(new MobileStorage(), Constants.EMPTY_STRING));
+  _MyAppState createState() {
+    IUtility utility = new Utility(new MobileStorage(), Constants.EMPTY_STRING);
+    IView view = IView();
+    IFactory fact = new TownSquareFactory();
+    List<ISquare> squares = [];
+    RsaKeyHelper helper = RsaKeyHelper();
+    IApp app = new App(utility, view, helper, fact, squares);
+    return new _MyAppState(utility, new TownSquareFactory(), app);
+  }
 }
 
 class _MyAppState extends State<MyTabbedPage>
     with SingleTickerProviderStateMixin
-    implements IView, IApp {
+    implements IView {
   final IUtility _utility;
   bool _isLoading;
   UpdateValues _updateValues;
@@ -48,8 +61,10 @@ class _MyAppState extends State<MyTabbedPage>
   TabController _tabController;
   List<Tab> _tabs;
   SettingsTab _settingsTab;
+  IFactory _factory;
+  IApp _app;
 
-  _MyAppState(this._utility) {
+  _MyAppState(this._utility, this._factory, this._app) {
     _isLoading = true;
     _updateValues = new UpdateValues();
     _initialTabIndex = 0;
@@ -60,14 +75,23 @@ class _MyAppState extends State<MyTabbedPage>
     _tabs.add(Tab(icon: Icon(Icons.info)));
     _tabChildren.add(buildAbout());
     _settingsTab = new SettingsTab(new TextEditingController(),
-        new TextEditingController(), new FocusNode(), this);
+        new TextEditingController(), new FocusNode(), _app);
   }
 
   void sendMessage(String msg) {}
 
   void noSquares() {}
 
-  void processInvitation(String invitation) {}
+  void processInvitation(String invitation) {
+    IProcessInvitiation processInvitation = _factory.createProcessInvitation(
+        Constants.BASE_PROCESS_INVITATION, _utility, _app);
+
+    processInvitation.processInvitation(invitation);
+  }
+
+  void registerHub(String hubInfo, String hubName) {
+    _utility.writeFile(hubName + Constants.HUB_REGISTRATION_FILE_EXT, hubInfo);
+  }
 
   void initialize() {
     setState(() {

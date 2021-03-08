@@ -1,13 +1,21 @@
+import 'dart:convert';
+import 'dart:math';
+import 'dart:typed_data';
+
+import 'package:steel_crypt/steel_crypt.dart';
 import 'package:uuid/uuid.dart';
 
+import 'double_string.dart';
 import 'istorage.dart';
 import 'iutility.dart';
 import 'dart:io' as io;
 import 'constants.dart';
+import 'rsa_pem.dart';
 
 class Utility implements IUtility {
   String _directory;
   IStorage _storage;
+  Random _rnd = Random();
 
   Utility(this._storage, this._directory);
 
@@ -86,5 +94,48 @@ class Utility implements IUtility {
   String createGUID() {
     var uuid = Uuid();
     return uuid.v4();
+  }
+
+  String getRandomString(int length) {
+    return String.fromCharCodes(Iterable.generate(
+        length,
+        (_) => Constants.CHARACTERS
+            .codeUnitAt(_rnd.nextInt(Constants.CHARACTERS.length))));
+  }
+
+  String base64Encode(Uint8List data) {
+    return base64.encode(data);
+  }
+
+  Uint8List base64Decode(String data) {
+    return base64.decode(data);
+  }
+
+  String encryptData(String data, String password) {
+    var aesEncrypter = AesCrypt(
+        key: base64Encode(Uint8List.fromList(password.codeUnits)),
+        padding: PaddingAES
+            .pkcs7); //generate AES encrypter with key and PKCS7 padding
+    String encrypted = aesEncrypter.ecb.encrypt(inp: data); //encrypt using GCM
+    return encrypted;
+  }
+
+  String decryptData(String data, String password) {
+    var aesEncrypter = AesCrypt(key: password, padding: PaddingAES.pkcs7);
+    String result = aesEncrypter.ecb.decrypt(enc: data);
+    return result;
+  }
+
+  String safeString(String s) {
+    return s.replaceAll(Constants.SPACE, Constants.UNDERSCORE).toLowerCase();
+  }
+
+  DoubleString createPassword(int len, String publicKey) {
+    String fortunaKey = getRandomString(len);
+    RsaKeyHelper tempHelper = RsaKeyHelper();
+    String encryptedPassword = tempHelper.encrypt(
+        fortunaKey, tempHelper.parsePublicKeyFromPem(publicKey));
+
+    return DoubleString(fortunaKey, encryptedPassword);
   }
 }
