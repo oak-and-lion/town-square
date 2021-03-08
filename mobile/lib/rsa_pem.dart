@@ -71,9 +71,12 @@ class RsaKeyHelper {
   String encrypt(String plaintext, RSAPublicKey publicKey) {
     var cipher = new RSAEngine()
       ..init(true, new PublicKeyParameter<RSAPublicKey>(publicKey));
-    print(cipher.algorithmName);
+    var encoder = PKCS1Encoding(cipher);
     var cipherText =
-        cipher.process(new Uint8List.fromList(plaintext.codeUnits));
+        encoder.process(new Uint8List.fromList(plaintext.codeUnits));
+    print(cipher.algorithmName);
+    //var cipherText =
+    //    cipher.process(new Uint8List.fromList(plaintext.codeUnits));
 
     return base64Encode(cipherText);
   }
@@ -81,7 +84,8 @@ class RsaKeyHelper {
   String decrypt(String ciphertext, RSAPrivateKey privateKey) {
     var cipher = new RSAEngine()
       ..init(false, new PrivateKeyParameter<RSAPrivateKey>(privateKey));
-    var decrypted = cipher.process(base64Decode(ciphertext));
+    var decoder = PKCS1Encoding(cipher);
+    var decrypted = decoder.process(base64Decode(ciphertext));
 
     return new String.fromCharCodes(decrypted);
   }
