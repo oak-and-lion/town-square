@@ -9,7 +9,7 @@ import 'ifactory.dart';
 import 'iutility.dart';
 import 'square_response.dart';
 
-class ProcessInvitation implements IProcessInvitiation {
+class ProcessInvitation implements IProcessInvitation {
   IFactory _factory;
   IUtility _utility;
   IApp _app;

@@ -83,7 +83,7 @@ class _MyAppState extends State<MyTabbedPage>
   void noSquares() {}
 
   void processInvitation(String invitation) {
-    IProcessInvitiation processInvitation = _factory.createProcessInvitation(
+    IProcessInvitation processInvitation = _factory.createProcessInvitation(
         Constants.BASE_PROCESS_INVITATION, _utility, _app);
 
     processInvitation.processInvitation(invitation);

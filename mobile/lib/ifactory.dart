@@ -13,8 +13,8 @@ class IFactory {
     return ISquare();
   }
 
-  IProcessInvitiation createProcessInvitation(
+  IProcessInvitation createProcessInvitation(
       int type, IUtility utility, IApp app) {
-    return IProcessInvitiation();
+    return IProcessInvitation();
   }
 }

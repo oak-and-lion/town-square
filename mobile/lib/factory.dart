@@ -27,12 +27,12 @@ class TownSquareFactory implements IFactory {
     return ISquare();
   }
 
-  IProcessInvitiation createProcessInvitation(
+  IProcessInvitation createProcessInvitation(
       int type, IUtility utility, IApp app) {
     if (type == Constants.BASE_PROCESS_INVITATION) {
       return ProcessInvitation(this, utility, app);
     }
 
-    return IProcessInvitiation();
+    return IProcessInvitation();
   }
 }
