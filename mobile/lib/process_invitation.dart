@@ -1,5 +1,4 @@
-import 'package:mobile/iprocess_invitation.dart';
-
+import 'iprocess_invitation.dart';
 import 'client_message_package.dart';
 import 'constants.dart';
 import 'double_string.dart';
@@ -30,19 +29,19 @@ class ProcessInvitation implements IProcessInvitation {
         invitation,
         Constants.EMPTY_STRING,
         Constants.EMPTY_STRING);
-    client.sendMessage(package);
+    await client.sendMessage(package);
   }
 
-  void processInviteCallback(ClientMessagePackage package) {
+  void processInviteCallback(ClientMessagePackage package) async {
     SquareResponse response = getResponse(package.getResult());
     if (response.getCode() == Constants.OK_CODE ||
         response.getCode() == Constants.ALREADY_REGISTERED_CODE) {
       package.setClientPubKey(response.getData());
-      processJoin(package);
+      await processJoin(package);
     }
   }
 
-  void processJoin(ClientMessagePackage package) {
+  Future<void> processJoin(ClientMessagePackage package) async {
     List<String> invite = package.getUserData().split(Constants.TILDE);
     DoubleString passwordInfo = _utility.createPassword(
         Constants.PASSWORD_LENGTH, package.getClientPubKey());
@@ -70,10 +69,10 @@ class ProcessInvitation implements IProcessInvitation {
         encrypted;
     package.setMessage(message);
     package.setCallback(processJoinCallback);
-    package.getClient().sendMessage(package);
+    await package.getClient().sendMessage(package);
   }
 
-  void processMemberCallback(ClientMessagePackage package) {
+  Future<void> processMemberCallback(ClientMessagePackage package) async {
     SquareResponse response = getResponse(package.getResult());
     bool result = _utility.writeFile(
         package.getUserData() + Constants.MEMBERS_FILE_EXT,
@@ -85,7 +84,7 @@ class ProcessInvitation implements IProcessInvitation {
     }
   }
 
-  void processJoinCallback(ClientMessagePackage package) {
+  void processJoinCallback(ClientMessagePackage package) async {
     SquareResponse response = getResponse(package.getResult());
     List<String> invite = package.getUserData().split(Constants.TILDE);
     if (response.getCode() == Constants.OK_CODE ||
@@ -124,7 +123,7 @@ class ProcessInvitation implements IProcessInvitation {
       package.setUserData(squareSafeName);
       package.setMessage(message);
       package.setCallback(processMemberCallback);
-      package.getClient().sendMessage(package);
+      await package.getClient().sendMessage(package);
     }
   }
 

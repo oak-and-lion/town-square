@@ -10,14 +10,14 @@ class Client implements IClient {
 
   Client(this._ip, this._port);
 
-  void sendMessage(ClientMessagePackage package) async {
+  Future<void> sendMessage(ClientMessagePackage package) async {
     Socket socket = await Socket.connect(_ip, _port);
 
     String result = Constants.EMPTY_STRING;
     // listen to the received data event stream
     socket.listen((List<int> event) {
       result = utf8.decode(event);
-      if (result != "200:terminated") {
+      if (result != Constants.TERMINATION_CODE) {
         package.setResult(result);
         // callback to the original requestor with the updated response
         package.getCallback()(package);

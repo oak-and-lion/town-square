@@ -26,11 +26,12 @@ void main() async {
     consoleView.sendMessage("Enter command: ");
     line = stdin.readLineSync(encoding: Encoding.getByName('utf-8'));
     if (line.startsWith("invite")) {
-      await _app
-          .processInvitation(line.replaceAll("invite", Constants.EMPTY_STRING));
+      await _app.processInvitation(
+          line.replaceAll("invite", Constants.EMPTY_STRING).trim());
     } else if (line.startsWith("reghub")) {
       List<String> split = line
           .replaceAll("reghub", Constants.EMPTY_STRING)
+          .trim()
           .split(Constants.SPACE);
       _app.registerHub(split[0], split[1]);
     }
