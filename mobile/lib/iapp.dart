@@ -10,4 +10,6 @@ class IApp {
   void processInvitation(String invitation) {}
 
   void registerHub(String hubInfo, String hubName) {}
+
+  void getClone(String cloneRequest) {}
 }
