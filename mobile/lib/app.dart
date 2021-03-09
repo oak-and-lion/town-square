@@ -57,6 +57,8 @@ class App implements IApp {
     await processInvitation.processInvitation(invitation);
   }
 
+  void getClone(String cloneRequest) {}
+
   void setName(String value) {}
 
   void sendMessage(String msg) {

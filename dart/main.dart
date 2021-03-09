@@ -34,6 +34,8 @@ void main() async {
           .trim()
           .split(Constants.SPACE);
       _app.registerHub(split[0], split[1]);
+    } else if (line.startsWith("getclone")) {
+      _app.getClone(line.replaceAll("getclone", Constants.EMPTY_STRING).trim());
     }
   }
 }
