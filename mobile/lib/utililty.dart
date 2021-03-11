@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:archive/archive.dart';
 import 'package:steel_crypt/steel_crypt.dart';
 import 'package:uuid/uuid.dart';
 
@@ -75,6 +76,20 @@ class Utility implements IUtility {
     return true;
   }
 
+  bool writeBinaryFile(String fileName, Uint8List data) {
+    var syncPath = convertPath(fileName);
+
+    deleteFile(fileName);
+
+    try {
+      io.File(syncPath).writeAsBytesSync(data);
+    } catch (fse) {
+      return false;
+    }
+
+    return true;
+  }
+
   bool deleteFile(String fileName) {
     var syncPath = convertPath(fileName);
 
@@ -137,5 +152,36 @@ class Utility implements IUtility {
         fortunaKey, tempHelper.parsePublicKeyFromPem(publicKey));
 
     return DoubleString(fortunaKey, encryptedPassword);
+  }
+
+  bool unzip(String fileName) {
+    var syncPath = convertPath(fileName);
+
+    var exists = io.File(syncPath).existsSync();
+
+    if (exists) {
+      // Read the Zip file from disk.
+      final bytes = io.File(syncPath).readAsBytesSync();
+
+      // Decode the Zip file
+      final archive = ZipDecoder().decodeBytes(bytes);
+
+      // Extract the contents of the Zip archive to disk.
+      for (final file in archive) {
+        final filename = file.name;
+        if (file.isFile) {
+          final data = file.content as List<int>;
+          io.File(filename)
+            ..createSync(recursive: true)
+            ..writeAsBytesSync(data);
+        } else {
+          io.Directory(filename)..create(recursive: true);
+        }
+      }
+
+      return true;
+    }
+
+    return false;
   }
 }

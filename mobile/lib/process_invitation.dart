@@ -32,7 +32,7 @@ class ProcessInvitation implements IProcessInvitation {
     await client.sendMessage(package);
   }
 
-  void processInviteCallback(ClientMessagePackage package) async {
+  Future<void> processInviteCallback(ClientMessagePackage package) async {
     SquareResponse response = getResponse(package.getResult());
     if (response.getCode() == Constants.OK_CODE ||
         response.getCode() == Constants.ALREADY_REGISTERED_CODE) {

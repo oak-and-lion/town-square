@@ -1,3 +1,5 @@
+import 'get_clone.dart';
+import 'iget_clone.dart';
 import 'iprocess_invitation.dart';
 import 'iutility.dart';
 import 'process_invitation.dart';
@@ -34,5 +36,13 @@ class TownSquareFactory implements IFactory {
     }
 
     return IProcessInvitation();
+  }
+
+  IGetClone createGetCone(int type, IUtility utility, IApp app) {
+    if (type == Constants.BASE_PROCESS_INVITATION) {
+      return GetClone(this, utility, app);
+    }
+
+    return IGetClone();
   }
 }

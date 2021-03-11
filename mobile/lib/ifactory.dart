@@ -1,3 +1,4 @@
+import 'iget_clone.dart';
 import 'iprocess_invitation.dart';
 import 'isquare.dart';
 import 'iapp.dart';
@@ -16,5 +17,9 @@ class IFactory {
   IProcessInvitation createProcessInvitation(
       int type, IUtility utility, IApp app) {
     return IProcessInvitation();
+  }
+
+  IGetClone createGetCone(int type, IUtility utility, IApp app) {
+    return IGetClone();
   }
 }

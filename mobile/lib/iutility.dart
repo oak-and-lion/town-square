@@ -60,4 +60,12 @@ class IUtility {
   DoubleString createPassword(int len, String publicKey) {
     return DoubleString(Constants.EMPTY_STRING, Constants.EMPTY_STRING);
   }
+
+  bool unzip(String fileName) {
+    return false;
+  }
+
+  bool writeBinaryFile(String fileName, Uint8List data) {
+    return false;
+  }
 }

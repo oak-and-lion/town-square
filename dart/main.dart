@@ -22,21 +22,19 @@ void main() async {
   await _utility
       .init(() => {consoleView.sendMessage("starting app..."), _app.start()});
   String line = Constants.EMPTY_STRING;
-  while (line != 'done') {
-    consoleView.sendMessage("Enter command: ");
-    line = stdin.readLineSync(encoding: Encoding.getByName('utf-8'));
-    if (line.startsWith("invite")) {
-      await _app.processInvitation(
-          line.replaceAll("invite", Constants.EMPTY_STRING).trim());
-    } else if (line.startsWith("reghub")) {
-      List<String> split = line
-          .replaceAll("reghub", Constants.EMPTY_STRING)
-          .trim()
-          .split(Constants.SPACE);
-      _app.registerHub(split[0], split[1]);
-    } else if (line.startsWith("getclone")) {
-      _app.getClone(line.replaceAll("getclone", Constants.EMPTY_STRING).trim());
-    }
+  consoleView.sendMessage("Enter command: ");
+  line = stdin.readLineSync(encoding: Encoding.getByName('utf-8'));
+  if (line.startsWith("invite")) {
+    await _app.processInvitation(
+        line.replaceAll("invite", Constants.EMPTY_STRING).trim());
+  } else if (line.startsWith("reghub")) {
+    List<String> split = line
+        .replaceAll("reghub", Constants.EMPTY_STRING)
+        .trim()
+        .split(Constants.SPACE);
+    _app.registerHub(split[0], split[1]);
+  } else if (line.startsWith("getclone")) {
+    _app.getClone(line.replaceAll("getclone", Constants.EMPTY_STRING).trim());
   }
 }
 

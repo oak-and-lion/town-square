@@ -1,4 +1,5 @@
-import 'process_invitation.dart';
+import 'iget_clone.dart';
+import 'iprocess_invitation.dart';
 import 'constants.dart';
 import 'ifactory.dart';
 import 'isquare.dart';
@@ -52,12 +53,16 @@ class App implements IApp {
   }
 
   void processInvitation(String invitation) async {
-    ProcessInvitation processInvitation =
-        ProcessInvitation(_factory, _utility, this);
+    IProcessInvitation processInvitation = _factory.createProcessInvitation(
+        Constants.BASE_PROCESS_INVITATION, _utility, this);
     await processInvitation.processInvitation(invitation);
   }
 
-  void getClone(String cloneRequest) {}
+  void getClone(String cloneRequest) async {
+    IGetClone getClone =
+        _factory.createGetCone(Constants.BASE_CLIENT_TYPE, _utility, this);
+    await getClone.getClone(cloneRequest);
+  }
 
   void setName(String value) {}
 

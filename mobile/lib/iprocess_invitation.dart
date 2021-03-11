@@ -1,3 +1,3 @@
 class IProcessInvitation {
-  void processInvitation(String invitation) {}
+  Future<void> processInvitation(String invitation) async {}
 }

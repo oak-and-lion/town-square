@@ -21,11 +21,13 @@ class Constants {
   static const LEAVE_FILE_EXT = ".leave";
   static const MEMBERS_FILE_EXT = ".members";
   static const HUB_REGISTRATION_FILE_EXT = ".hub";
+  static const CLONE_FILE_EXT = ".clone";
   static const FILE_DATA_SEPERATOR = "~_~";
   static const COMMAND_SEPERATOR = "%%%";
   static const JOIN_COMMAND = "join";
   static const PUBLIC_KEY_COMMAND = "pkey";
   static const MEMBER_COMMAND = "members";
+  static const CLONE_COMMAND = "clone";
   static const UNENCRYPTED_FLAG = "u";
   static const ENCRYPTED_FLAG = "e";
   static const TILDE = "~";
@@ -35,6 +37,7 @@ class Constants {
   static const SPACE = " ";
   static const UNDERSCORE = "_";
   static const NEWLINE = "\n";
+  static const CARRIAGE_RETURN = "\r";
   static const TAB_PREFIX = "tab";
   static const ZERO = "0";
   static const NO_PASSWORD = "~~~~~~~";
@@ -43,6 +46,7 @@ class Constants {
   static const BASE_CLIENT_TYPE = 1;
   static const BASE_SQUARE_TYPE = 1;
   static const BASE_PROCESS_INVITATION = 1;
+  static const BASE_GET_CLONE = 1;
   static const OK_CODE = "200";
   static const INVALID_CODE = "400";
   static const ALREADY_REGISTERED_CODE = "460";
@@ -51,4 +55,6 @@ class Constants {
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   static const DUMMY_IP_ADDRESS = "1.1.1.1";
   static const DUMMY_PORT = "1";
+  static const CLONE_KEY_LENGTH = 16;
+  static const MY_SQUARE_NAME = "my_square";
 }
